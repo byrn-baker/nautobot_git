@@ -4,9 +4,9 @@ _metadata:
   description: AAA configuration for pods
   is_active: true
   roles:
-  - slug: pod-router
-  - slug: pod-core-switch
-  - slug: pod-access-switch
+  - slug: pod_router
+  - slug: pod_core_switch
+  - slug: pod_access_switch
 aaa-new-model:
   name: RAD_SERVERS
   type: radius

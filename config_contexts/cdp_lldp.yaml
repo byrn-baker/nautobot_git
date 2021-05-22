@@ -4,8 +4,8 @@ _metadata:
   description: LLDP AND CDP CONFIGURATION 
   is_active: true
   roles:
-  - slug: pod-router
-  - slug: pod-core-switch
-  - slug: pod-access-switch
+  - slug: pod_router
+  - slug: pod_core_switch
+  - slug: pod_access_switch
 lldp: true
 cdp: false  
