@@ -1,0 +1,16 @@
+_metadata:
+  name: AAA_CONFIGURATION
+  weight: 1000
+  description: AAA configuration for pods
+  is_active: true
+  roles:
+  - slug: pod-router
+  - slug: pod-core-switch
+  - slug: pod-access-switch
+aaa-new-model:
+  name: RAD_SERVERS
+  type: radius
+  ip_address: 192.168.4.253
+  auth_port: 1812
+  acct_port: 1813
+  key: cisco

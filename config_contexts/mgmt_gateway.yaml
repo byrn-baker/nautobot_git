@@ -1,0 +1,9 @@
+_metadata:
+  name: MGMT_GATEWAY
+  weight: 1000
+  description: Default route for the MGMT VRF
+  is_active: true
+  site:
+  - slug: pod1
+routes:  
+  mgmt_gateway: 192.168.4.254

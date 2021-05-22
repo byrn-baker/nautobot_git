@@ -1,0 +1,9 @@
+_metadata:
+  name: POD_OSPF
+  weight: 1000
+  description: POD ospf configuration
+  is_active: true
+  tags:
+    - slug: ospf
+ospf:
+  id: 1

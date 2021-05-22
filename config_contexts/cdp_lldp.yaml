@@ -1,0 +1,11 @@
+_metadata:
+  name: LLDP AND CDP
+  weight: 1000
+  description: LLDP AND CDP CONFIGURATION 
+  is_active: true
+  roles:
+  - slug: pod-router
+  - slug: pod-core-switch
+  - slug: pod-access-switch
+lldp: true
+cdp: false  
