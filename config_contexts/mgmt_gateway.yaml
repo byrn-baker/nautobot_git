@@ -4,6 +4,11 @@ _metadata:
   description: Default route for the MGMT VRF
   is_active: true
   site:
-  - slug: pod1
+  - POD1
+  - POD2
+  - POD3
+  - POD4
+  - POD5
+  - POD6
 routes:  
   mgmt_gateway: 192.168.4.254

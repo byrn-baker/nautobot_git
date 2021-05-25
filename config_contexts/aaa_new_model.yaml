@@ -5,8 +5,8 @@ _metadata:
   is_active: true
   roles:
   - slug: pod_router
-  - slug: pod_core_switch
-  - slug: pod_access_switch
+  - slug: pod_l3_switch
+  - slug: pod_l2_switch
 aaa-new-model:
   name: RAD_SERVERS
   type: radius

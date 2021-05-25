@@ -1,0 +1,25 @@
+_metadata:
+  name: POD3_DHCP_SERVER
+  weight: 1000
+  description: POD3 DHCP Server configuration
+  is_active: true
+  tags:
+    - slug: pod3_dhcp_server
+dhcp_pool:
+  - name: USERS_POOL
+    network: "155.3.3.0/26"
+    default_router: 155.3.3.1
+    lease: 30
+    excluded_address: "155.3.3.1 155.3.3.3"
+
+  - name: SERVERS_POOL
+    network: "155.3.3.64/26"
+    default_router: 155.3.3.65
+    lease: 30
+    excluded_address: "155.3.3.65 155.3.3.67"
+
+  - name: GUEST_POOL
+    network: "155.3.3.128/26"
+    default_router: 155.3.3.129
+    lease: 30
+    excluded_address: "155.3.3.129 155.3.3.131"

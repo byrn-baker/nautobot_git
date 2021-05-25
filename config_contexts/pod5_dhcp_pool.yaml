@@ -1,0 +1,25 @@
+_metadata:
+  name: POD5_DHCP_SERVER
+  weight: 1000
+  description: POD5 DHCP Server configuration
+  is_active: true
+  tags:
+    - slug: pod5_dhcp_server
+dhcp_pool:
+  - name: USERS_POOL
+    network: "155.5.5.0/26"
+    default_router: 155.5.5.1
+    lease: 30
+    excluded_address: "155.5.5.1 155.5.5.3"
+
+  - name: SERVERS_POOL
+    network: "155.5.5.64/26"
+    default_router: 155.5.5.65
+    lease: 30
+    excluded_address: "155.5.5.65 155.5.5.67"
+
+  - name: GUEST_POOL
+    network: "155.5.5.128/26"
+    default_router: 155.5.5.129
+    lease: 30
+    excluded_address: "155.5.5.129 155.5.5.131"
