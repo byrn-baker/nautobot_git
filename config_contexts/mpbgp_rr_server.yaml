@@ -1,7 +1,7 @@
 _metadata:
-  name: backbone_bgp
+  name: mpbgp_rr_server
   weight: 1000
-  description: Backbone BGP Config
+  description: MPBGP RR BGP Config
   is_active: true
   tags:
     - slug: mpbgp_rr_server
