@@ -1,0 +1,73 @@
+_metadata:
+  name: backbone_bgp
+  weight: 1000
+  description: Backbone BGP Config
+  is_active: true
+  tags:
+    - slug: mpbgp_rr_server
+bgp:
+  vpnv4:
+    neighbor_groups:
+      - name: MPBGP_RR_CLIENTS
+        description: "VPNV4 RR CLIENTS"
+        peers:
+          - name: 172.31.224.1
+            description: MDC
+          - name: 172.31.224.2
+            description: CITY_HALL
+          - name: 172.31.224.3
+            description: RAMPART
+          - name: 172.31.224.4
+            description: PD_STA
+          - name: 172.31.224.5
+            description: OLYMPIC
+          - name: 172.31.224.6
+            description: HOLLYWOOD
+          - name: 172.31.224.7
+            description: WILSHIRE
+          - name: 172.31.224.8
+            description: PACIFIC
+          - name: 172.31.224.9
+            description: WEST_LA
+          - name: 172.31.224.10
+            description: VAN_NUYS
+          - name: 172.31.224.11
+            description: VTD
+          - name: 172.31.224.12
+            description: WEST_VALLEY
+          - name: 172.31.224.13
+            description: TOPANGA
+          - name: 172.31.224.14
+            description: VDC
+          - name: 172.31.224.15
+            description: DEVONSHIRE
+          - name: 172.31.224.16
+            description: MISSION
+          - name: 172.31.224.17
+            description: FOOTHILL
+          - name: 172.31.224.18
+            description: NORTH_HOLLYWOOD
+          - name: 172.31.224.19
+            description: NORTHEAST
+          - name: 172.31.224.20
+            description: CENTRAL
+          - name: 172.31.224.21
+            description: NEWTON
+          - name: 172.31.224.22
+            description: SOUTHWEST
+          - name: 172.31.224.23
+            description: 77TH_ST
+          - name: 172.31.224.24
+            description: SOUTHEAST
+          - name: 172.31.224.25
+            description: HARBOR
+          - name: 172.31.224.26
+            description: HOLLENBACK
+          - name: 172.31.224.27
+            description: SAN_PEDRO
+          - name: 172.31.224.27
+            description: SAN_PEDRO
+          - name: 172.31.224.28
+            description: MT_LEE_PE01
+          - name: 172.31.224.29
+            description: VDC_PE01
