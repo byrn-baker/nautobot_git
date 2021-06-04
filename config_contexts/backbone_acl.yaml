@@ -7,6 +7,6 @@ _metadata:
     - slug: backbone_router
     - slug: backbone_edge
 ipv4_acl:
-  - MPLS_LOOPBACK_RANGE:
-      sequence:
-        10: { action: permit, source: "172.31.224.0 0.0.0.255", dest: "any" }
+  MPLS_LOOPBACK_RANGE:
+    sequence:
+      10: { action: permit, source: "172.31.224.0 0.0.0.255", dest: "any" }
