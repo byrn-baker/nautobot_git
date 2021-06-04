@@ -1,0 +1,14 @@
+_metadata:
+  name: backbone_acls
+  weight: 1000
+  description: ACLs for all backbone routers
+  is_active: true
+  roles:
+    - slug: backbone_router
+    - slug: backbone_edge
+ipv4_acl:
+  - name: MPLS_LOOPBACK_RANGE
+      - seq: 10
+        source: "172.31.224.0 0.0.0.255"
+        dest: "any"
+        action: permit

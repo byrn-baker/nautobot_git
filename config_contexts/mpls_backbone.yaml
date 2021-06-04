@@ -1,0 +1,8 @@
+_metadata:
+  name: mpls_backbone
+  weight: 1000
+  description: MPLS Config
+  is_active: true
+  roles:
+    - slug: backbone_router
+    - slug: backbone_edge
