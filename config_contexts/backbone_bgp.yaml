@@ -90,3 +90,21 @@ community_set:
     set: "65000:3400"
   - name: SET-NEXT-HOP-SELF
     set: "65000:0"
+route_policy:
+  - name: BB-ZONE | 
+    policy:
+      "if community matches-every SET-NEXT-HOP-SELF then
+        set next-hop self
+        delete community in SET-NEXT-HOP-SELF
+      endif
+      if community matches-any TRANSIT then
+        set next-hop self
+        pass
+      else
+        pass
+      endif   
+    end-policy"
+  - name: PASS-ALL
+    policy: 
+      "pass
+      end-policy"
