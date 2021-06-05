@@ -91,22 +91,7 @@ community_set:
   - name: SET-NEXT-HOP-SELF
     set: "65000:0"
 route_policy:
-  - name: |
-  route-policy BB-ZONE
-  if community matches-every SET-NEXT-HOP-SELF then
-    set next-hop self
-    delete community in SET-NEXT-HOP-SELF
-  endif
-  if community matches-any TRANSIT then
-    set next-hop self
-    pass
-  else
-    pass
-  endif   
-  end-policy
-  !
-  - name: |
-  route-policy PASS-ALL
-  pass
-  end-policy
-  !
+  - name: BB-ZONE
+    matches_every: SET-NEXT-HOP-SELF
+    matches_any: TRANSIT
+  - name: PASS-ALL
