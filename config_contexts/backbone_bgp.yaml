@@ -85,5 +85,8 @@ bgp:
             description: MT_LEE_PE
           - name: 172.31.224.31
             description: VDC_PE
-
-
+community-set:
+  - name: TRANSIT
+    set: "65000:3400"
+  - name: SET-NEXT-HOP-SELF
+    set: "65000:0"
