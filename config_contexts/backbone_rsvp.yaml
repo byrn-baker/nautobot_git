@@ -1,0 +1,16 @@
+_metadata:
+  name: backbone_rsvp
+  weight: 1000
+  description: RSVP and Traffic Engineering Config
+  is_active: true
+  roles:
+    - slug: backbone_router
+    - slug: backbone_edge
+rsvp:
+  - name: GigabitEthernet0/0/0/0
+    bandwidth: 100
+  - name: GigabitEthernet0/0/0/1
+    bandwidth: 100
+traffic_engineering:
+  - name: GigabitEthernet0/0/0/0
+  - name: GigabitEthernet0/0/0/1
