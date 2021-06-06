@@ -68,9 +68,9 @@ bgp:
             description: HOLLENBACK
           - name: 172.31.224.27
             description: SAN_PEDRO
-  provider_edge:
+  pe:
     neighbor_groups:
-      - name: PROVIDER_EDGE_GROUP
+      - name: "PROVIDER_EDGE_GROUP"
         description: "Backbone Provider Edge"
         rp_in: PASS_ALL
         rp_out: PE_EDGE
