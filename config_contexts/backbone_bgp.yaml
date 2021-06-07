@@ -11,8 +11,8 @@ bgp:
     neighbor_groups:
       - name: BB_FULL_MESH_GROUP
         description: "Backbone Full Mesh"
-        rp_in: PASS_ALL
-        rp_out: BB_ZONE
+        rp_in: PASS-ALL
+        rp_out: BB-ZONE
         peers:
           - name: 172.31.224.1
             description: MDC
@@ -72,14 +72,14 @@ bgp:
     neighbor_groups:
       - name: "PROVIDER_EDGE_GROUP"
         description: "Backbone Provider Edge"
-        rp_in: PASS_ALL
+        rp_in: PASS-ALL
         rp_out: BB-ZONE
   vpnv4:
     neighbor_groups:
       - name: MPBGP_RR_GROUP
         description: "Fusion Router Group"
-        rp_in: PASS_ALL
-        rp_out: PASS_ALL
+        rp_in: PASS-ALL
+        rp_out: PASS-ALL
         peers:
           - name: 172.31.224.30
             description: MT_LEE_PE
