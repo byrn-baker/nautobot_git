@@ -73,7 +73,7 @@ bgp:
       - name: "PROVIDER_EDGE_GROUP"
         description: "Backbone Provider Edge"
         rp_in: PASS_ALL
-        rp_out: PE_EDGE
+        rp_out: BB-ZONE
   vpnv4:
     neighbor_groups:
       - name: MPBGP_RR_GROUP
