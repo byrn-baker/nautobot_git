@@ -8,4 +8,4 @@ _metadata:
   - slug: pod_l3_switch
   - slug: pod_l2_switch
 lldp: true
-cdp: false  
+cdp: false

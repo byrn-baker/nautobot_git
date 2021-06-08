@@ -3,12 +3,11 @@ _metadata:
   weight: 1000
   description: Default route for the MGMT VRF
   is_active: true
-  site:
-  - POD1
-  - POD2
-  - POD3
-  - POD4
-  - POD5
-  - POD6
+  roles:
+    - slug: backbone_router
+    - slug: backbone_edge
+    - slug: pod_router
+    - slug: pod_l3_switch
+    - slug: pod_l2_switch
 routes:  
   mgmt_gateway: 192.168.4.254
