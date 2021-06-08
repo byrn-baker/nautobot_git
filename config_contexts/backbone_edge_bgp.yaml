@@ -1,0 +1,40 @@
+_metadata:
+  name: backbone_bgp
+  weight: 1000
+  description: Backbone BGP Config
+  is_active: true
+  tags:
+    - slug: bacbone_edge
+bgp:
+  ibgp:
+    l_asn: 65000
+    neighbor_groups:
+      - name: BACKBONE_BBR
+        description: "Backbone Uplink"
+        next_hop_self: true
+        rp_in: PASS-ALL
+        rp_out: BB-ZONE
+        peers:
+          - name: 172.31.224.1
+            description: MDC_BBR01
+  vpnv4:
+    neighbor_groups:
+      - name: MPBGP_RR_GROUP
+        description: "Fusion Router Group"
+        rp_in: PASS-ALL
+        rp_out: PASS-ALL
+        peers:
+          - name: 172.31.224.30
+            description: MT_LEE_PE
+          - name: 172.31.224.31
+            description: VDC_PE
+community_set:
+  - name: TRANSIT
+    set: "65000:3400"
+  - name: SET-NEXT-HOP-SELF
+    set: "65000:0"
+route_policy:
+  - name: BB-ZONE
+    matches_every: SET-NEXT-HOP-SELF
+    matches_any: TRANSIT
+  - name: PASS-ALL
