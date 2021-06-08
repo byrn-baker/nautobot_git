@@ -82,9 +82,9 @@ bgp:
         rp_out: PASS-ALL
         peers:
           - name: 172.31.224.30
-            description: MT_LEE_PE
+            description: CITY_HALL_RR
           - name: 172.31.224.31
-            description: VDC_PE
+            description: WEST_LA_RR
 community_set:
   - name: TRANSIT
     set: "65000:3400"
