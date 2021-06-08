@@ -3,7 +3,7 @@ _metadata:
   weight: 1000
   description: Default route for the MGMT VRF
   is_active: true
-  device_roles:
+  roles:
     - slug: backbone_router
     - slug: backbone_edge
     - slug: pod_router
