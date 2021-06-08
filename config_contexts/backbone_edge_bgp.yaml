@@ -1,5 +1,5 @@
 _metadata:
-  name: backbone_bgp
+  name: backbone_edge_bgp
   weight: 1000
   description: Backbone BGP Config
   is_active: true
