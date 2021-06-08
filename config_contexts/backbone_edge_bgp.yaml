@@ -14,20 +14,17 @@ bgp:
         next_hop_self: true
         rp_in: PASS-ALL
         rp_out: BB-ZONE
-        peers:
-          - name: 172.31.224.1
-            description: MDC_BBR01
   vpnv4:
     neighbor_groups:
       - name: MPBGP_RR_GROUP
-        description: "Fusion Router Group"
+        description: "BACKBONE ROUTE REFLECTOR"
         rp_in: PASS-ALL
         rp_out: PASS-ALL
         peers:
           - name: 172.31.224.30
-            description: MT_LEE_PE
+            description: CITY_HALL_RR
           - name: 172.31.224.31
-            description: VDC_PE
+            description: VAN_NUYS_RR
 community_set:
   - name: TRANSIT
     set: "65000:3400"
