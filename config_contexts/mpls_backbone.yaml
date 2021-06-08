@@ -3,7 +3,7 @@ _metadata:
   weight: 1000
   description: MPLS Config
   is_active: true
-  roles:
+  device_roles:
     - slug: backbone_router
     - slug: backbone_edge
 mpls: true

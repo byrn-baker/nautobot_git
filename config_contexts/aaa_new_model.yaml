@@ -3,7 +3,7 @@ _metadata:
   weight: 1000
   description: AAA configuration for pods
   is_active: true
-  roles:
+  device_roles:
   - slug: pod_router
   - slug: pod_l3_switch
   - slug: pod_l2_switch
