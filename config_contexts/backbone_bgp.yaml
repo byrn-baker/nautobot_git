@@ -15,58 +15,62 @@ bgp:
         rp_out: BB-ZONE
         peers:
           - name: 172.31.224.1
-            description: MDC
+            description: MDC_BBR01
           - name: 172.31.224.2
-            description: CITY_HALL
+            description: CITY_HALL_BBR01
           - name: 172.31.224.3
-            description: RAMPART
+            description: CITY_HALL_BBR02
           - name: 172.31.224.4
-            description: PD_STA
+            description: RAMPART_BBR01
           - name: 172.31.224.5
-            description: OLYMPIC
+            description: PD_STA_BBR01
           - name: 172.31.224.6
-            description: HOLLYWOOD
+            description: OLYMPIC_BBR01
           - name: 172.31.224.7
-            description: WILSHIRE
+            description: HOLLYWOOD_BBR01
           - name: 172.31.224.8
-            description: PACIFIC
+            description: WILSHIRE_BBR01
           - name: 172.31.224.9
-            description: WEST_LA
+            description: PACIFIC_BBR01
           - name: 172.31.224.10
-            description: VAN_NUYS
+            description: WEST_LA_BBR01
           - name: 172.31.224.11
-            description: VTD
+            description: VAN_NUYS_BBR01
           - name: 172.31.224.12
-            description: WEST_VALLEY
+            description: VAN_NUYS_BBR02
           - name: 172.31.224.13
-            description: TOPANGA
+            description: VTD_BBR01
           - name: 172.31.224.14
-            description: VDC
+            description: WEST_VALLEY_BBR01
           - name: 172.31.224.15
-            description: DEVONSHIRE
+            description: TOPANGA_BBR01
           - name: 172.31.224.16
-            description: MISSION
+            description: VDC_BBR01
           - name: 172.31.224.17
-            description: FOOTHILL
+            description: DEVONSHIRE_BBR01
           - name: 172.31.224.18
-            description: NORTH_HOLLYWOOD
+            description: MISSION_BBR01
           - name: 172.31.224.19
-            description: NORTHEAST
+            description: FOOTHILL_BBR01
           - name: 172.31.224.20
-            description: CENTRAL
+            description: NORTH_HOLLYWOOD_BBR01
           - name: 172.31.224.21
-            description: NEWTON
+            description: NORTHEAST_BBR01
           - name: 172.31.224.22
-            description: SOUTHWEST
+            description: CENTRAL_BBR01
           - name: 172.31.224.23
-            description: 77TH_ST
+            description: NEWTON_BBR01
           - name: 172.31.224.24
-            description: SOUTHEAST
+            description: SOUTHWEST_BBR01
           - name: 172.31.224.25
-            description: HARBOR
+            description: 77TH_ST_BBR01
           - name: 172.31.224.26
-            description: HOLLENBACK
+            description: SOUTHEAST_BBR01
           - name: 172.31.224.27
+            description: HARBOR_BBR01
+          - name: 172.31.224.28
+            description: HOLLENBACK_BBR01
+          - name: 172.31.224.29
             description: SAN_PEDRO
       - name: "PROVIDER_EDGE_GROUP"
         description: "Backbone Provider Edge"
@@ -79,9 +83,9 @@ bgp:
         rp_in: PASS-ALL
         rp_out: PASS-ALL
         peers:
-          - name: 172.31.224.30
+          - name: 172.31.224.34
             description: CITY_HALL_RR
-          - name: 172.31.224.31
+          - name: 172.31.224.35
             description: VAN_NUYS_RR
 community_set:
   - name: TRANSIT
