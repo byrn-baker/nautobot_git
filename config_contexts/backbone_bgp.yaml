@@ -72,10 +72,11 @@ bgp:
             description: HOLLENBACK_BBR01
           - name: 172.31.224.29
             description: SAN_PEDRO
-      - name: "PROVIDER_EDGE_GROUP"
-        description: "Backbone Provider Edge"
-        rp_in: PASS-ALL
-        rp_out: BB-ZONE      
+  pe:    
+    - name: "PROVIDER_EDGE_GROUP"
+      description: "Backbone Provider Edge"
+      rp_in: PASS-ALL
+      rp_out: BB-ZONE      
   vpnv4:
     neighbor_groups:
       - name: MPBGP_RR_GROUP
