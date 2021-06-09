@@ -3,8 +3,8 @@ _metadata:
   weight: 1000
   description: Backbone BGP Config
   is_active: true
-  tags:
-    - slug: backbone_bgp
+  roles:
+    - slug: backbone_router
 bgp:
   ibgp:
     l_asn: 65000
