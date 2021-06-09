@@ -4,7 +4,7 @@ _metadata:
   description: Backbone BGP Config
   is_active: true
   tags:
-    - slug: bacbone_bgp
+    - slug: backbone_bgp
 bgp:
   ibgp:
     l_asn: 65000
