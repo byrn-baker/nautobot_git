@@ -18,8 +18,6 @@ bgp:
             ip: 172.31.224.1
           - name: city_hall_bbr02
             ip: 172.31.224.2
-          - name: city_hall_brr01
-            ip: 172.31.224.3
           - name: rampart_bbr01
             ip: 172.31.224.6
           - name: pd_sta_bbr01
