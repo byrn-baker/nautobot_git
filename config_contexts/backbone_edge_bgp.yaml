@@ -21,10 +21,8 @@ bgp:
         rp_in: PASS-ALL
         rp_out: PASS-ALL
         peers:
-          - name: 172.31.224.30
-            description: CITY_HALL_RR
-          - name: 172.31.224.31
-            description: VAN_NUYS_RR
+          - name: city_hall_brr01
+            ip: 172.31.224.3
 community_set:
   - name: TRANSIT
     set: "65000:3400"
