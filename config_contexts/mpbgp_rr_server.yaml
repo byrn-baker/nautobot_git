@@ -11,63 +11,73 @@ bgp:
       - name: MPBGP_RR_CLIENTS
         description: "VPNV4 RR CLIENTS"
         peers:
-          - name: 172.31.224.1
-            description: MDC
-          - name: 172.31.224.2
-            description: CITY_HALL
-          - name: 172.31.224.3
-            description: RAMPART
-          - name: 172.31.224.4
-            description: PD_STA
-          - name: 172.31.224.5
-            description: OLYMPIC
-          - name: 172.31.224.6
-            description: HOLLYWOOD
-          - name: 172.31.224.7
-            description: WILSHIRE
-          - name: 172.31.224.8
-            description: PACIFIC
-          - name: 172.31.224.9
-            description: WEST_LA
-          - name: 172.31.224.10
-            description: VAN_NUYS
-          - name: 172.31.224.11
-            description: VTD
-          - name: 172.31.224.12
-            description: WEST_VALLEY
-          - name: 172.31.224.13
-            description: TOPANGA
-          - name: 172.31.224.14
-            description: VDC
-          - name: 172.31.224.15
-            description: DEVONSHIRE
-          - name: 172.31.224.16
-            description: MISSION
-          - name: 172.31.224.17
-            description: FOOTHILL
-          - name: 172.31.224.18
-            description: NORTH_HOLLYWOOD
-          - name: 172.31.224.19
-            description: NORTHEAST
-          - name: 172.31.224.20
-            description: CENTRAL
-          - name: 172.31.224.21
-            description: NEWTON
-          - name: 172.31.224.22
-            description: SOUTHWEST
-          - name: 172.31.224.23
-            description: 77TH_ST
-          - name: 172.31.224.24
-            description: SOUTHEAST
-          - name: 172.31.224.25
-            description: HARBOR
-          - name: 172.31.224.26
-            description: HOLLENBACK
-          - name: 172.31.224.27
-            description: SAN_PEDRO
-          - name: 172.31.224.27
-            description: SAN_PEDRO
-          - name: 172.31.224.28
-            description: MT_LEE_PE01
-          - name: 172.31.224.29
-            description: VDC_PE01
+          - name: city_hall_bbr01
+            ip: 172.31.224.1
+          - name: city_hall_bbr02
+            ip: 172.31.224.2
+          - name: rampart_bbr01
+            ip: 172.31.224.6
+          - name: pd_sta_bbr01
+            ip: 172.31.224.7  
+          - name: olympic_bbr01
+            ip: 172.31.224.8
+          - name: hollywood_bbr01
+            ip: 172.31.224.9
+          - name: wilshire_bbr01
+            ip: 172.31.224.10  
+          - name: pacific_bbr01
+            ip: 172.31.224.11 
+          - name: west_la_bbr01
+            ip: 172.31.224.12
+          - name: van_nuys_bbr01
+            ip: 172.31.224.13
+          - name: vtd_bbr01
+            ip: 172.31.224.15  
+          - name: west_valley_bbr01
+            ip: 172.31.224.16 
+          - name: topanga_bbr01
+            ip: 172.31.224.17
+          - name: vdc_bbr01
+            ip: 172.31.224.18
+          - name: devonshire_bbr01
+            ip: 172.31.224.20 
+          - name: mission_bbr01
+            ip: 172.31.224.21
+          - name: foothill_bbr01
+            ip: 172.31.224.22
+          - name: north_hollywood_bbr01
+            ip: 172.31.224.23
+          - name: northeast_bbr01
+            ip: 172.31.224.24
+          - name: mdc_bbr01
+            ip: 172.31.224.25
+          - name: central_bbr01
+            ip: 172.31.224.27
+          - name: newton_bbr01
+            ip: 172.31.224.28
+          - name: southwest_bbr01
+            ip: 172.31.224.29
+          - name: 77th_st_bbr01
+            ip: 172.31.224.30
+          - name: southeast_bbr01
+            ip: 172.31.224.31
+          - name: harbor_bbr01
+            ip: 172.31.224.32
+          - name: hollenback_bbr01
+            ip: 172.31.224.33
+          - name: west_la_bbr02
+            ip: 172.31.224.34
+          - name: van_nuys_bbr02
+            ip: 172.31.224.35  
+          - name: san_pedro_bbr01
+            ip: 172.31.224.36
+          - name: city_hall_bdc01
+            ip: 172.31.224.4
+          - name: city_hall_bdc02
+            ip: 172.31.224.5
+          - name: van_nuys_bdc01
+            ip: 172.31.224.14
+          - name: vdc_pe01
+            ip: 172.31.224.19 
+          - name: mt_lee_pe01
+            ip: 172.31.224.26  

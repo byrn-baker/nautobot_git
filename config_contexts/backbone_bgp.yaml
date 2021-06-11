@@ -14,69 +14,74 @@ bgp:
         rp_in: PASS-ALL
         rp_out: BB-ZONE
         peers:
-          - name: 172.31.224.1
-            description: MDC_BBR01
-          - name: 172.31.224.2
-            description: CITY_HALL_BBR01
-          - name: 172.31.224.3
-            description: CITY_HALL_BBR02
-          - name: 172.31.224.4
-            description: RAMPART_BBR01
-          - name: 172.31.224.5
-            description: PD_STA_BBR01
-          - name: 172.31.224.6
-            description: OLYMPIC_BBR01
-          - name: 172.31.224.7
-            description: HOLLYWOOD_BBR01
-          - name: 172.31.224.8
-            description: WILSHIRE_BBR01
-          - name: 172.31.224.9
-            description: PACIFIC_BBR01
-          - name: 172.31.224.10
-            description: WEST_LA_BBR01
-          - name: 172.31.224.11
-            description: VAN_NUYS_BBR01
-          - name: 172.31.224.12
-            description: VAN_NUYS_BBR02
-          - name: 172.31.224.13
-            description: VTD_BBR01
-          - name: 172.31.224.14
-            description: WEST_VALLEY_BBR01
-          - name: 172.31.224.15
-            description: TOPANGA_BBR01
-          - name: 172.31.224.16
-            description: VDC_BBR01
-          - name: 172.31.224.17
-            description: DEVONSHIRE_BBR01
-          - name: 172.31.224.18
-            description: MISSION_BBR01
-          - name: 172.31.224.19
-            description: FOOTHILL_BBR01
-          - name: 172.31.224.20
-            description: NORTH_HOLLYWOOD_BBR01
-          - name: 172.31.224.21
-            description: NORTHEAST_BBR01
-          - name: 172.31.224.22
-            description: CENTRAL_BBR01
-          - name: 172.31.224.23
-            description: NEWTON_BBR01
-          - name: 172.31.224.24
-            description: SOUTHWEST_BBR01
-          - name: 172.31.224.25
-            description: 77TH_ST_BBR01
-          - name: 172.31.224.26
-            description: SOUTHEAST_BBR01
-          - name: 172.31.224.27
-            description: HARBOR_BBR01
-          - name: 172.31.224.28
-            description: HOLLENBACK_BBR01
-          - name: 172.31.224.29
-            description: SAN_PEDRO
+          - name: city_hall_bbr01
+            ip: 172.31.224.1
+          - name: city_hall_bbr02
+            ip: 172.31.224.2
+          - name: city_hall_brr01
+            ip: 172.31.224.3
+          - name: rampart_bbr01
+            ip: 172.31.224.6
+          - name: pd_sta_bbr01
+            ip: 172.31.224.7  
+          - name: olympic_bbr01
+            ip: 172.31.224.8
+          - name: hollywood_bbr01
+            ip: 172.31.224.9
+          - name: wilshire_bbr01
+            ip: 172.31.224.10  
+          - name: pacific_bbr01
+            ip: 172.31.224.11 
+          - name: west_la_bbr01
+            ip: 172.31.224.12
+          - name: van_nuys_bbr01
+            ip: 172.31.224.13
+          - name: vtd_bbr01
+            ip: 172.31.224.15  
+          - name: west_valley_bbr01
+            ip: 172.31.224.16 
+          - name: topanga_bbr01
+            ip: 172.31.224.17
+          - name: vdc_bbr01
+            ip: 172.31.224.18
+          - name: devonshire_bbr01
+            ip: 172.31.224.20 
+          - name: mission_bbr01
+            ip: 172.31.224.21
+          - name: foothill_bbr01
+            ip: 172.31.224.22
+          - name: north_hollywood_bbr01
+            ip: 172.31.224.23
+          - name: northeast_bbr01
+            ip: 172.31.224.24
+          - name: mdc_bbr01
+            ip: 172.31.224.25
+          - name: central_bbr01
+            ip: 172.31.224.27
+          - name: newton_bbr01
+            ip: 172.31.224.28
+          - name: southwest_bbr01
+            ip: 172.31.224.29
+          - name: 77th_st_bbr01
+            ip: 172.31.224.30
+          - name: southeast_bbr01
+            ip: 172.31.224.31
+          - name: harbor_bbr01
+            ip: 172.31.224.32
+          - name: hollenback_bbr01
+            ip: 172.31.224.33
+          - name: west_la_bbr02
+            ip: 172.31.224.34
+          - name: van_nuys_bbr02
+            ip: 172.31.224.35  
+          - name: san_pedro_bbr01
+            ip: 172.31.224.36    
   pe:    
     - name: "PROVIDER_EDGE_GROUP"
       description: "Backbone Provider Edge"
       rp_in: PASS-ALL
-      rp_out: BB-ZONE      
+      rp_out: BB-ZONE
+           
   vpnv4:
     neighbor_groups:
       - name: MPBGP_RR_GROUP
@@ -84,10 +89,8 @@ bgp:
         rp_in: PASS-ALL
         rp_out: PASS-ALL
         peers:
-          - name: 172.31.224.34
-            description: CITY_HALL_RR
-          - name: 172.31.224.35
-            description: VAN_NUYS_RR
+          - name: city_hall_brr01
+            ip: 172.31.224.3
 community_set:
   - name: TRANSIT
     set: "65000:3400"
