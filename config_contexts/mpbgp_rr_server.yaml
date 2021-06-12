@@ -3,8 +3,8 @@ _metadata:
   weight: 1000
   description: MPBGP RR BGP Config
   is_active: true
-  tags:
-    - slug: mpbgp_rr_server
+  roles:
+    - slug: mpbgp_router
 bgp:
   vpnv4:
     neighbor_groups:
