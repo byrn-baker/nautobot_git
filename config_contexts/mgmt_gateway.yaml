@@ -6,6 +6,7 @@ _metadata:
   roles:
     - slug: backbone_router
     - slug: backbone_edge
+    - slug: mpbgp_router
     - slug: pod_router
     - slug: pod_l3_switch
     - slug: pod_l2_switch
