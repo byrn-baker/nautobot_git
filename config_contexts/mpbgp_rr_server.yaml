@@ -6,6 +6,8 @@ _metadata:
   roles:
     - slug: mpbgp_router
 bgp:
+  ibgp:
+    l_asn: 65000
   vpnv4:
     neighbor_groups:
       - name: MPBGP_RR_CLIENTS
