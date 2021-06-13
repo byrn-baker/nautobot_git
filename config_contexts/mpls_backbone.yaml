@@ -6,5 +6,6 @@ _metadata:
   roles:
     - slug: backbone_router
     - slug: backbone_edge
+    - slug: mpbgp_router
 mpls: true
 rsvp: true    
