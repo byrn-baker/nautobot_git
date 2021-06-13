@@ -8,6 +8,7 @@ _metadata:
 bgp:
   ibgp:
     l_asn: 65000
+    rr: true
   vpnv4:
     neighbor_groups:
       - name: MPBGP_RR_CLIENTS
