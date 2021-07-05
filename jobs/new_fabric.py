@@ -1,6 +1,6 @@
 from django.utils.text import slugify
 
-from nautobot.dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site, Racks, Region
+from nautobot.dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site, Region
 from nautobot.extras.models import Status
 from nautobot.extras.jobs import *
 import ipaddress
@@ -22,23 +22,23 @@ class NewDataCenter(job):
         description = "Choice how many Relay Racks"
     )
 
-    underlay_p2p_network_summary = StringVar(
+    underlay_p2p_network_summary = ipaddress.ip_network(
         description = "Underlay P2P network - Assign range larger then total [spines * total potential leafs * 2"
     )
 
-    overlay_loopback_network_summary = StringVar(
+    overlay_loopback_network_summary = ipaddress.ip_network(
         description = "Overlay Loopback network - Assign range larger then total spines + total leafs switches"
     )
 
-    vtep_loopback_network_summary = StringVar(
+    vtep_loopback_network_summary = ipaddress.ip_network(
         description = "Vtep Loopback network - Assign range larger then total leaf switches"
     )
 
-    mlag_leaf_peer_l3 = StringVar(
+    mlag_leaf_peer_l3 = ipaddress.ip_network(
         description = "Leaf L3 MLAG network - Assign range larger then total spines + total leafs switches"
     )
 
-    mlag_peer = StringVar(
+    mlag_peer = ipaddress.ip_network(
         description = "MLAG Peer network - Assign range larger then total spines + total leafs switches"
     )
 
