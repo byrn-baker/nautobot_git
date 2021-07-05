@@ -8,7 +8,7 @@ from nautobot.extras.jobs import *
 class NewDC(Job):
 
     class Meta:
-        name = "New DateCenter"
+        name = "New DataCenter"
         description = "Build new vxlan deployment"
         field_order = ['region', 'fabric_name', 'relay_rack', 'underlay_p2p_network_summary', 'overlay_loopback_network_summary', 'vtep_loopback_network_summary', 'mlag_leaf_peer_l3', 'mlag_peer', 'vxlan_vlan_aware_bundles', 'bgp_peer_groups', 'spine_switch_count', 'spine_bgp_as', 'leaf_bgp_as_range', 'leaf_switch_count', 'tor_switch_count']
 
@@ -26,9 +26,9 @@ class NewDC(Job):
         description = "Choice how many Relay Racks"
     )
 
-    # underlay_p2p_network_summary = ipaddress.ip_network(
-    #     description = "Underlay P2P network - Assign range larger then total [spines * total potential leafs * 2"
-    # )
+    underlay_p2p_network_summary = ipaddress.ip_network(
+        description = "Underlay P2P network - Assign range larger then total [spines * total potential leafs * 2"
+    )
 
     # overlay_loopback_network_summary = ipaddress.ip_network(
     #     description = "Overlay Loopback network - Assign range larger then total spines + total leafs switches"
