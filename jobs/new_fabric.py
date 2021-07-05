@@ -110,42 +110,53 @@ class NewDC(Job):
         )
         site.validated_save()
         self.log_success(obj=site, message="Created new site")
-        
-        # Create Spine
-        spine_role = DeviceRole.objects.get(name='Fabric_Spine')
-        for i in range(1, data['spine_switch_count'] + 1):
-            device = Device(
-                device_type=data['spine_model'],
-                name=f'{site.slug}spine{i}',
-                site=site,
-                status=STATUS_PLANNED,
-                device_role=spine_role
-            )
-            device.validated_save()
-            self.log_success(obj=device, message="Created Spine Switches")
 
-        # Create Leaf
-        leaf_role = DeviceRole.objects.get(name='Fabric_l3_leaf')
-        for i in range(1, data['leaf_switch_count'] + 1):
-            device = Device(
-                device_type=data['leaf_model'],
-                name=f'{site.slug}leaf{i}',
-                site=site,
-                status=STATUS_PLANNED,
-                device_role=leaf_role
-            )
-            device.validated_save()
-            self.log_success(obj=device, message="Created Leaf Switches")
+        # Create Site Relay Racks
+        # for i in range(1, data['relay_rack'] + 1):
+        #     rr = Racks(
+        #         name=f'{site.slug}RR{i}',
+        #         status=STATUS_PLANNED,
+        #         site=self.site,
+        #         u_height="42"
+        #     )
+        #     rr.validate_save()
+        #     self.log_success(obj=rr, message="Created new Racks")
 
-        # Create ToR
-        tor_role = DeviceRole.objects.get(name='Fabric_l2_leaf')
-        for i in range(1, data['tor_switch_count'] + 1):
-            device = Device(
-                device_type=data['tor_model'],
-                name=f'{site.slug}tor{i}',
-                site=site,
-                status=STATUS_PLANNED,
-                device_role=tor_role
-            )
-            device.validated_save()
-            self.log_success(obj=device, message="Created ToR Switches")
+        # # Create Spine
+        # spine_role = DeviceRole.objects.get(name='Fabric_Spine')
+        # for i in range(1, data['spine_switch_count'] + 1):
+        #     device = Device(
+        #         device_type=data['spine_model'],
+        #         name=f'{site.slug}spine{i}',
+        #         site=site,
+        #         status=STATUS_PLANNED,
+        #         device_role=spine_role
+        #     )
+        #     device.validated_save()
+        #     self.log_success(obj=device, message="Created Spine Switches")
+
+        # # Create Leaf
+        # leaf_role = DeviceRole.objects.get(name='Fabric_l3_leaf')
+        # for i in range(1, data['leaf_switch_count'] + 1):
+        #     device = Device(
+        #         device_type=data['leaf_model'],
+        #         name=f'{site.slug}leaf{i}',
+        #         site=site,
+        #         status=STATUS_PLANNED,
+        #         device_role=leaf_role
+        #     )
+        #     device.validated_save()
+        #     self.log_success(obj=device, message="Created Leaf Switches")
+
+        # # Create ToR
+        # tor_role = DeviceRole.objects.get(name='Fabric_l2_leaf')
+        # for i in range(1, data['tor_switch_count'] + 1):
+        #     device = Device(
+        #         device_type=data['tor_model'],
+        #         name=f'{site.slug}tor{i}',
+        #         site=site,
+        #         status=STATUS_PLANNED,
+        #         device_role=tor_role
+        #     )
+        #     device.validated_save()
+        #     self.log_success(obj=device, message="Created ToR Switches")
