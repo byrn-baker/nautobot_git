@@ -116,7 +116,8 @@ class NewDC(Job):
             rr = Racks(
                 name=f'{site.slug}RR{i}',
                 status=STATUS_PLANNED,
-                site=site.id
+                site=self.site,
+                u_height="42"
             )
             rr.validate_save()
             self.log_success(obj=rr, message="Created new Racks")
