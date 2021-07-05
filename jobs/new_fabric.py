@@ -5,7 +5,7 @@ from nautobot.extras.models import Status
 from nautobot.extras.jobs import *
 import ipaddress
 
-class NewDataCenter(job):
+class NewDataCenter(Job):
 
     class Meta:
         name = "New DateCenter"
