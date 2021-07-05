@@ -26,7 +26,7 @@ class NewDC(Job):
         description = "Choice how many Relay Racks"
     )
 
-    underlay_p2p_network_summary = ipaddress.ip_network(
+    underlay_p2p_network_summary = StringVar(
         description = "Underlay P2P network - Assign range larger then total [spines * total potential leafs * 2"
     )
 
