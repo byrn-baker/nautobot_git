@@ -46,9 +46,9 @@ class NewDC(Job):
         description = "MLAG Peer network - Assign range larger then total spines + total leafs switches"
     )
 
-    # bgp_peer_groups = Stringvar(
-    #     description = "List the names of th BGP Peer Groups - Comma seperated 'IPv4_UNDERLAY_PEERS', 'EVPN_OVERLAY_PEERS', 'MLAG_IPv4_UNDERLAY_PEER' "
-    # )
+    bgp_peer_groups = Stringvar(
+        description = "List the names of th BGP Peer Groups - Comma seperated 'IPv4_UNDERLAY_PEERS', 'EVPN_OVERLAY_PEERS', 'MLAG_IPv4_UNDERLAY_PEER' "
+    )
 
     # spine_switch_count = IntegerVar(
     #     description = "Number of Spines to be deployed"
