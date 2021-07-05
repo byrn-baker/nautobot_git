@@ -46,57 +46,57 @@ class NewDC(Job):
         description = "MLAG Peer network - Assign range larger then total spines + total leafs switches"
     )
 
-    bgp_peer_groups = Stringvar(
-        description = "List the names of th BGP Peer Groups - Comma seperated 'IPv4_UNDERLAY_PEERS', 'EVPN_OVERLAY_PEERS', 'MLAG_IPv4_UNDERLAY_PEER' "
-    )
+    # bgp_peer_groups = Stringvar(
+    #     description = "List the names of th BGP Peer Groups - Comma seperated 'IPv4_UNDERLAY_PEERS', 'EVPN_OVERLAY_PEERS', 'MLAG_IPv4_UNDERLAY_PEER' "
+    # )
 
-    spine_switch_count = IntegerVar(
-        description = "Number of Spines to be deployed"
-    )
+    # spine_switch_count = IntegerVar(
+    #     description = "Number of Spines to be deployed"
+    # )
 
-    spine_bgp_as = IntegerVar(
-        description = "Spine BGP ASN"
-    )
+    # spine_bgp_as = IntegerVar(
+    #     description = "Spine BGP ASN"
+    # )
     
-    leaf_bgp_as_range = IntegerVar(
-        description = "Define the range of acceptable remote ASNs from leaf switches"
-    )
+    # leaf_bgp_as_range = IntegerVar(
+    #     description = "Define the range of acceptable remote ASNs from leaf switches"
+    # )
 
-    leaf_switch_count = IntegerVar(
-        description = "Number of Leafs to be deployed"
-    )
+    # leaf_switch_count = IntegerVar(
+    #     description = "Number of Leafs to be deployed"
+    # )
 
-    tor_switch_count = IntegerVar(
-        description = "Number of ToR switches to be deployed"
-    )
-    manufacturer = ObjectVar(
-        model=Manufacturer,
-        required=False
-    )
+    # tor_switch_count = IntegerVar(
+    #     description = "Number of ToR switches to be deployed"
+    # )
+    # manufacturer = ObjectVar(
+    #     model=Manufacturer,
+    #     required=False
+    # )
 
-    spine_model = ObjectVar(
-        description="Spine model",
-        model=DeviceType,
-        query_params={
-            'manufacturer_id': '$manufacturer'
-        }
-    )
+    # spine_model = ObjectVar(
+    #     description="Spine model",
+    #     model=DeviceType,
+    #     query_params={
+    #         'manufacturer_id': '$manufacturer'
+    #     }
+    # )
 
-    leaf_model = ObjectVar(
-        description="Leaf model",
-        model=DeviceType,
-        query_params={
-            'manufacturer_id': '$manufacturer'
-        }
-    )
+    # leaf_model = ObjectVar(
+    #     description="Leaf model",
+    #     model=DeviceType,
+    #     query_params={
+    #         'manufacturer_id': '$manufacturer'
+    #     }
+    # )
 
-    tor_model = ObjectVar(
-        description="ToR model",
-        model=DeviceType,
-        query_params={
-            'manufacturer_id': '$manufacturer'
-        }
-    )
+    # tor_model = ObjectVar(
+    #     description="ToR model",
+    #     model=DeviceType,
+    #     query_params={
+    #         'manufacturer_id': '$manufacturer'
+    #     }
+    # )
 
     # def run(self, data, commit):
     #     STATUS_PLANNED = Status.objects.get(slug='planned')
