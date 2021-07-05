@@ -46,7 +46,7 @@ class NewDC(Job):
         description = "MLAG Peer network - Assign range larger then total spines + total leafs switches"
     )
 
-    vxlan_vlan_aware_bundles = Bool(
+    vxlan_vlan_aware_bundles = ObjectVar(
         description = "Should bundles be vxlan vlan aware?",
         model=True,
         required=True
