@@ -18,13 +18,13 @@ class NewDC(Job):
         required=False
     )
 
-    # site_name = StringVar(
-    #     description = "Name for the new fabric"
-    # )
+    site_name = StringVar(
+        description = "Name for the new fabric"
+    )
 
-    # relay_rack = IntegerVar(
-    #     description = "Choice how many Relay Racks"
-    # )
+    relay_rack = IntegerVar(
+        description = "Choice how many Relay Racks"
+    )
 
     # underlay_p2p_network_summary = ipaddress.ip_network(
     #     description = "Underlay P2P network - Assign range larger then total [spines * total potential leafs * 2"
