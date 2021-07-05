@@ -5,9 +5,10 @@ from nautobot.extras.models import Status
 from nautobot.extras.jobs import *
 import ipaddress
 
-class NewFabric(job):
+class NewDataCenter(job):
+
     class Meta:
-        name = "New Site"
+        name = "New DateCenter"
         description = "Build new vxlan deployment"
         field_order = ['region', 'fabric_name', 'relay_rack', 'underlay_p2p_network_summary', 'overlay_loopback_network_summary', 'vtep_loopback_network_summary', 'mlag_leaf_peer_l3', 'mlag_peer', 'vxlan_vlan_aware_bundles', 'bgp_peer_groups', 'spine_switch_count', 'spine_bgp_as', 'leaf_bgp_as_range', 'leaf_switch_count', 'tor_switch_count']
 

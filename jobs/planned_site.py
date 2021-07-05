@@ -10,7 +10,7 @@ class NewBranch(Job):
     class Meta:
         name = "New Pod"
         description = "Provision a new pod"
-        field_order = ['site_name', 'router_count', 'core_switch_count', 'access_switch_count', 'switch_model']
+        field_order = ['site_name', 'site_asn','manufacturer', 'switch_model', 'router_count', 'router_model', 'core_switch_count', 'access_switch_count']
 
     site_name = StringVar(
         description="Name of the new pod"
