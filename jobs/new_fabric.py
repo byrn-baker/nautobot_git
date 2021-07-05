@@ -47,7 +47,9 @@ class NewDC(Job):
     )
 
     vxlan_vlan_aware_bundles = Bool(
-        description = "Should bundles be vxlan vlan aware?"
+        description = "Should bundles be vxlan vlan aware?",
+        model=True,
+        required=True
     )
 
     # bgp_peer_groups = Stringvar(
