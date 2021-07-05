@@ -1,6 +1,6 @@
 from django.utils.text import slugify
 
-from nautobot.dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site, Region
+from nautobot.dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site, Region, Racks
 from nautobot.extras.models import Status
 from nautobot.extras.jobs import *
 
@@ -111,6 +111,15 @@ class NewDC(Job):
         site.validated_save()
         self.log_success(obj=site, message="Created new site")
 
+        # Create Site Relay Racks
+        relay_rack = Racks(
+            name=f'{site.slug}RR{i}',
+            status=STATUS_PLANNED,
+            site=site.id
+        )
+        relay_rack.validate_save()
+        self.log_success(obj=relay_rack, message="Created new Racks")
+
         # Create Spine
         spine_role = DeviceRole.objects.get(name='Fabric_Spine')
         for i in range(1, data['spine_switch_count'] + 1):
@@ -149,17 +158,3 @@ class NewDC(Job):
             )
             device.validated_save()
             self.log_success(obj=device, message="Created ToR Switches")
-
-        # Generate a CSV table of new devices
-        output = [
-            'name,make,model'
-        ]
-        for device in Device.objects.filter(site=site):
-            attrs = [
-                device.name,
-                device.device_type.manufacturer.name,
-                device.device_type.model
-            ]
-            output.append(','.join(attrs))
-
-        return '\n'.join(output)
