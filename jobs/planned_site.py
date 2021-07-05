@@ -1,101 +1,46 @@
 from django.utils.text import slugify
 
-from nautobot.dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site, Region
+from nautobot.dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site
 from nautobot.extras.models import Status
 from nautobot.extras.jobs import *
 
 
-class NewDC(Job):
+class NewBranch(Job):
 
     class Meta:
-        name = "New DateCenter"
-        description = "Build new vxlan deployment"
-        field_order = ['region', 'fabric_name', 'relay_rack', 'underlay_p2p_network_summary', 'overlay_loopback_network_summary', 'vtep_loopback_network_summary', 'mlag_leaf_peer_l3', 'mlag_peer', 'vxlan_vlan_aware_bundles', 'bgp_peer_groups', 'spine_switch_count', 'spine_bgp_as', 'leaf_bgp_as_range', 'leaf_switch_count', 'tor_switch_count']
-
-    region = ObjectVar(
-        description="Choose Region",
-        model=Region,
-        required=False
-    )
+        name = "New Pod"
+        description = "Provision a new pod"
+        field_order = ['site_name', 'site_asn','manufacturer', 'switch_model', 'router_count', 'router_model', 'core_switch_count', 'access_switch_count']
 
     site_name = StringVar(
-        description = "Name for the new fabric"
+        description="Name of the new pod"
     )
 
-    relay_rack = IntegerVar(
-        description = "Choice how many Relay Racks"
+    site_asn = StringVar(
+        description="BGP Autonomous System Number (ASN)"
     )
-
-    underlay_p2p_network_summary = ipaddress.ip_network(
-        description = "Underlay P2P network - Assign range larger then total [spines * total potential leafs * 2"
+    router_count = IntegerVar(
+        description="Number of routers to create"
     )
-
-    overlay_loopback_network_summary = ipaddress.ip_network(
-        description = "Overlay Loopback network - Assign range larger then total spines + total leafs switches"
+    core_switch_count = IntegerVar(
+        description="Number of core switches to create"
     )
-
-    vtep_loopback_network_summary = ipaddress.ip_network(
-        description = "Vtep Loopback network - Assign range larger then total leaf switches"
-    )
-
-    mlag_leaf_peer_l3 = ipaddress.ip_network(
-        description = "Leaf L3 MLAG network - Assign range larger then total spines + total leafs switches"
-    )
-
-    mlag_peer = ipaddress.ip_network(
-        description = "MLAG Peer network - Assign range larger then total spines + total leafs switches"
-    )
-
-    vxlan_vlan_aware_bundles = Bool(
-        description = "Should bundles be vxlan vlan aware?"
-    )
-
-    bgp_peer_groups = Stringvar(
-        description = "List the names of th BGP Peer Groups - Comma seperated 'IPv4_UNDERLAY_PEERS', 'EVPN_OVERLAY_PEERS', 'MLAG_IPv4_UNDERLAY_PEER' "
-    )
-
-    spine_switch_count = IntegerVar(
-        description = "Number of Spines to be deployed"
-    )
-
-    spine_bgp_as = IntegerVar(
-        description = "Spine BGP ASN"
-    )
-    
-    leaf_bgp_as_range = IntegerVar(
-        description = "Define the range of acceptable remote ASNs from leaf switches"
-    )
-
-    leaf_switch_count = IntegerVar(
-        description = "Number of Leafs to be deployed"
-    )
-
-    tor_switch_count = IntegerVar(
-        description = "Number of ToR switches to be deployed"
+    access_switch_count = IntegerVar(
+        description="Number of access switches to create"
     )
     manufacturer = ObjectVar(
         model=Manufacturer,
         required=False
     )
-
-    spine_model = ObjectVar(
-        description="Spine model",
+    router_model = ObjectVar(
+        description="vios_router",
         model=DeviceType,
         query_params={
             'manufacturer_id': '$manufacturer'
         }
     )
-
-    leaf_model = ObjectVar(
-        description="Leaf model",
-        model=DeviceType,
-        query_params={
-            'manufacturer_id': '$manufacturer'
-        }
-    )
-
-    tor_model = ObjectVar(
-        description="ToR model",
+    switch_model = ObjectVar(
+        description="vios_switch",
         model=DeviceType,
         query_params={
             'manufacturer_id': '$manufacturer'
@@ -105,64 +50,64 @@ class NewDC(Job):
     def run(self, data, commit):
         STATUS_PLANNED = Status.objects.get(slug='planned')
 
-        #  Create the New site
+        # Create the new site
         site = Site(
             name=data['site_name'],
             slug=slugify(data['site_name']),
-            asn=data['spine_bgp_as'],
+            asn=data['site_asn'],
             status=STATUS_PLANNED,
         )
         site.validated_save()
         self.log_success(obj=site, message="Created new site")
-
-        # Create Spine
-        spine_role = DeviceRole.objects.get(name='fabric_spine')
-        for i in range(1, data['spine_switch_count'] + 1):
-            device = Device(
-                device_type=data['spine_model'],
-                name=f'{site.slug}spine{i}',
+        
+        # Create router
+        router_role = DeviceRole.objects.get(name='pod_router')
+        for i in range(1, data['router_count'] + 1):
+            switch = Device(
+                device_type=data['router_model'],
+                name=f'{site.slug}r{i}',
                 site=site,
                 status=STATUS_PLANNED,
-                device_role=spine_role
+                device_role=router_role
             )
-            device.validated_save()
-            self.log_success(obj=device, message="Created Spine Switches")
+            switch.validated_save()
+            self.log_success(obj=switch, message="Created new Router")
 
-        # Create Leaf
-        leaf_role = DeviceRole.objects.get(name='fabric_l3_leaf')
-        for i in range(1, data['leaf_switch_count'] + 1):
-            device = Device(
-                device_type=data['leaf_model'],
-                name=f'{site.slug}leaf{i}',
+        # Create core switches
+        core_switch_role = DeviceRole.objects.get(name='pod_core_switch')
+        for i in range(1, data['core_switch_count'] + 1):
+            switch = Device(
+                device_type=data['switch_model'],
+                name=f'{site.slug}csw{i}',
                 site=site,
                 status=STATUS_PLANNED,
-                device_role=leaf_role
+                device_role=core_switch_role
             )
-            device.validated_save()
-            self.log_success(obj=device, message="Created Leaf Switches")
+            switch.validated_save()
+            self.log_success(obj=switch, message="Created new core switch")
 
-        # Create ToR
-        tor_role = DeviceRole.objects.get(name='fabric_l2_leaf')
-        for i in range(1, data['tor_switch_count'] + 1):
-            device = Device(
-                device_type=data['tor_model'],
-                name=f'{site.slug}tor{i}',
+        # Create access switches
+        access_switch_role = DeviceRole.objects.get(name='pod_access_switch')
+        for i in range(1, data['access_switch_count'] + 1):
+            switch = Device(
+                device_type=data['switch_model'],
+                name=f'{site.slug}asw{i}',
                 site=site,
                 status=STATUS_PLANNED,
-                device_role=tor_role
+                device_role=access_switch_role
             )
-            device.validated_save()
-            self.log_success(obj=device, message="Created ToR Switches")
+            switch.validated_save()
+            self.log_success(obj=switch, message="Created new access switch")
 
         # Generate a CSV table of new devices
         output = [
             'name,make,model'
         ]
-        for device in Device.objects.filter(site=site):
+        for switch in Device.objects.filter(site=site):
             attrs = [
-                device.name,
-                device.device_type.manufacturer.name,
-                device.device_type.model
+                switch.name,
+                switch.device_type.manufacturer.name,
+                switch.device_type.model
             ]
             output.append(','.join(attrs))
 
