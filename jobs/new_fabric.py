@@ -98,18 +98,18 @@ class NewDC(Job):
         }
     )
 
-    def run(self, data, commit):
-        STATUS_PLANNED = Status.objects.get(slug='planned')
+    # def run(self, data, commit):
+    #     STATUS_PLANNED = Status.objects.get(slug='planned')
 
-        #  Create the New site
-        site = Site(
-            name=data['site_name'],
-            slug=slugify(data['site_name']),
-            asn=data['spine_bgp_as'],
-            status=STATUS_PLANNED,
-        )
-        site.validated_save()
-        self.log_success(obj=site, message="Created new site")
+    #     #  Create the New site
+    #     site = Site(
+    #         name=data['site_name'],
+    #         slug=slugify(data['site_name']),
+    #         asn=data['spine_bgp_as'],
+    #         status=STATUS_PLANNED,
+    #     )
+    #     site.validated_save()
+    #     self.log_success(obj=site, message="Created new site")
 
         # Create Site Relay Racks
         # for i in range(1, data['relay_rack'] + 1):
