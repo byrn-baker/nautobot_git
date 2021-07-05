@@ -46,9 +46,9 @@ class NewDC(Job):
         description = "MLAG Peer network - Assign range larger then total spines + total leafs switches"
     )
 
-    # vxlan_vlan_aware_bundles = Bool(
-    #     description = "Should bundles be vxlan vlan aware?"
-    # )
+    vxlan_vlan_aware_bundles = Bool(
+        description = "Should bundles be vxlan vlan aware?"
+    )
 
     # bgp_peer_groups = Stringvar(
     #     description = "List the names of th BGP Peer Groups - Comma seperated 'IPv4_UNDERLAY_PEERS', 'EVPN_OVERLAY_PEERS', 'MLAG_IPv4_UNDERLAY_PEER' "
