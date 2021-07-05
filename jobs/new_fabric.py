@@ -112,7 +112,7 @@ class NewDC(Job):
         self.log_success(obj=site, message="Created new site")
 
         # Create Spine
-        spine_role = DeviceRole.objects.get(name='fabric_spine')
+        spine_role = DeviceRole.objects.get(name='Fabric_Spine')
         for i in range(1, data['spine_switch_count'] + 1):
             device = Device(
                 device_type=data['spine_model'],
@@ -125,7 +125,7 @@ class NewDC(Job):
             self.log_success(obj=device, message="Created Spine Switches")
 
         # Create Leaf
-        leaf_role = DeviceRole.objects.get(name='fabric_l3_leaf')
+        leaf_role = DeviceRole.objects.get(name='Fabric_l3_leaf')
         for i in range(1, data['leaf_switch_count'] + 1):
             device = Device(
                 device_type=data['leaf_model'],
@@ -138,7 +138,7 @@ class NewDC(Job):
             self.log_success(obj=device, message="Created Leaf Switches")
 
         # Create ToR
-        tor_role = DeviceRole.objects.get(name='fabric_l2_leaf')
+        tor_role = DeviceRole.objects.get(name='Fabric_l2_leaf')
         for i in range(1, data['tor_switch_count'] + 1):
             device = Device(
                 device_type=data['tor_model'],
