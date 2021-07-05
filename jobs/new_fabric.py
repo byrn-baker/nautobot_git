@@ -22,23 +22,23 @@ class NewDataCenter(job):
         description = "Choice how many Relay Racks"
     )
 
-    underlay_p2p_network_summary = ipaddress.ip_network(
+    underlay_p2p_network_summary = StringVar(
         description = "Underlay P2P network - Assign range larger then total [spines * total potential leafs * 2"
     )
 
-    overlay_loopback_network_summary = ipaddress.ip_network(
+    overlay_loopback_network_summary = StringVar(
         description = "Overlay Loopback network - Assign range larger then total spines + total leafs switches"
     )
 
-    vtep_loopback_network_summary = ipaddress.ip_network(
+    vtep_loopback_network_summary = StringVar(
         description = "Vtep Loopback network - Assign range larger then total leaf switches"
     )
 
-    mlag_leaf_peer_l3 = ipaddress.ip_network(
+    mlag_leaf_peer_l3 = StringVar(
         description = "Leaf L3 MLAG network - Assign range larger then total spines + total leafs switches"
     )
 
-    mlag_peer = ipaddress.ip_network(
+    mlag_peer = StringVar(
         description = "MLAG Peer network - Assign range larger then total spines + total leafs switches"
     )
 
