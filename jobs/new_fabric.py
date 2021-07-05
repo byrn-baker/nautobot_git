@@ -7,13 +7,13 @@ import ipaddress
 
 class NewFabric(job):
     class Meta:
-        name = "New Fabric"
+        name = "New Site"
         description = "Build new vxlan deployment"
         field_order = ['region', 'fabric_name', 'relay_rack', 'underlay_p2p_network_summary', 'overlay_loopback_network_summary', 'vtep_loopback_network_summary', 'mlag_leaf_peer_l3', 'mlag_peer', 'vxlan_vlan_aware_bundles', 'bgp_peer_groups', 'spine_switch_count', 'spine_bgp_as', 'leaf_bgp_as_range', 'leaf_switch_count', 'tor_switch_count']
 
     region = ObjectVar(model=Region)
 
-    fabric_name = StringVar(
+    site_name = StringVar(
         description = "Name for the new fabric"
     )
 
@@ -72,8 +72,8 @@ class NewFabric(job):
         model=Manufacturer,
         required=False
     )
-    
-    spine = ObjectVar(
+
+    spine_model = ObjectVar(
         description="Spine model",
         model=DeviceType,
         query_params={
@@ -81,7 +81,7 @@ class NewFabric(job):
         }
     )
 
-    leaf = ObjectVar(
+    leaf_model = ObjectVar(
         description="Leaf model",
         model=DeviceType,
         query_params={
@@ -89,10 +89,76 @@ class NewFabric(job):
         }
     )
 
-    tor = ObjectVar(
+    tor_model = ObjectVar(
         description="ToR model",
         model=DeviceType,
         query_params={
             'manufacturer_id': '$manufacturer'
         }
     )
+
+    def run(self, data, commit):
+        STATUS_PLANNED = Status.objects.get(slug='planned')
+
+        #  Create the New site
+        site = Site(
+            name=data['site_name'],
+            slug=slugify(data['site_name']),
+            asn=data['spine_bgp_as'],
+            status=STATUS_PLANNED,
+        )
+        site.validated_save()
+        self.log_success(obj=site, message="Created new site")
+
+        # Create Spine
+        spine_role = DeviceRole.objects.get(name='fabric_spine')
+        for i in range(1, data['spine_switch_count'] + 1):
+            device = Device(
+                device_type=data['spine_model'],
+                name=f'{site.slug}spine{i}',
+                site=site,
+                status=STATUS_PLANNED,
+                device_role=spine_role
+            )
+            device.validated_save()
+            self.log_success(obj=device, message="Created Spine Switches")
+
+        # Create Leaf
+        leaf_role = DeviceRole.objects.get(name='fabric_l3_leaf')
+        for i in range(1, data['leaf_switch_count'] + 1):
+            device = Device(
+                device_type=data['leaf_model'],
+                name=f'{site.slug}leaf{i}',
+                site=site,
+                status=STATUS_PLANNED,
+                device_role=leaf_role
+            )
+            device.validated_save()
+            self.log_success(obj=device, message="Created Leaf Switches")
+
+        # Create ToR
+        tor_role = DeviceRole.objects.get(name='fabric_l2_leaf')
+        for i in range(1, data['tor_switch_count'] + 1):
+            device = Device(
+                device_type=data['tor_model'],
+                name=f'{site.slug}tor{i}',
+                site=site,
+                status=STATUS_PLANNED,
+                device_role=tor_role
+            )
+            device.validated_save()
+            self.log_success(obj=device, message="Created ToR Switches")
+
+        # Generate a CSV table of new devices
+        output = [
+            'name,make,model'
+        ]
+        for device in Device.objects.filter(site=site):
+            attrs = [
+                device.name,
+                device.device_type.manufacturer.name,
+                device.device_type.model
+            ]
+            output.append(','.join(attrs))
+
+        return '\n'.join(output)
