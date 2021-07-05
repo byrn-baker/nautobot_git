@@ -47,7 +47,7 @@ class NewDC(Job):
     )
 
     _peer_groups = Stringvar(
-        description = "List the names of th BGP Peer Groups - Comma seperated 'IPv4_UNDERLAY_PEERS', 'EVPN_OVERLAY_PEERS', 'MLAG_IPv4_UNDERLAY_PEER' "
+        description = "List the names of th BGP Peer Groups - Comma seperated"
     )
 
     spine_switch_count = IntegerVar(
