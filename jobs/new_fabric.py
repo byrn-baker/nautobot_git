@@ -110,18 +110,7 @@ class NewDC(Job):
         )
         site.validated_save()
         self.log_success(obj=site, message="Created new site")
-
-        # Create Site Relay Racks
-        # for i in range(1, data['relay_rack'] + 1):
-        #     rr = Racks(
-        #         name=f'{site.slug}RR{i}',
-        #         status=STATUS_PLANNED,
-        #         site=self.site,
-        #         u_height="42"
-        #     )
-        #     rr.validate_save()
-        #     self.log_success(obj=rr, message="Created new Racks")
-
+        
         # Create Spine
         spine_role = DeviceRole.objects.get(name='Fabric_Spine')
         for i in range(1, data['spine_switch_count'] + 1):
