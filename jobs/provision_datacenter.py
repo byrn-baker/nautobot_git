@@ -173,7 +173,10 @@ class DataCenter(Job):
                 name=f'{site.slug}_spine_{i}',
                 site=site,
                 status=STATUS_PLANNED,
-                device_role=spine_role
+                device_role=spine_role,
+                rack=rack,
+                position=data.get("rack_elevation"),
+                face="front"
             )
             device.validated_save()
             self.log_success(obj=device, message="Created Spine Switches")
@@ -181,7 +184,7 @@ class DataCenter(Job):
         # Generate Loopback interface and Assign address
         loopback_intf = Interface.objects.create(
             name="Loopback0", 
-            type='virtual',
+            type="virtual",
             device=device
         )
 
