@@ -13,6 +13,8 @@ class DataCenter(Job):
     region = ObjectVar(
         description="Choose Region",
         model=Region,
-        required=False
+        query_params={
+            'region_id': '$region'
+        }
     )
 
