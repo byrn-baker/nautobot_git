@@ -131,6 +131,38 @@ class DataCenter(Job):
         underlay_pfx.validated_save()
         self.log_success(obj=underlay_pfx, message="Created new underlay prefix")
 
+        overlay_pfx = Prefix(
+            prefix=data['overlay_loopback_network_summary'],
+            site=site,
+            status=RESERVED
+        )
+        overlay_pfx.validated_save()
+        self.log_success(obj=overlay_pfx, message="Created new overlay prefix")
+
+        vtep_pfx = Prefix(
+            prefix=data['vtep_loopback_network_summary'],
+            site=site,
+            status=RESERVED
+        )
+        vtep_pfx.validated_save()
+        self.log_success(obj=vtep_pfx, message="Created new VTEP prefix")
+
+        mlag_leaf_peer_pfx = Prefix(
+            prefix=data['mlag_leaf_peer_l3'],
+            site=site,
+            status=RESERVED
+        )
+        mlag_leaf_peer_pfx.validated_save()
+        self.log_success(obj=mlag_leaf_peer_pfx, message="Created new Leaf mlag peer prefix")
+
+        mlag_peer_pfx = Prefix(
+            prefix=data['mlag_peer'],
+            site=site,
+            status=RESERVED
+        )
+        mlag_peer_pfx.validated_save()
+        self.log_success(obj=mlag_peer_pfx, message="Created new Leaf mlag peer prefix")
+
         # Create Spine
         spine_role = DeviceRole.objects.get(name='Fabric_Spine')
         for i in range(1, data['spine_switch_count'] + 1):
