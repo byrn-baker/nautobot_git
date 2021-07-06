@@ -115,7 +115,7 @@ class DataCenter(Job):
         # Create the Relay Racks
         for i in range(1, data['rr_count'] + 1):
             rack = Rack(
-                name=f'{site.slug}_RR_{i}',
+                name=f'{site.slug}_rr_{i}',
                 site=site,
                 u_height="42",
                 width="19",
@@ -178,6 +178,20 @@ class DataCenter(Job):
             device.validated_save()
             self.log_success(obj=device, message="Created Spine Switches")
 
+        # Generate Loopback interface and Assign address
+        loopback_intf = Interface.objects.create(
+            name="Loopback0", type=InterfaceTypeChoices.TYPE_VIRTUAL, device=device
+        )
+
+        loopback_pfx = Prefix.objects.get(
+            site=site,
+            prefix=overlay_pfx
+        )
+
+        available_ips = loopback_pfx.get_available_ips()
+        address = list(available_ips)[0]
+        loopback_ip = IPAddress.objects.create(address=str(address), assigned_object=loopback_intf)
+
         # Create Leaf
         leaf_role = DeviceRole.objects.get(name='Fabric_l3_leaf')
         for i in range(1, data['leaf_switch_count'] + 1):
@@ -203,3 +217,4 @@ class DataCenter(Job):
             )
             device.validated_save()
             self.log_success(obj=device, message="Created ToR Switches")
+
