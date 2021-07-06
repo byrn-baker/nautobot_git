@@ -121,6 +121,8 @@ class DataCenter(Job):
                 width="19",
                 status=STATUS_PLANNED
             )
+            rack.validated_save()
+            self.log_success(obj=rack, message="Created Relay Racks")
 
         # Create IP Networks
         underlay_pfx = Prefix(
