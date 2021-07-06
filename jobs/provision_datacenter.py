@@ -43,54 +43,54 @@ class DataCenter(Job):
         description = "Should bundles be vxlan vlan aware?"
     )
 
-    _peer_groups = Stringvar(
-        description = "List the names of th BGP Peer Groups - Comma seperated"
-    )
+    # _peer_groups = Stringvar(
+    #     description = "List the names of th BGP Peer Groups - Comma seperated"
+    # )
 
-    spine_switch_count = IntegerVar(
-        description = "Number of Spines to be deployed"
-    )
+    # spine_switch_count = IntegerVar(
+    #     description = "Number of Spines to be deployed"
+    # )
 
-    spine_bgp_as = IntegerVar(
-        description = "Spine BGP ASN"
-    )
+    # spine_bgp_as = IntegerVar(
+    #     description = "Spine BGP ASN"
+    # )
     
-    leaf_bgp_as_range = IntegerVar(
-        description = "Define the range of acceptable remote ASNs from leaf switches"
-    )
+    # leaf_bgp_as_range = IntegerVar(
+    #     description = "Define the range of acceptable remote ASNs from leaf switches"
+    # )
 
-    leaf_switch_count = IntegerVar(
-        description = "Number of Leafs to be deployed"
-    )
+    # leaf_switch_count = IntegerVar(
+    #     description = "Number of Leafs to be deployed"
+    # )
 
-    tor_switch_count = IntegerVar(
-        description = "Number of ToR switches to be deployed"
-    )
-    manufacturer = ObjectVar(
-        model=Manufacturer,
-        required=False
-    )
+    # tor_switch_count = IntegerVar(
+    #     description = "Number of ToR switches to be deployed"
+    # )
+    # manufacturer = ObjectVar(
+    #     model=Manufacturer,
+    #     required=False
+    # )
 
-    spine_model = ObjectVar(
-        description="Spine model",
-        model=DeviceType,
-        query_params={
-            'manufacturer_id': '$manufacturer'
-        }
-    )
+    # spine_model = ObjectVar(
+    #     description="Spine model",
+    #     model=DeviceType,
+    #     query_params={
+    #         'manufacturer_id': '$manufacturer'
+    #     }
+    # )
 
-    leaf_model = ObjectVar(
-        description="Leaf model",
-        model=DeviceType,
-        query_params={
-            'manufacturer_id': '$manufacturer'
-        }
-    )
+    # leaf_model = ObjectVar(
+    #     description="Leaf model",
+    #     model=DeviceType,
+    #     query_params={
+    #         'manufacturer_id': '$manufacturer'
+    #     }
+    # )
 
-    tor_model = ObjectVar(
-        description="ToR model",
-        model=DeviceType,
-        query_params={
-            'manufacturer_id': '$manufacturer'
-        }
-    )
+    # tor_model = ObjectVar(
+    #     description="ToR model",
+    #     model=DeviceType,
+    #     query_params={
+    #         'manufacturer_id': '$manufacturer'
+    #     }
+    # )
