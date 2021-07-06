@@ -100,6 +100,7 @@ class DataCenter(Job):
         self.data = data
         self.commit = commit
         STATUS_PLANNED = Status.objects.get(slug='planned')
+        RESERVED = Status.objects.get(slug='reserved')
 
         #  Create the New site
         site = Site(
@@ -125,7 +126,7 @@ class DataCenter(Job):
         underlay_pfx = Prefix(
             prefix=data['underlay_p2p_network_summary'],
             site=site,
-            status='Active'
+            status=RESERVED
         )
         underlay_pfx.validated_save()
         self.log_success(obj=underlay_pfx, message="Created new underlay prefix")
