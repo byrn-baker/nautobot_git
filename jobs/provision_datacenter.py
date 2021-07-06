@@ -101,6 +101,7 @@ class DataCenter(Job):
         self.commit = commit
         STATUS_PLANNED = Status.objects.get(slug='planned')
         RESERVED = Status.objects.get(slug='reserved')
+        ACTIVE = Status.objects.get(slug='active')
 
         #  Create the New site
         site = Site(
@@ -193,7 +194,7 @@ class DataCenter(Job):
 
         available_ips = loopback_pfx.get_available_ips()
         address = list(available_ips)[0]
-        loopback_ip = IPAddress.objects.create(address=str(address), status='active', assigned_object=loopback_intf)
+        loopback_ip = IPAddress.objects.create(address=str(address), status=RESERVED, assigned_object=loopback_intf)
         loopback_ip.validated_save()
         self.log_success(obj=loopback_ip, message="Assigned Available IP to Loopback")
 
