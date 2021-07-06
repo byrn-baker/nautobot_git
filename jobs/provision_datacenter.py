@@ -111,6 +111,16 @@ class DataCenter(Job):
         site.validated_save()
         self.log_success(obj=site, message="Created new site")
 
+        # Create the Relay Racks
+        for i in range(1, data['rr_count'] + 1):
+            rack = Rack(
+                name=f'{site.slug}_RR_{i}',
+                site=site,
+                u_height="42",
+                width="19",
+                status=STATUS_PLANNED
+            )
+
         # Create IP Networks
         underlay_pfx = Prefix(
             prefix=data['underlay_p2p_network_summary'],
