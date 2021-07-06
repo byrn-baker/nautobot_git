@@ -190,8 +190,6 @@ class DataCenter(Job):
         self.log_success(obj=loopback_intf, message="Created Loopback Interfaces")
 
         loopback_pfx = Prefix.objects.get(site=site, role__name="overlay")
-        loopback_pfx.validated_save()
-        self.log_success(obj=loopback_pfx, message="Created Loopback Prefix and Overlay Role")
 
         available_ips = loopback_pfx.get_available_ips()
         address = list(available_ips)[0]
