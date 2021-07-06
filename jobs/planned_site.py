@@ -15,6 +15,9 @@ class NewBranch(Job):
     region = ObjectVar(
         description="Choose Region",
         model=Region,
+        query_params={
+            'region_id': '$region'
+        }
         required=False
     )
 
