@@ -3,7 +3,7 @@ from pynautobot import api
 nb = api(url="https://192.168.130.204", token="c7fdc6be609a244bb1e851c5e47b3ccd9d990b58")
 nb.http_session.verify = False
 
-class NewDC(Job):
+class DataCenter(Job):
     class Meta:
         name = "Build New DataCenter"
         description = "Build a new DataCenter with VXLAN"
