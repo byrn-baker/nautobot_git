@@ -8,7 +8,7 @@ class DataCenter(Job):
     class Meta:
         name = "Build New DataCenter"
         description = "Build a new DataCenter with VXLAN"
-        field_order = ['region', 'site_name', 'underlay_p2p_network_summary', 'overlay_loopback_network_summary', 'vtep_loopback_network_summary', 'mlag_leaf_peer_l3', 'mlag_peer', 'spine_switch_count', 'spine_bgp_as', 'leaf_bgp_as_range', 'leaf_switch_count', 'tor_switch_count']
+        field_order = ['region', 'site_name', 'underlay_p2p_network_summary', 'overlay_loopback_network_summary', 'vtep_loopback_network_summary', 'mlag_leaf_peer_l3', 'mlag_peer', 'vxlan_vlan_aware_bundles', 'spine_switch_count', 'spine_bgp_as', 'leaf_bgp_as_range', 'leaf_switch_count', 'tor_switch_count']
 
     region = ObjectVar(
         description="Choose Region",
@@ -51,21 +51,21 @@ class DataCenter(Job):
         description = "Spine BGP ASN"
     )
     
-    # leaf_bgp_as_range = IntegerVar(
-    #     description = "Define the range of acceptable remote ASNs from leaf switches"
-    # )
+    leaf_bgp_as_range = IntegerVar(
+        description = "Define the range of acceptable remote ASNs from leaf switches"
+    )
 
-    # leaf_switch_count = IntegerVar(
-    #     description = "Number of Leafs to be deployed"
-    # )
+    leaf_switch_count = IntegerVar(
+        description = "Number of Leafs to be deployed"
+    )
 
-    # tor_switch_count = IntegerVar(
-    #     description = "Number of ToR switches to be deployed"
-    # )
-    # manufacturer = ObjectVar(
-    #     model=Manufacturer,
-    #     required=False
-    # )
+    tor_switch_count = IntegerVar(
+        description = "Number of ToR switches to be deployed"
+    )
+    manufacturer = ObjectVar(
+        model=Manufacturer,
+        required=False
+    )
 
     # spine_model = ObjectVar(
     #     description="Spine model",
