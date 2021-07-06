@@ -43,13 +43,13 @@ class DataCenter(Job):
         description = "Should bundles be vxlan vlan aware?"
     )
 
-    bgp_peer_groups = Stringvar(
-        description = "List the names of th BGP Peer Groups - Comma seperated"
-    )
-
-    # spine_switch_count = IntegerVar(
-    #     description = "Number of Spines to be deployed"
+    # bgp_peer_groups = Stringvar(
+    #     description = "List the names of th BGP Peer Groups - Comma seperated"
     # )
+
+    spine_switch_count = IntegerVar(
+        description = "Number of Spines to be deployed"
+    )
 
     # spine_bgp_as = IntegerVar(
     #     description = "Spine BGP ASN"
