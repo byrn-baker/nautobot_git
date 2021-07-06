@@ -1,6 +1,7 @@
 from django.utils.text import slugify
 
 from nautobot.dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site, Region, Rack
+from nautobot.ipam.models import VRF, RouteTarget, Prefix, IPAddress
 from nautobot.extras.models import Status
 from nautobot.extras.jobs import *
 
@@ -111,7 +112,13 @@ class DataCenter(Job):
         self.log_success(obj=site, message="Created new site")
 
         # Create IP Networks
-
+        underlay_pfx = Prefix(
+            prefix=data['underlay_p2p_network_summary'],
+            site=site.slug,
+            status=STATUS_PLANNED
+        )
+        underlay_pfx.validated_save()
+        self.log_success(obj=underlay_pfx, message="Created new underlay prefix")
 
         # Create Spine
         spine_role = DeviceRole.objects.get(name='Fabric_Spine')
