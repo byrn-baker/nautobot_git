@@ -114,7 +114,7 @@ class DataCenter(Job):
         # Create IP Networks
         underlay_pfx = Prefix(
             prefix=data['underlay_p2p_network_summary'],
-            site=site.slug,
+            site=site,
             status=STATUS_PLANNED
         )
         underlay_pfx.validated_save()
