@@ -1,6 +1,6 @@
 from django.utils.text import slugify
 
-from nautobot.dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site, Region
+from nautobot.dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site, Region, Racks
 from nautobot.extras.models import Status
 from nautobot.extras.jobs import *
 
@@ -13,5 +13,13 @@ class DataCenter(Job):
     region = ObjectVar(
         description="Choose Region",
         model=Region
+    )
+
+    site_name = StringVar(
+        description = "Name for the new fabric"
+    )
+
+    relay_rack = IntegerVar(
+        description = "Choice how many Relay Racks"
     )
 
