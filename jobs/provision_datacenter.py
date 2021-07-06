@@ -125,7 +125,7 @@ class DataCenter(Job):
         underlay_pfx = Prefix(
             prefix=data['underlay_p2p_network_summary'],
             site=site,
-            status=STATUS_PLANNED
+            status='reserved'
         )
         underlay_pfx.validated_save()
         self.log_success(obj=underlay_pfx, message="Created new underlay prefix")
