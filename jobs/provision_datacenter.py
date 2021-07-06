@@ -90,3 +90,55 @@ class DataCenter(Job):
             'manufacturer_id': '$manufacturer'
         }
     )
+
+    def run(self, data, commit):
+        STATUS_PLANNED = Status.objects.get(slug='planned')
+
+        #  Create the New site
+        site = Site(
+            name=data['site_name'],
+            slug=slugify(data['site_name']),
+            asn=data['spine_bgp_as'],
+            status=STATUS_PLANNED,
+        )
+        site.validated_save()
+        self.log_success(obj=site, message="Created new site")
+
+        # Create Spine
+        spine_role = DeviceRole.objects.get(name='Fabric_Spine')
+        for i in range(1, data['spine_switch_count'] + 1):
+            device = Device(
+                device_type=data['spine_model'],
+                name=f'{site.slug}spine{i}',
+                site=site,
+                status=STATUS_PLANNED,
+                device_role=spine_role
+            )
+            device.validated_save()
+            self.log_success(obj=device, message="Created Spine Switches")
+
+        # Create Leaf
+        leaf_role = DeviceRole.objects.get(name='Fabric_l3_leaf')
+        for i in range(1, data['leaf_switch_count'] + 1):
+            device = Device(
+                device_type=data['leaf_model'],
+                name=f'{site.slug}leaf{i}',
+                site=site,
+                status=STATUS_PLANNED,
+                device_role=leaf_role
+            )
+            device.validated_save()
+            self.log_success(obj=device, message="Created Leaf Switches")
+
+        # Create ToR
+        tor_role = DeviceRole.objects.get(name='Fabric_l2_leaf')
+        for i in range(1, data['tor_switch_count'] + 1):
+            device = Device(
+                device_type=data['tor_model'],
+                name=f'{site.slug}tor{i}',
+                site=site,
+                status=STATUS_PLANNED,
+                device_role=tor_role
+            )
+            device.validated_save()
+            self.log_success(obj=device, message="Created ToR Switches")
