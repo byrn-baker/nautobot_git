@@ -132,14 +132,17 @@ class DataCenter(Job):
         )
         underlay_pfx.validated_save()
         self.log_success(obj=underlay_pfx, message="Created new underlay prefix")
+        
+        overlay_role, _ = Role.objects.get_or_create(name="overlay")
+        Prefix.objects.get_or_create(prefix=data['overlay_loopback_network_summary'], site=site, role=overlay_role)
 
-        overlay_pfx = Prefix(
-            prefix=data['overlay_loopback_network_summary'],
-            site=site,
-            status=RESERVED
-        )
-        overlay_pfx.validated_save()
-        self.log_success(obj=overlay_pfx, message="Created new overlay prefix")
+        # overlay_pfx = Prefix(
+        #     prefix=data['overlay_loopback_network_summary'],
+        #     site=site,
+        #     status=RESERVED
+        # )
+        # overlay_pfx.validated_save()
+        # self.log_success(obj=overlay_pfx, message="Created new overlay prefix")
 
         vtep_pfx = Prefix(
             prefix=data['vtep_loopback_network_summary'],
@@ -181,18 +184,14 @@ class DataCenter(Job):
             device.validated_save()
             self.log_success(obj=device, message="Created Spine Switches")
 
-            # Generate Loopback interface and Assign address
-            loopback_intf = Interface.objects.create(
-                name="Loopback0", type="virtual", device=device
-            )
+        # Generate Loopback interface and Assign address
+        loopback_intf = Interface.objects.create(name="Loopback0", type="virtual", device=device)
 
-            loopback_pfx = Prefix.objects.get(
-                site=site, prefix=overlay_pfx
-            )
+        loopback_pfx = Prefix.objects.get(site=site, role__name="overlay")
 
-            available_ips = loopback_pfx.get_available_ips()
-            address = list(available_ips)[0]
-            loopback_ip = IPAddress.objects.create(address=str(address), assigned_object=loopback_intf)
+        available_ips = loopback_pfx.get_available_ips()
+        address = list(available_ips)[0]
+        loopback_ip = IPAddress.objects.create(address=str(address), assigned_object=loopback_intf)
 
         # Create Leaf
         leaf_role = DeviceRole.objects.get(name='Fabric_l3_leaf')
