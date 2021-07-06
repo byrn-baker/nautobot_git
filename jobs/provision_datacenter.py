@@ -51,7 +51,7 @@ class DataCenter(Job):
         description = "Spine BGP ASN"
     )
     
-    leaf_bgp_as_range = IntegerVar(
+    leaf_bgp_as_range = StringVar(
         description = "Define the range of acceptable remote ASNs from leaf switches"
     )
 
