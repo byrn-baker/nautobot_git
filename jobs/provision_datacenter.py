@@ -1,7 +1,8 @@
-from pynautobot import api
+from django.utils.text import slugify
 
-nb = api(url="https://192.168.130.204", token="c7fdc6be609a244bb1e851c5e47b3ccd9d990b58")
-nb.http_session.verify = False
+from nautobot.dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site
+from nautobot.extras.models import Status
+from nautobot.extras.jobs import *
 
 class DataCenter(Job):
     class Meta:
