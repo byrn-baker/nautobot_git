@@ -1,6 +1,6 @@
 from django.utils.text import slugify
 
-from nautobot.dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site, Region, Rack, Interface, InterfaceTypeChoices
+from nautobot.dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site, Region, Rack, Interface
 from nautobot.ipam.models import VRF, RouteTarget, Prefix, IPAddress
 from nautobot.extras.models import Status
 from nautobot.extras.jobs import *
@@ -180,7 +180,9 @@ class DataCenter(Job):
 
         # Generate Loopback interface and Assign address
         loopback_intf = Interface.objects.create(
-            name="Loopback0", type=InterfaceTypeChoices.TYPE_VIRTUAL, device=device
+            name="Loopback0", 
+            type='virtual',
+            device=device
         )
 
         loopback_pfx = Prefix.objects.get(
