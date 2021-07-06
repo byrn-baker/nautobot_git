@@ -8,7 +8,7 @@ class DataCenter(Job):
     class Meta:
         name = "Build New DataCenter"
         description = "Build a new DataCenter with VXLAN"
-        field_order = ['region', 'site_name', 'underlay_p2p_network_summary', 'overlay_loopback_network_summary', 'vtep_loopback_network_summary', 'mlag_leaf_peer_l3', 'mlag_peer', '_peer_groups', 'spine_switch_count', 'spine_bgp_as', 'leaf_bgp_as_range', 'leaf_switch_count', 'tor_switch_count']
+        field_order = ['region', 'site_name', 'underlay_p2p_network_summary', 'overlay_loopback_network_summary', 'vtep_loopback_network_summary', 'mlag_leaf_peer_l3', 'mlag_peer', 'bgp_peer_groups', 'spine_switch_count', 'spine_bgp_as', 'leaf_bgp_as_range', 'leaf_switch_count', 'tor_switch_count']
 
     region = ObjectVar(
         description="Choose Region",
@@ -43,9 +43,9 @@ class DataCenter(Job):
         description = "Should bundles be vxlan vlan aware?"
     )
 
-    # _peer_groups = Stringvar(
-    #     description = "List the names of th BGP Peer Groups - Comma seperated"
-    # )
+    bgp_peer_groups = Stringvar(
+        description = "List the names of th BGP Peer Groups - Comma seperated"
+    )
 
     # spine_switch_count = IntegerVar(
     #     description = "Number of Spines to be deployed"
