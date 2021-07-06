@@ -193,7 +193,7 @@ class DataCenter(Job):
 
         available_ips = loopback_pfx.get_available_ips()
         address = list(available_ips)[0]
-        loopback_ip = IPAddress.objects.create(address=str(address), assigned_object=loopback_intf)
+        loopback_ip = IPAddress.objects.create(address=str(address), status='active', assigned_object=loopback_intf)
         loopback_ip.validated_save()
         self.log_success(obj=loopback_ip, message="Assigned Available IP to Loopback")
 
