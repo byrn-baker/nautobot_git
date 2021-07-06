@@ -18,7 +18,7 @@ class DataCenter(Job):
         description = "Choice how many Relay Racks"
     )
 
-      region = ObjectVar(
-        description="Choose Region",
-        model=Region
+    region = ObjectVar(
+    description="Choose Region",
+    model=Region
     )
