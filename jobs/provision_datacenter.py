@@ -1,6 +1,6 @@
 from django.utils.text import slugify
 
-from nautobot.dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site, Region
+from nautobot.dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site, Region, Rack
 from nautobot.extras.models import Status
 from nautobot.extras.jobs import *
 
@@ -8,7 +8,7 @@ class DataCenter(Job):
     class Meta:
         name = "Build New DataCenter"
         description = "Build a new DataCenter with VXLAN"
-        field_order = ['region', 'site_name', 'underlay_p2p_network_summary', 'overlay_loopback_network_summary', 'vtep_loopback_network_summary', 'mlag_leaf_peer_l3', 'mlag_peer', 'vxlan_vlan_aware_bundles', 'spine_switch_count', 'spine_bgp_as', 'leaf_bgp_as_range', 'leaf_switch_count', 'tor_switch_count']
+        field_order = ['region', 'site_name', 'rr_count', 'underlay_p2p_network_summary', 'overlay_loopback_network_summary', 'vtep_loopback_network_summary', 'mlag_leaf_peer_l3', 'mlag_peer', 'vxlan_vlan_aware_bundles', 'spine_switch_count', 'spine_bgp_as', 'leaf_bgp_as_range', 'leaf_switch_count', 'tor_switch_count']
 
     region = ObjectVar(
         description="Choose Region",
@@ -17,6 +17,10 @@ class DataCenter(Job):
 
     site_name = StringVar(
         description = "Name for the new fabric"
+    )
+
+    rr_count = IntegerVar(
+        description = "Number or Relay Racks to build"
     )
 
     underlay_p2p_network_summary = IPNetworkVar(
@@ -92,6 +96,8 @@ class DataCenter(Job):
     )
 
     def run(self, data, commit):
+        self.data = data
+        self.commit = commit
         STATUS_PLANNED = Status.objects.get(slug='planned')
 
         #  Create the New site
@@ -104,12 +110,15 @@ class DataCenter(Job):
         site.validated_save()
         self.log_success(obj=site, message="Created new site")
 
+        # Create IP Networks
+
+
         # Create Spine
         spine_role = DeviceRole.objects.get(name='Fabric_Spine')
         for i in range(1, data['spine_switch_count'] + 1):
             device = Device(
                 device_type=data['spine_model'],
-                name=f'{site.slug}spine{i}',
+                name=f'{site.slug}_spine_{i}',
                 site=site,
                 status=STATUS_PLANNED,
                 device_role=spine_role
@@ -122,7 +131,7 @@ class DataCenter(Job):
         for i in range(1, data['leaf_switch_count'] + 1):
             device = Device(
                 device_type=data['leaf_model'],
-                name=f'{site.slug}leaf{i}',
+                name=f'{site.slug}_leaf_{i}',
                 site=site,
                 status=STATUS_PLANNED,
                 device_role=leaf_role
@@ -135,7 +144,7 @@ class DataCenter(Job):
         for i in range(1, data['tor_switch_count'] + 1):
             device = Device(
                 device_type=data['tor_model'],
-                name=f'{site.slug}tor{i}',
+                name=f'{site.slug}_tor_{i}',
                 site=site,
                 status=STATUS_PLANNED,
                 device_role=tor_role
