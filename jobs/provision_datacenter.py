@@ -186,12 +186,18 @@ class DataCenter(Job):
 
         # Generate Loopback interface and Assign address
         loopback_intf = Interface.objects.create(name="Loopback0", type="virtual", device=device)
+        loopback_intf.validated_save()
+        self.log_success(obj=loopback_intf, message="Created Loopback Interfaces")
 
         loopback_pfx = Prefix.objects.get(site=site, role__name="overlay")
+        loopback_pfx.validated_save()
+        self.log_success(obj=loopback_pfx, message="Created Loopback Prefix and Overlay Role")
 
         available_ips = loopback_pfx.get_available_ips()
         address = list(available_ips)[0]
         loopback_ip = IPAddress.objects.create(address=str(address), assigned_object=loopback_intf)
+        loopback_ip.validated_save()
+        self.log_success(obj=loopback_ip, message="Assigned Available IP to Loopback")
 
         # Create Leaf
         leaf_role = DeviceRole.objects.get(name='Fabric_l3_leaf')
