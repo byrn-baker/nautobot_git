@@ -67,26 +67,26 @@ class DataCenter(Job):
         required=False
     )
 
-    # spine_model = ObjectVar(
-    #     description="Spine model",
-    #     model=DeviceType,
-    #     query_params={
-    #         'manufacturer_id': '$manufacturer'
-    #     }
-    # )
+    spine_model = ObjectVar(
+        description="Spine model",
+        model=DeviceType,
+        query_params={
+            'manufacturer_id': '$manufacturer'
+        }
+    )
 
-    # leaf_model = ObjectVar(
-    #     description="Leaf model",
-    #     model=DeviceType,
-    #     query_params={
-    #         'manufacturer_id': '$manufacturer'
-    #     }
-    # )
+    leaf_model = ObjectVar(
+        description="Leaf model",
+        model=DeviceType,
+        query_params={
+            'manufacturer_id': '$manufacturer'
+        }
+    )
 
-    # tor_model = ObjectVar(
-    #     description="ToR model",
-    #     model=DeviceType,
-    #     query_params={
-    #         'manufacturer_id': '$manufacturer'
-    #     }
-    # )
+    tor_model = ObjectVar(
+        description="ToR model",
+        model=DeviceType,
+        query_params={
+            'manufacturer_id': '$manufacturer'
+        }
+    )
