@@ -19,7 +19,7 @@ class DataCenter(Job):
         description = "Name for the new fabric"
     )
 
-    relay_rack = IntegerVar(
-        description = "Choice how many Relay Racks"
-    )
+    # relay_rack = IntegerVar(
+    #     description = "Choice how many Relay Racks"
+    # )
 
