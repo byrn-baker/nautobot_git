@@ -1,7 +1,7 @@
 from django.utils.text import slugify
 
 from nautobot.dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site, Region, Rack, Interface
-from nautobot.ipam.models import VRF, RouteTarget, Prefix, IPAddress
+from nautobot.ipam.models import VRF, RouteTarget, Prefix, IPAddress, Role
 from nautobot.extras.models import Status
 from nautobot.extras.jobs import *
 
