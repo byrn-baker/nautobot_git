@@ -132,7 +132,7 @@ class DataCenter(Job):
         # underlay_pfx.validated_save()
         # self.log_success(obj=underlay_pfx, message="Created new underlay prefix")
         
-        overlay_role, _ = Role.objects.get_or_create(name="over_lay")
+        overlay_role, _ = Role.objects.get_or_create(name="overlay")
         overlay_pfx = Prefix(
             prefix=data['overlay_loopback_network_summary'],
             site=self.site,
