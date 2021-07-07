@@ -122,18 +122,18 @@ class DataCenter(Job):
             role=underlay_role,
             status=RESERVED
         )
-        # underlay_pfx.validated_save()
-        # self.log_success(obj=underlay_pfx, message="Created new underlay prefix")
+        underlay_pfx.validated_save()
+        self.log_success(obj=underlay_pfx, message="Created new underlay prefix")
         
-        # overlay_role, _ = Role.objects.get_or_create(name="overlay")
-        # overlay_pfx = Prefix(
-        #     prefix=data['overlay_loopback_network_summary'],
-        #     site=self.site,
-        #     role=overlay_role,
-        #     status=RESERVED
-        # )
-        # overlay_pfx.validated_save()
-        # self.log_success(obj=overlay_pfx, message="Created new overlay prefix")
+        overlay_role, _ = Role.objects.get_or_create(name="overlay")
+        overlay_pfx = Prefix(
+            prefix=data['overlay_loopback_network_summary'],
+            site=self.site,
+            role=overlay_role,
+            status=RESERVED
+        )
+        overlay_pfx.validated_save()
+        self.log_success(obj=overlay_pfx, message="Created new overlay prefix")
 
         # vtep_role, _ = Role.objects.get_or_create(name="vtep")
         # vtep_pfx = Prefix(
