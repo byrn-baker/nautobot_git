@@ -130,7 +130,7 @@ class DataCenter(Job):
             role=underlay_role,
             status=RESERVED 
         )
-        underlay_pfx.validated_save()
+        # underlay_pfx.validated_save()
         self.log_success(obj=underlay_pfx, message="Created new underlay prefix")
         
         overlay_role, _ = Role.objects.get_or_create(name="overlay")
@@ -140,7 +140,7 @@ class DataCenter(Job):
             role=overlay_role,
             status=RESERVED
         )
-        overlay_pfx.validated_save()
+        # overlay_pfx.validated_save()
         self.log_success(obj=overlay_pfx, message="Created new overlay prefix")
 
         vtep_role, _ = Role.objects.get_or_create(name="vtep")
@@ -150,7 +150,7 @@ class DataCenter(Job):
             role=vtep_role,
             status=RESERVED
         )
-        vtep_pfx.validated_save()
+        # vtep_pfx.validated_save()
         self.log_success(obj=vtep_pfx, message="Created new VTEP prefix")
 
         leaf_peer_role, _ = Role.objects.get_or_create(name="mlag_leaf_peer_l3")
@@ -160,7 +160,7 @@ class DataCenter(Job):
             role=leaf_peer_role,
             status=RESERVED
         )
-        mlag_leaf_peer_pfx.validated_save()
+        # mlag_leaf_peer_pfx.validated_save()
         self.log_success(obj=mlag_leaf_peer_pfx, message="Created new Leaf mlag peer prefix")
 
         mlag_peer_role = Role.objects.get_or_create(name="mlag_peer")
@@ -170,7 +170,7 @@ class DataCenter(Job):
             role=mlag_peer_role,
             status=RESERVED
         )
-        mlag_peer_pfx.validated_save()
+        # mlag_peer_pfx.validated_save()
         self.log_success(obj=mlag_peer_pfx, message="Created new Leaf mlag peer prefix") 
 
         # Create the Relay Racks
