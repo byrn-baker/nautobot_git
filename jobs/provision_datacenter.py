@@ -125,50 +125,6 @@ class DataCenter(Job):
             rack.validated_save()
             self.log_success(obj=rack, message="Created Relay Racks")
 
-        # Create IP Networks
-        underlay_pfx = Prefix(
-            prefix=data['underlay_p2p_network_summary'],
-            site=site,
-            status=RESERVED
-        )
-        underlay_pfx.validated_save()
-        self.log_success(obj=underlay_pfx, message="Created new underlay prefix")
-        
-        overlay_role, _ = Role.objects.get_or_create(name="overlay")
-        Prefix.objects.get_or_create(prefix=data['overlay_loopback_network_summary'], site=site, role=overlay_role)
-
-        # overlay_pfx = Prefix(
-        #     prefix=data['overlay_loopback_network_summary'],
-        #     site=site,
-        #     status=RESERVED
-        # )
-        # overlay_pfx.validated_save()
-        # self.log_success(obj=overlay_pfx, message="Created new overlay prefix")
-
-        vtep_pfx = Prefix(
-            prefix=data['vtep_loopback_network_summary'],
-            site=site,
-            status=RESERVED
-        )
-        vtep_pfx.validated_save()
-        self.log_success(obj=vtep_pfx, message="Created new VTEP prefix")
-
-        mlag_leaf_peer_pfx = Prefix(
-            prefix=data['mlag_leaf_peer_l3'],
-            site=site,
-            status=RESERVED
-        )
-        mlag_leaf_peer_pfx.validated_save()
-        self.log_success(obj=mlag_leaf_peer_pfx, message="Created new Leaf mlag peer prefix")
-
-        mlag_peer_pfx = Prefix(
-            prefix=data['mlag_peer'],
-            site=site,
-            status=RESERVED
-        )
-        mlag_peer_pfx.validated_save()
-        self.log_success(obj=mlag_peer_pfx, message="Created new Leaf mlag peer prefix")
-
         # Create Spine
         spine_role = DeviceRole.objects.get(name='Fabric_Spine')
         for i in range(1, data['spine_switch_count'] + 1):
@@ -184,19 +140,6 @@ class DataCenter(Job):
             )
             device.validated_save()
             self.log_success(obj=device, message="Created Spine Switches")
-
-        # Generate Loopback interface and Assign address
-        loopback_intf = Interface.objects.create(name="Loopback0", type="virtual", device=device)
-        loopback_intf.validated_save()
-        self.log_success(obj=loopback_intf, message="Created Loopback Interfaces")
-
-        loopback_pfx = Prefix.objects.get(site=site, role__name="overlay")
-
-        available_ips = loopback_pfx.get_available_ips()
-        address = list(available_ips)[0]
-        loopback_ip = IPAddress.objects.create(address=str(address), status=RESERVED, assigned_object=loopback_intf)
-        loopback_ip.validated_save()
-        self.log_success(obj=loopback_ip, message="Assigned Available IP to Loopback")
 
         # Create Leaf
         leaf_role = DeviceRole.objects.get(name='Fabric_l3_leaf')
@@ -224,3 +167,59 @@ class DataCenter(Job):
             device.validated_save()
             self.log_success(obj=device, message="Created ToR Switches")
 
+        # Create IP Networks
+        underlay_pfx = Prefix(
+            prefix=data['underlay_p2p_network_summary'],
+            site=site,
+            status=RESERVED
+        )
+        underlay_pfx.validated_save()
+        self.log_success(obj=underlay_pfx, message="Created new underlay prefix")
+        
+        overlay_role, _ = Role.objects.get_or_create(name="overlay")
+        # Prefix.objects.get_or_create(prefix=data['overlay_loopback_network_summary'], site=site, role=overlay_role)
+        overlay_pfx = Prefix(
+            prefix=data['overlay_loopback_network_summary'],
+            site=site,
+            role=overlay_role,
+            status=RESERVED
+        )
+        overlay_pfx.validated_save()
+        self.log_success(obj=overlay_pfx, message="Created new overlay prefix")
+
+        vtep_pfx = Prefix(
+            prefix=data['vtep_loopback_network_summary'],
+            site=site,
+            status=RESERVED
+        )
+        vtep_pfx.validated_save()
+        self.log_success(obj=vtep_pfx, message="Created new VTEP prefix")
+
+        mlag_leaf_peer_pfx = Prefix(
+            prefix=data['mlag_leaf_peer_l3'],
+            site=site,
+            status=RESERVED
+        )
+        mlag_leaf_peer_pfx.validated_save()
+        self.log_success(obj=mlag_leaf_peer_pfx, message="Created new Leaf mlag peer prefix")
+
+        mlag_peer_pfx = Prefix(
+            prefix=data['mlag_peer'],
+            site=site,
+            status=RESERVED
+        )
+        mlag_peer_pfx.validated_save()
+        self.log_success(obj=mlag_peer_pfx, message="Created new Leaf mlag peer prefix")    
+            
+        # Generate Loopback interface and Assign address
+        loopback_intf = Interface.objects.create(name="Loopback0", type="virtual", device=device)
+        loopback_intf.validated_save()
+        self.log_success(obj=loopback_intf, message="Created Loopback Interfaces")
+
+        loopback_pfx = Prefix.objects.get(site=site, role__name="overlay")
+
+        available_ips = loopback_pfx.get_available_ips()
+        address = list(available_ips)[0]
+        loopback_ip = IPAddress.objects.create(address=str(address), status=RESERVED, assigned_object=loopback_intf)
+        loopback_ip.validated_save()
+        self.log_success(obj=loopback_ip, message="Assigned Available IP to Loopback")
