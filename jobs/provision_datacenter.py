@@ -143,7 +143,7 @@ class DataCenter(Job):
         overlay_pfx.validated_save()
         self.log_success(obj=overlay_pfx, message="Created new overlay prefix")
 
-        vtep_role, _ = Role.objects.get_or_create(name="vtep")
+        vtep_role, _ = Role.objects.get_or_create(name="vtep_loopback")
         vtep_pfx = Prefix(
             prefix=str(data['vtep_loopback_network_summary']),
             site=self.site,
@@ -153,21 +153,21 @@ class DataCenter(Job):
         vtep_pfx.validated_save()
         self.log_success(obj=vtep_pfx, message="Created new VTEP prefix")
 
-        leaf_peer_role, _ = Role.objects.get_or_create(name="mlag_leaf_peer_l3")
+        leaf_role, _ = Role.objects.get_or_create(name="mlag_l3")
         mlag_leaf_peer_pfx = Prefix(
             prefix=str(data['mlag_leaf_peer_l3']),
             site=self.site,
-            role=leaf_peer_role,
+            role=leaf_role,
             status=RESERVED
         )
         mlag_leaf_peer_pfx.validated_save()
         self.log_success(obj=mlag_leaf_peer_pfx, message="Created new Leaf mlag peer prefix")
 
-        mlag_peer_role = Role.objects.get_or_create(name="mlag_peer")
+        mlag_role = Role.objects.get_or_create(name="mlag_l2")
         mlag_peer_pfx = Prefix(
             prefix=str(data['mlag_peer']),
             site=self.site,
-            role=mlag_peer_role,
+            role=mlag_role,
             status=RESERVED
         )
         mlag_peer_pfx.validated_save()
