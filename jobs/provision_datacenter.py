@@ -125,7 +125,7 @@ class DataCenter(Job):
         # Create IP Networks
         underlay_role, _ = Role.objects.get_or_create(name="underlay")
         underlay_pfx = Prefix(
-            prefix=data['underlay_p2p_network_summary'],
+            prefix=str(data['underlay_p2p_network_summary']),
             site=self.site,
             role=underlay_role,
             status=RESERVED 
@@ -135,7 +135,7 @@ class DataCenter(Job):
         
         overlay_role, _ = Role.objects.get_or_create(name="overlay")
         overlay_pfx = Prefix(
-            prefix=data['overlay_loopback_network_summary'],
+            prefix=str(data['overlay_loopback_network_summary']),
             site=self.site,
             role=overlay_role,
             status=RESERVED
@@ -145,7 +145,7 @@ class DataCenter(Job):
 
         vtep_role, _ = Role.objects.get_or_create(name="vtep")
         vtep_pfx = Prefix(
-            prefix=data['vtep_loopback_network_summary'],
+            prefix=str(data['vtep_loopback_network_summary']),
             site=self.site,
             role=vtep_role,
             status=RESERVED
@@ -155,7 +155,7 @@ class DataCenter(Job):
 
         leaf_peer_role, _ = Role.objects.get_or_create(name="mlag_leaf_peer_l3")
         mlag_leaf_peer_pfx = Prefix(
-            prefix=data['mlag_leaf_peer_l3'],
+            prefix=str(data['mlag_leaf_peer_l3']),
             site=self.site,
             role=leaf_peer_role,
             status=RESERVED
@@ -165,7 +165,7 @@ class DataCenter(Job):
 
         mlag_peer_role = Role.objects.get_or_create(name="mlag_peer")
         mlag_peer_pfx = Prefix(
-            prefix=data['mlag_peer'],
+            prefix=str(data['mlag_peer']),
             site=self.site,
             role=mlag_peer_role,
             status=RESERVED
