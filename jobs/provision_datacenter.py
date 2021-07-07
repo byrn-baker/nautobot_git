@@ -115,15 +115,14 @@ class DataCenter(Job):
         self.log_success(obj=self.site, message="Created new site")
 
         # Create IP Networks
-        underlay_role = Role.objects.get_or_create(name="underlay")
-        Prefix.objects.get_or_create(
-            prefix=data['underlay_p2p_network_summary'], site=self.site, role=underlay_role, status=RESERVED
-        )
+        # underlay_role, _ = Role.objects.get_or_create(name="underlay")
+        # Prefix.objects.get_or_create(
+        #     prefix=data['underlay_p2p_network_summary'], site=self.site, role=underlay_role, status=RESERVED)
 
-        overlay_role = Role.objects.get_or_create(name="overlay")
-        Prefix.objects.get_or_create(
-            prefix=data['overlay_loopback_network_summary'], site=self.site, role=overlay_role, status=RESERVED
-        )
+        # overlay_role, _ = Role.objects.get_or_create(name="overlay")
+        # Prefix.objects.get_or_create(
+        #     prefix=data['overlay_loopback_network_summary'], site=self.site, role=overlay_role, status=RESERVED)
+
         # underlay_pfx = Prefix(
         #     prefix=data['underlay_p2p_network_summary'],
         #     site=self.site,
@@ -133,15 +132,15 @@ class DataCenter(Job):
         # underlay_pfx.validated_save()
         # self.log_success(obj=underlay_pfx, message="Created new underlay prefix")
         
-        # overlay_role, _ = Role.objects.get_or_create(name="over_lay")
-        # overlay_pfx = Prefix(
-        #     prefix=data['overlay_loopback_network_summary'],
-        #     site=self.site,
-        #     role=overlay_role,
-        #     status=RESERVED
-        # )
-        # overlay_pfx.validated_save()
-        # self.log_success(obj=overlay_pfx, message="Created new overlay prefix")
+        overlay_role, _ = Role.objects.get_or_create(name="over_lay")
+        overlay_pfx = Prefix(
+            prefix=data['overlay_loopback_network_summary'],
+            site=self.site,
+            role=overlay_role,
+            status=RESERVED
+        )
+        overlay_pfx.validated_save()
+        self.log_success(obj=overlay_pfx, message="Created new overlay prefix")
 
         # vtep_role, _ = Role.objects.get_or_create(name="vtep")
         # vtep_pfx = Prefix(
