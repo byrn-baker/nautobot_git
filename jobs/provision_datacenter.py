@@ -9,7 +9,7 @@ class DataCenter(Job):
     class Meta:
         name = "Build New DataCenter"
         description = "Build a new DataCenter with VXLAN"
-        field_order = ['region', 'site_name', 'rr_count', 'underlay_p2p_network_summary', 'overlay_loopback_network_summary', 'vtep_loopback_network_summary', 'mlag_leaf_peer_l3', 'mlag_peer', 'vxlan_vlan_aware_bundles', 'spine_switch_count', 'spine_bgp_as', 'leaf_bgp_as_range', 'leaf_switch_count', 'tor_switch_count']
+        field_order = ['region', 'site_name', 'pod_name', 'rr_count', 'underlay_p2p_network_summary', 'overlay_loopback_network_summary', 'vtep_loopback_network_summary', 'mlag_leaf_peer_l3', 'mlag_peer', 'vxlan_vlan_aware_bundles', 'spine_switch_count', 'spine_bgp_as', 'leaf_bgp_as_range', 'leaf_switch_count', 'tor_switch_count']
 
     region = ObjectVar(
         description="Choose Region",
@@ -20,7 +20,7 @@ class DataCenter(Job):
         description = "Name for the new fabric"
     )
 
-    pod_number = IntegerVar(
+    pod_name = StringVar(
         description = "Pod number for this deployment"
     )
 
