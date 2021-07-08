@@ -20,6 +20,10 @@ class DataCenter(Job):
         description = "Name for the new fabric"
     )
 
+    pod_number = IntegerVar(
+        description = "Pod number for this deployment"
+    )
+
     rr_count = IntegerVar(
         description = "Number or Relay Racks to build"
     )
@@ -95,6 +99,30 @@ class DataCenter(Job):
             'manufacturer_id': '$manufacturer'
         }
     )
+    
+    def create_p2p_link(self, intf1, intf2):
+        # Creating a point to point link between 2 interfaces
+        # Connects 2 interfaces with a cable and uses the underlay prefix assigning one IP to each interface
+        if intf1.cable or intf2.cable:
+            self.log_warning(
+                essage=f"Unable to create a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}"
+            )
+            return False
+
+        status = Status.objects.get_for_model(Cable).get(slug="connected")
+        cable = Cable.objects.create(termination_a=intf1, termination_b=intf2, status=status)
+        cable.save()
+
+        # Find Next available Network
+        prefix = Prefix.objects.filter(site=self.site, role__name="p2p_underlay").first()
+        first_avail = prefix.get_first_available_prefix()
+        subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
+
+        Prefix.objects.create(prefix=str(subnet))
+
+        # Create IP Addresses on both sides
+        ip1 = IPAddress.objects.create(address=str(subnet[0]), assigned_object=intf1)
+        ip2 = IPAddress.objects.create(address=str(subnet[1]), assigned_object=intf2)
 
     def run(self, data, commit):
         self.data = data
@@ -187,8 +215,9 @@ class DataCenter(Job):
 
         # Create Spine
         spine_role = DeviceRole.objects.get(name='Fabric_Spine')
+        pod = data['pod_name']
         for i in range(1, data['spine_switch_count'] + 1):
-            rack_name = f'{self.site.slug}_rr_{i}'
+            rack_name = f'{self.site.slug}_{pod}_rr_{i}'
             rack = Rack.objects.filter(name=rack_name, site=self.site).first()
 
             device_name = f'{self.site.slug}_spine_{i}'
@@ -200,7 +229,7 @@ class DataCenter(Job):
 
             device = Device(
                 device_type=data['spine_model'],
-                name=f'{self.site.slug}_spine_{i}',
+                name=f'{self.site.slug}_{pod}_spine_{i}',
                 site=self.site,
                 status=STATUS_PLANNED,
                 device_role=spine_role,
@@ -241,10 +270,10 @@ class DataCenter(Job):
         # Create Leaf
         leaf_role = DeviceRole.objects.get(name='Fabric_l3_leaf')
         for i in range(1, data['leaf_switch_count'] + 1):
-            rack_name = f'{self.site.slug}_rr_{i}'
+            rack_name = f'{self.site.slug}_{pod}_rr_{i}'
             rack = Rack.objects.filter(name=rack_name, site=self.site).first()
 
-            device_name = f'{self.site.slug}_leaff_{i}'
+            device_name = f'{self.site.slug}_{pod}_leaf_{i}'
             device = Device.objects.filter(name=device_name).first()
             if device:
                 self.devices[device_name] = device
@@ -253,7 +282,7 @@ class DataCenter(Job):
 
             device = Device(
                 device_type=data['leaf_model'],
-                name=f'{self.site.slug}_leaf_{i}',
+                name=f'{self.site.slug}_{pod}_leaf_{i}',
                 site=self.site,
                 status=STATUS_PLANNED,
                 device_role=leaf_role,
