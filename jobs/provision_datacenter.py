@@ -123,7 +123,7 @@ class DataCenter(Job):
         # self.log_success(obj=site, message="Created new site")
 
         # Create IP Networks
-        underlay_role, _ = Role.objects.get_or_create(name="p2p_underlay")
+        underlay_role, _ = Role.objects.get_or_create(name="p2p_underlay", slug="p2p_underlay")
         underlay_pfx = Prefix(
             prefix=str(data['underlay_p2p_network_summary']),
             site=self.site,
@@ -133,7 +133,7 @@ class DataCenter(Job):
         underlay_pfx.validated_save()
         self.log_success(obj=underlay_pfx, message="Created new underlay prefix")
         
-        overlay_role, _ = Role.objects.get_or_create(name="bgp_overlay")
+        overlay_role, _ = Role.objects.get_or_create(name="bgp_overlay", slug="bgp_overlay")
         overlay_pfx = Prefix(
             prefix=str(data['overlay_loopback_network_summary']),
             site=self.site,
@@ -143,7 +143,7 @@ class DataCenter(Job):
         overlay_pfx.validated_save()
         self.log_success(obj=overlay_pfx, message="Created new overlay prefix")
 
-        vtep_role, _ = Role.objects.get_or_create(name="vtep_loopback")
+        vtep_role, _ = Role.objects.get_or_create(name="vtep_loopback", slug="vtep_loopback")
         vtep_pfx = Prefix(
             prefix=str(data['vtep_loopback_network_summary']),
             site=self.site,
@@ -153,7 +153,7 @@ class DataCenter(Job):
         vtep_pfx.validated_save()
         self.log_success(obj=vtep_pfx, message="Created new VTEP prefix")
 
-        leaf_role, _ = Role.objects.get_or_create(name="mlag_l3")
+        leaf_role, _ = Role.objects.get_or_create(name="mlag_l3", slug="mlag_l3")
         mlag_leaf_peer_pfx = Prefix(
             prefix=str(data['mlag_leaf_peer_l3']),
             site=self.site,
@@ -163,7 +163,7 @@ class DataCenter(Job):
         mlag_leaf_peer_pfx.validated_save()
         self.log_success(obj=mlag_leaf_peer_pfx, message="Created new Leaf mlag peer prefix")
 
-        mlag_role = Role.objects.get_or_create(name="mlag_l2")
+        mlag_role = Role.objects.get_or_create(name="mlag_l2", slug="mlag_l2")
         mlag_peer_pfx = Prefix(
             prefix=str(data['mlag_peer']),
             site=self.site,
