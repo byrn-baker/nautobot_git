@@ -9,7 +9,7 @@ class DataCenter(Job):
     class Meta:
         name = "Build New DataCenter"
         description = "Build a new DataCenter with VXLAN"
-        field_order = ['region', 'site_name', 'pod_name', 'rr_count', 'underlay_p2p_network_summary', 'overlay_loopback_network_summary', 'vtep_loopback_network_summary', 'mlag_leaf_peer_l3', 'mlag_peer', 'vxlan_vlan_aware_bundles', 'spine_switch_count', 'spine_bgp_as', 'leaf_bgp_as_range', 'leaf_switch_count', 'tor_switch_count']
+        field_order = ['region', 'site_name', 'pod_name', 'relay_rack_count', 'underlay_p2p_network_summary', 'overlay_loopback_network_summary', 'vtep_loopback_network_summary', 'mlag_leaf_peer_l3', 'mlag_peer', 'vxlan_vlan_aware_bundles', 'spine_switch_count', 'spine_bgp_as', 'leaf_bgp_as_range', 'leaf_switch_count', 'tor_switch_count']
 
     region = ObjectVar(
         description="Choose Region",
@@ -24,7 +24,7 @@ class DataCenter(Job):
         description = "Pod number for this deployment"
     )
 
-    rr_count = IntegerVar(
+    relay_rack_count = IntegerVar(
         description = "Number or Relay Racks to build"
     )
 
@@ -202,9 +202,10 @@ class DataCenter(Job):
         self.log_success(obj=mlag_peer_pfx, message="Created new Leaf mlag peer prefix") 
 
         # Create the Relay Racks
-        for i in range(1, data['rr_count'] + 1):
+        pod = data['pod_name']
+        for i in range(1, data['relay_rack_count'] + 1):
             rack = Rack(
-                name=f'{self.site.slug}_rr_{i}',
+                name=f'{self.site.slug}){pod}_rr_{i}',
                 site=self.site,
                 u_height="42",
                 width="19",
@@ -215,7 +216,6 @@ class DataCenter(Job):
 
         # Create Spine
         spine_role = DeviceRole.objects.get(name='Fabric_Spine')
-        pod = data['pod_name']
         for i in range(1, data['spine_switch_count'] + 1):
             rack_name = f'{self.site.slug}_{pod}_rr_{i}'
             rack = Rack.objects.filter(name=rack_name, site=self.site).first()
