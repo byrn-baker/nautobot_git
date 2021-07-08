@@ -205,7 +205,7 @@ class DataCenter(Job):
         pod = data['pod_name']
         for i in range(1, data['relay_rack_count'] + 1):
             rack = Rack(
-                name=f'{self.site.slug}){pod}_rr_{i}',
+                name=f'{self.site.slug}_{pod}_rr_{i}',
                 site=self.site,
                 u_height="42",
                 width="19",
