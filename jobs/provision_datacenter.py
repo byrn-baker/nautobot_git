@@ -205,7 +205,7 @@ class DataCenter(Job):
         pod = data['pod_name']
         for i in range(1, data['relay_rack_count'] + 1):
             rack = Rack(
-                name=f'{self.site.slug}_{pod}_rr_{i}',
+                name=f'{self.site.slug}_{pod.lower}_rr_{i}',
                 site=self.site,
                 u_height="42",
                 width="19",
@@ -217,7 +217,7 @@ class DataCenter(Job):
         # Create Spine
         spine_role = DeviceRole.objects.get(name='Fabric_Spine')
         for i in range(1, data['spine_switch_count'] + 1):
-            rack_name = f'{self.site.slug}_{pod}_rr_{i}'
+            rack_name = f'{self.site.slug}_{pod.lower}_rr_{i}'
             rack = Rack.objects.filter(name=rack_name, site=self.site).first()
 
             device_name = f'{self.site.slug}_spine_{i}'
@@ -229,7 +229,7 @@ class DataCenter(Job):
 
             device = Device(
                 device_type=data['spine_model'],
-                name=f'{self.site.slug}_{pod}_spine_{i}',
+                name=f'{self.site.slug}_{pod.lower}_spine_{i}',
                 site=self.site,
                 status=STATUS_PLANNED,
                 device_role=spine_role,
@@ -270,10 +270,10 @@ class DataCenter(Job):
         # Create Leaf
         leaf_role = DeviceRole.objects.get(name='Fabric_l3_leaf')
         for i in range(1, data['leaf_switch_count'] + 1):
-            rack_name = f'{self.site.slug}_{pod}_rr_{i}'
+            rack_name = f'{self.site.slug}_{pod.lower}_rr_{i}'
             rack = Rack.objects.filter(name=rack_name, site=self.site).first()
 
-            device_name = f'{self.site.slug}_{pod}_leaf_{i}'
+            device_name = f'{self.site.slug}_{pod.lower}_leaf_{i}'
             device = Device.objects.filter(name=device_name).first()
             if device:
                 self.devices[device_name] = device
@@ -282,7 +282,7 @@ class DataCenter(Job):
 
             device = Device(
                 device_type=data['leaf_model'],
-                name=f'{self.site.slug}_{pod}_leaf_{i}',
+                name=f'{self.site.slug}_{pod.lower}_leaf_{i}',
                 site=self.site,
                 status=STATUS_PLANNED,
                 device_role=leaf_role,
