@@ -244,7 +244,7 @@ class DataCenter(Job):
             rack_name = f'{self.site.slug}_rr_{i}'
             rack = Rack.objects.filter(name=rack_name, site=self.site).first()
 
-            device_name = f'{self.site.slug}_spine_{i}'
+            device_name = f'{self.site.slug}_leaff_{i}'
             device = Device.objects.filter(name=device_name).first()
             if device:
                 self.devices[device_name] = device
