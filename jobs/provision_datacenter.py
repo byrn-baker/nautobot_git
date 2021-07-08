@@ -217,7 +217,7 @@ class DataCenter(Job):
             loopback_intf.validated_save()
             self.log_success(obj=loopback_intf, message="Created Loopback Interfaces")
 
-            loopback_pfx = Prefix.objects.get(site=self.site, role__name="overlay")
+            loopback_pfx = Prefix.objects.get(site=self.site, role__name="bgp_overlay")
 
             overlay_ips = loopback_pfx.get_available_ips()
             overlay_address = list(overlay_ips)[0]
@@ -230,7 +230,7 @@ class DataCenter(Job):
             vtep_intf.validated_save()
             self.log_success(obj=vtep_intf, message="Created vtep Interfaces")
 
-            vtep_pfx = Prefix.objects.get(site=self.site, role__name="vtep")
+            vtep_pfx = Prefix.objects.get(site=self.site, role__name="vtep_loopback")
 
             vtep_ips = vtep_pfx.get_available_ips()
             vtep_address = list(vtep_ips)[0]
