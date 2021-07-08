@@ -239,20 +239,58 @@ class DataCenter(Job):
             self.log_success(obj=vtep_ip, message="Assigned Available IP to Loopback")
 
         # Create Leaf
-        # leaf_role = DeviceRole.objects.get(name='Fabric_l3_leaf')
-        # for i in range(1, data['leaf_switch_count'] + 1):
-        #     device = Device(
-        #         device_type=data['leaf_model'],
-        #         name=f'{self.site.slug}_leaf_{i}',
-        #         site=self.site,
-        #         status=STATUS_PLANNED,
-        #         device_role=leaf_role,
-        #         rack=rack,
-        #         position=data.get("rack_elevation"),
-        #         face="front"
-        #     )
-        #     device.validated_save()
-        #     self.log_success(obj=device, message="Created Leaf Switches")
+        leaf_role = DeviceRole.objects.get(name='Fabric_l3_leaf')
+        for i in range(1, data['leaf_switch_count'] + 1):
+            rack_name = f'{self.site.slug}_rr_{i}'
+            rack = Rack.objects.filter(name=rack_name, site=self.site).first()
+
+            device_name = f'{self.site.slug}_spine_{i}'
+            device = Device.objects.filter(name=device_name).first()
+            if device:
+                self.devices[device_name] = device
+                self.log_success(obj=device, message=f"Device {device_name} already present")
+                continue
+
+            device = Device(
+                device_type=data['leaf_model'],
+                name=f'{self.site.slug}_leaf_{i}',
+                site=self.site,
+                status=STATUS_PLANNED,
+                device_role=leaf_role,
+                rack=rack,
+                position=data.get("rack_elevation"),
+                face="front"
+            )
+            device.validated_save()
+            self.devices[device_name] = device
+            self.log_success(obj=device, message="Created Leaf Switches")
+
+            # Generate BGP Overlay interface and Assign address
+            loopback_intf = Interface.objects.create(name="Loopback0", type="virtual", description="BGP Overlay", device=device)
+            loopback_intf.validated_save()
+            self.log_success(obj=loopback_intf, message="Created Loopback Interfaces")
+
+            loopback_pfx = Prefix.objects.get(site=self.site, role__name="bgp_overlay")
+
+            overlay_ips = loopback_pfx.get_available_ips()
+            overlay_address = list(overlay_ips)[0]
+            overlay_ip = IPAddress.objects.create(address=str(overlay_address), status=RESERVED, assigned_object=loopback_intf)
+            overlay_ip.validated_save()
+            self.log_success(obj=overlay_ip, message="Assigned Available IP to Loopback")
+
+            # Generate VTEP Loopback interface and assign addresses
+            vtep_intf = Interface.objects.create(name="Loopback1", type="virtual", description="VTEP Loopback", device=device)
+            vtep_intf.validated_save()
+            self.log_success(obj=vtep_intf, message="Created vtep Interfaces")
+
+            vtep_pfx = Prefix.objects.get(site=self.site, role__name="vtep_loopback")
+
+            vtep_ips = vtep_pfx.get_available_ips()
+            vtep_address = list(vtep_ips)[0]
+            vtep_ip = IPAddress.objects.create(address=str(vtep_address), status=RESERVED, assigned_object=vtep_intf)
+            vtep_ip.validated_save()
+            self.log_success(obj=vtep_ip, message="Assigned Available IP to Loopback")
+
 
         # # Create ToR
         # tor_role = DeviceRole.objects.get(name='Fabric_l2_leaf')
