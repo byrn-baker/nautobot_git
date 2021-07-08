@@ -163,7 +163,7 @@ class DataCenter(Job):
         mlag_leaf_peer_pfx.validated_save()
         self.log_success(obj=mlag_leaf_peer_pfx, message="Created new Leaf mlag peer prefix")
 
-        mlag_role = Role.objects.get_or_create(name="mlag_l2", slug="mlag_l2")
+        mlag_role, _ = Role.objects.get_or_create(name="mlag_l2", slug="mlag_l2")
         mlag_peer_pfx = Prefix(
             prefix=str(data['mlag_peer']),
             site=self.site,
