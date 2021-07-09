@@ -243,9 +243,16 @@ class DataCenter(Job):
             self.log_success(device, f"Device {device_name} successfully created")
 
             # Create physical interfaces
-            for intf in device_intf:
-                Interface.objects.create(name=intf, type='1000base-t', device=device)
+            for i in range(1, data['leaf_switch_count'] + 1):
+                intf = f'Ethernet{i}'
+                Interface.objects.create(name=intf, type='1000base-t', label='l3_leaf', device=device)
                 self.log_success(obj=intf, message="Created Ethernet Interfaces")
+
+            # MGMT Interface
+            mgmt_intf = Interface.objects.create(name='Management1', type='1000base-t', device=device)
+            mgmt_intf.validated_save()
+            self.log_success(obj=mgmt_intf, message="Created Management Interfaces")
+
 
             # Generate BGP Overlay interface and Assign address
             loopback_intf = Interface.objects.create(name="Loopback0", type="virtual", description="BGP Overlay", device=device)
@@ -301,15 +308,21 @@ class DataCenter(Job):
             self.log_success(obj=device, message="Created Leaf Switches")
 
             # Create physical interfaces
-            for i in device_intf:
-                intf = Interface.objects.create(name=intf, type='1000base-t', device=device)
-                intf.validated_save()
+            for i in range(1, data['spine_switch_count'], data['tor_switch_count'] + 1):
+                intf = f'Ethernet{i}'
+                Interface.objects.create(name=intf, type='1000base-t', label='l3_leaf', device=device)
                 self.log_success(obj=intf, message="Created Ethernet Interfaces")
+
+            # MGMT Interface
+            mgmt_intf = Interface.objects.create(name='Management1', type='1000base-t', device=device)
+            mgmt_intf.validated_save()
+            self.log_success(obj=mgmt_intf, message="Created Management Interfaces")
 
             # Generate BGP Overlay interface and Assign address
             loopback_intf = Interface.objects.create(name="Loopback0", type="virtual", description="BGP Overlay", device=device)
             loopback_intf.validated_save()
             self.log_success(obj=loopback_intf, message="Created Loopback Interfaces")
+
 
             loopback_pfx = Prefix.objects.get(site=self.site, role__name="bgp_overlay")
 
