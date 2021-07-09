@@ -245,7 +245,6 @@ class DataCenter(Job):
             # Create physical interfaces
             for intf in device_intf:
                 Interface.objects.create(name=intf, type='1000base-t', device=device)
-                intf.validated_save()
                 self.log_success(obj=intf, message="Created Ethernet Interfaces")
 
             # Generate BGP Overlay interface and Assign address
