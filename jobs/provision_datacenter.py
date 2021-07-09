@@ -243,6 +243,12 @@ class DataCenter(Job):
             self.log_success(device, f"Device {device_name} successfully created")
 
             # Create physical interfaces
+            intfs = iter(Interface.objects.filter(device=device))
+            for int_role, cnt in data['interfaces']:
+                for i in range(0, cnt):
+                    intf = next(intfs)
+                    intf._custom_field_data = {"role": int_role}
+                    intf.save()
             for i in range(1, data['leaf_switch_count'] + 1):
                 intf = f'Ethernet{i}'
                 Interface.objects.create(name=intf, type='1000base-t', label='l3_leaf', device=device)
@@ -308,15 +314,10 @@ class DataCenter(Job):
             self.log_success(obj=device, message="Created Leaf Switches")
 
             # Create physical interfaces
-            for i in range(1, data['spine_switch_count'] + 1):
-                spine_intf = f'Ethernet{i}'
-                Interface.objects.create(name=spine_intf, type='1000base-t', label='spine', device=device)
-                self.log_success(obj=spine_intf, message="Created Ethernet Interfaces")
-
-                for j in range(1, data['tor_switch_count'] + i):
-                    leaf_intf = f'Ethernet{i}'
-                    Interface.objects.get_or_create(name=leaf_intf, type='1000base-t', label='l2_leaf', device=device)
-                    self.log_success(obj=leaf_intf, message="Created Ethernet Interfaces")  
+            # for i in range(1, data['spine_switch_count'] + 1):
+            #     spine_intf = f'Ethernet{i}'
+            #     Interface.objects.create(name=spine_intf, type='1000base-t', label='spine', device=device)
+            #     self.log_success(obj=spine_intf, message="Created Ethernet Interfaces")
 
             # MGMT Interface
             mgmt_intf = Interface.objects.create(name='Management1', type='1000base-t', device=device)
