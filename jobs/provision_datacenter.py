@@ -216,6 +216,7 @@ class DataCenter(Job):
 
         # Create Spine
         spine_role = DeviceRole.objects.get(name='Fabric_Spine')
+        device_intf = ['Ethernet1', 'Ethernet2', 'Ethernet3', 'Ethernet4', 'Ethernet5', 'Ethernet6', 'Ethernet7', 'Ethernet8', 'Management1' ]
         for i in range(1, data['spine_switch_count'] + 1):
             rack_name = f'{self.site.slug}_{pod}_rr_{i}'
             rack = Rack.objects.filter(name=rack_name, site=self.site).first()
@@ -240,6 +241,10 @@ class DataCenter(Job):
             device.validated_save()
             self.devices[device_name] = device
             self.log_success(device, f"Device {device_name} successfully created")
+
+            # Create physical interfaces
+            for intf in device_intf:
+                Interface.objects.create(name=intf, type='1000base-t')
 
             # Generate BGP Overlay interface and Assign address
             loopback_intf = Interface.objects.create(name="Loopback0", type="virtual", description="BGP Overlay", device=device)
