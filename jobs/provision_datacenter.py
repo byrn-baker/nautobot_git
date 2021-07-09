@@ -300,6 +300,11 @@ class DataCenter(Job):
             self.devices[device_name] = device
             self.log_success(obj=device, message="Created Leaf Switches")
 
+            # Create physical interfaces
+            for intf in device_intf:
+                Interface.objects.create(name=intf, type='1000base-t', device=device)
+                self.log_success(obj=intf, message="Created Ethernet Interfaces")
+
             # Generate BGP Overlay interface and Assign address
             loopback_intf = Interface.objects.create(name="Loopback0", type="virtual", description="BGP Overlay", device=device)
             loopback_intf.validated_save()
