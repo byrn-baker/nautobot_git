@@ -301,8 +301,9 @@ class DataCenter(Job):
             self.log_success(obj=device, message="Created Leaf Switches")
 
             # Create physical interfaces
-            for intf in device_intf:
-                Interface.objects.create(name=intf, type='1000base-t', device=device)
+            for i in device_intf:
+                intf = Interface.objects.create(name=intf, type='1000base-t', device=device)
+                intf.validated_save()
                 self.log_success(obj=intf, message="Created Ethernet Interfaces")
 
             # Generate BGP Overlay interface and Assign address
