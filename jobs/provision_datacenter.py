@@ -310,12 +310,12 @@ class DataCenter(Job):
             # Create physical interfaces
             for i in range(1, data['spine_switch_count'] + 1):
                 spine_intf = f'Ethernet{i}'
-                Interface.objects.create(name=spine_intf, type='1000base-t', label='l3_leaf', device=device)
+                Interface.objects.create(name=spine_intf, type='1000base-t', label='spine', device=device)
                 self.log_success(obj=spine_intf, message="Created Ethernet Interfaces")
 
                 for j in range(1, data['tor_switch_count'] + 1):
                     leaf_intf = f'Ethernet{i}'
-                    Interface.objects.create(name=leaf_intf, type='1000base-t', label='l2_leaf', device=device)
+                    Interface.objects.get_or_create(name=leaf_intf, type='1000base-t', label='l2_leaf', device=device)
                     self.log_success(obj=leaf_intf, message="Created Ethernet Interfaces")  
 
             # MGMT Interface
