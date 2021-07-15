@@ -1,8 +1,8 @@
 from django.utils.text import slugify
 
-from nautobot.dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site, Region, Rack, Interface
-from nautobot.ipam.models import VRF, RouteTarget, Prefix, IPAddress, Role
-from nautobot.extras.models import Status
+from nautobot.dcim.models import *
+from nautobot.ipam.models import *
+from nautobot.extras.models import *
 from nautobot.extras.jobs import *
 
 class CreateAristaPod(Job):
@@ -65,9 +65,9 @@ class CreateAristaPod(Job):
         # ----------------------------------------------------------------------------
         # Initialize the database with all required objects
         # ----------------------------------------------------------------------------
-        # create_custom_fields()
-        # create_relationships()
-        # create_prefix_roles()
+        create_custom_fields()
+        create_relationships()
+        create_prefix_roles()
 
         # ----------------------------------------------------------------------------
         # Find or Create Site
@@ -80,7 +80,7 @@ class CreateAristaPod(Job):
         self.site.save()
         self.log_success(self.site, f"Site {pod_code} successfully created")
 
-        leaf_count = data["leaf_count"]
+        ROLES["leaf"]["nbr"] = data["leaf_count"]
 
         # ----------------------------------------------------------------------------
         # Allocate Prefixes for this POP
@@ -148,7 +148,7 @@ class CreateAristaPod(Job):
         # Create Racks
         # ----------------------------------------------------------------------------
         rack_status = Status.objects.get_for_model(Rack).get(slug="active")
-        for i in range(1, leaf_count + 1):
+        for i in range(1, ROLES["leaf"]["nbr"] + 1):
             rack_name = f"{pod_code}-{100 + i}"
             rack = Rack.objects.get_or_create(
                 name=rack_name, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
