@@ -65,9 +65,9 @@ class CreateAristaPod(Job):
         # ----------------------------------------------------------------------------
         # Initialize the database with all required objects
         # ----------------------------------------------------------------------------
-        create_custom_fields()
-        create_relationships()
-        create_prefix_roles()
+        # create_custom_fields()
+        # create_relationships()
+        # create_prefix_roles()
 
         # ----------------------------------------------------------------------------
         # Find or Create Site
