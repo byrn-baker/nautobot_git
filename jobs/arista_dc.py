@@ -4,6 +4,7 @@ from nautobot.dcim.models import *
 from nautobot.ipam.models import *
 from nautobot.extras.models import *
 from nautobot.extras.jobs import *
+from nautobot.extras.custom_fields import *
 
 class CreateAristaPod(Job):
     """Job to create a new site and datacenter pod."""
