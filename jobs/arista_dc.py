@@ -6,9 +6,6 @@ from nautobot.extras.models import CustomField, Job, Status
 from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar
 from nautobot.circuits.models import Provider, CircuitType, Circuit, CircuitTermination
 
-ROLES = {}
-ROLES["leaf"] = 'leaf'
-ROLES["spine"] = 'spine'
 class CreateAristaPod(Job):
     """Job to create a new site and datacenter pod."""
 
