@@ -6,6 +6,7 @@ from nautobot.extras.models import CustomField, Job
 from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar
 from nautobot.circuits.models import Provider, CircuitType, Circuit, CircuitTermination
 
+ROLES = DeviceRole.objects.all()
 class CreateAristaPod(Job):
     """Job to create a new site and datacenter pod."""
 
@@ -66,9 +67,9 @@ class CreateAristaPod(Job):
         # ----------------------------------------------------------------------------
         # Initialize the database with all required objects
         # ----------------------------------------------------------------------------
-        create_custom_fields()
-        create_relationships()
-        create_prefix_roles()
+        # create_custom_fields()
+        # create_relationships()
+        # create_prefix_roles()
 
         # ----------------------------------------------------------------------------
         # Find or Create Site
