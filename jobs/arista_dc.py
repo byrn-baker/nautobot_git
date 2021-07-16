@@ -76,7 +76,7 @@ class CreateAristaPod(Job):
         # ----------------------------------------------------------------------------
         pod_code = data["pod_code"].lower()
         region = data["region"]
-        site_status = "active"
+        site_status = "Active"
         self.site, created = Site.objects.get_or_create(name=pod_code, region=region, slug=pod_code, status=site_status)
         self.site.custom_field_data["site_type"] = "POD"
         self.site.save()
