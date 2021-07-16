@@ -6,6 +6,8 @@ from nautobot.extras.models import CustomField, Job, Status
 from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar
 from nautobot.circuits.models import Provider, CircuitType, Circuit, CircuitTermination
 
+ROLES = {}
+ROLES = DeviceRole.objects.all()
 class CreateAristaPod(Job):
     """Job to create a new site and datacenter pod."""
 
@@ -82,7 +84,6 @@ class CreateAristaPod(Job):
         self.site.save()
         self.log_success(self.site, f"Site {pod_code} successfully created")
         
-        ROLES = DeviceRole.objects.all()
         TOP_LEVEL_PREFIX_ROLE = "pod"
         SITE_PREFIX_SIZE = "24"
         ROLES["leaf"]["nbr"] = data["leaf_count"]
