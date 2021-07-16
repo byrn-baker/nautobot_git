@@ -2,7 +2,7 @@ from django.utils.text import slugify
 
 from nautobot.dcim.models import Site, Device, Rack, Region, Cable, DeviceRole, DeviceType, Interface
 from nautobot.ipam.models import Role, Prefix, IPAddress
-from nautobot.extras.models import CustomField, Job
+from nautobot.extras.models import CustomField, Job, Status
 from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar
 from nautobot.circuits.models import Provider, CircuitType, Circuit, CircuitTermination
 
@@ -76,7 +76,7 @@ class CreateAristaPod(Job):
         # ----------------------------------------------------------------------------
         pod_code = data["pod_code"].lower()
         region = data["region"]
-        site_status = "Active"
+        site_status = Status.objects.get_for_model(Site).get(slug="active")
         self.site, created = Site.objects.get_or_create(name=pod_code, region=region, slug=pod_code, status=site_status)
         self.site.custom_field_data["site_type"] = "POD"
         self.site.save()
