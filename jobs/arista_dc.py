@@ -1,13 +1,11 @@
 from django.utils.text import slugify
 
 from nautobot.dcim.models import Site, Device, Rack, Region, Cable, DeviceRole, DeviceType, Interface
-from nautobot.dcim.site import Status
 from nautobot.ipam.models import Role, Prefix, IPAddress
 from nautobot.extras.models import CustomField, Job
 from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar
 from nautobot.circuits.models import Provider, CircuitType, Circuit, CircuitTermination
 
-ROLES = DeviceRole.objects.all()
 class CreateAristaPod(Job):
     """Job to create a new site and datacenter pod."""
 
@@ -40,6 +38,7 @@ class CreateAristaPod(Job):
         - Generate a new Prefix from a "point-to-point" container associated with this site
         - Assign one IP address to each interface from the previous prefix
         """
+        P2P_PREFIX_SIZE = "31"
         if intf1.cable or intf2.cable:
             self.log_warning(
                 message=f"Unable to create a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}"
@@ -82,7 +81,10 @@ class CreateAristaPod(Job):
         self.site.custom_field_data["site_type"] = "POD"
         self.site.save()
         self.log_success(self.site, f"Site {pod_code} successfully created")
-
+        
+        ROLES = DeviceRole.objects.all()
+        TOP_LEVEL_PREFIX_ROLE = "pod"
+        SITE_PREFIX_SIZE = "24"
         ROLES["leaf"]["nbr"] = data["leaf_count"]
 
         # ----------------------------------------------------------------------------
