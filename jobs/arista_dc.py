@@ -5,7 +5,6 @@ from nautobot.ipam.models import Role, Prefix, IPAddress
 from nautobot.extras.models import CustomField, Job
 from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar
 from nautobot.circuits.models import Provider, CircuitType, Circuit, CircuitTermination
-from nautobot.dcim.deviceroles import ROLES
 
 class CreateAristaPod(Job):
     """Job to create a new site and datacenter pod."""
