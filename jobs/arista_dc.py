@@ -61,9 +61,10 @@ class CreateAristaPod(Job):
         SITE_PREFIX_SIZE = 16 
         RACK_HEIGHT = 42
         RACK_TYPE = "4-post-frame"
-        ROLES = {}
-        ROLES["spine"] = {}
-        ROLES["leaf"] = {}
+        ROLES = {
+            "spine": {"DeviceRole": "spine", "label": "Role"},
+            "leaf": {"DeviceRole": "leaf", "label": "Role"},
+        }
         ROLES["leaf"]["nbr"] = data["leaf_count"]
 
 
