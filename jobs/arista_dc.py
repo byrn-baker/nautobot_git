@@ -15,7 +15,7 @@ RACK_HEIGHT = "42"
 RACK_TYPE = "4-post-frame"
 
 # ROLES Reference
-ROLES = {}
+
 ROLES["spine"]["count"] = "2"
 class CreateAristaPod(Job):
     """Job to create a new site and datacenter pod."""
