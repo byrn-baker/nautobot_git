@@ -177,7 +177,7 @@ class CreateAristaPod(Job):
 
                 # Generate Loopback0 interface and assign Loopback0 address
                 loopback0_intf = Interface.objects.create(
-                    name="Loopback0", type=InterfaceTypeChoices.TYPE_VIRTUAL, device=device
+                    name="Loopback0", type="virtual", device=device
                 )
 
                 loopback0_prefix = Prefix.objects.get(
@@ -192,7 +192,7 @@ class CreateAristaPod(Job):
 
                 # Generate Loopback1 interface and assign Loopback1 address
                 loopback1_intf = Interface.objects.create(
-                    name="Loopback1", type=InterfaceTypeChoices.TYPE_VIRTUAL, device=device
+                    name="Loopback1", type="virtual", device=device
                 )
 
                 loopback1_prefix = Prefix.objects.get(
