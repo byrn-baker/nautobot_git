@@ -20,13 +20,13 @@ class CreateAristaPod(Job):
         label = "POD"
         field_order = [
             "region",
-            "pod_code",
+            "dc_code",
             "leaf_count",
         ]
 
     region = ObjectVar(model=Region)
 
-    pod_code = StringVar(description="Name of the new Pod", label="Pod")
+    dc_code = StringVar(description="Name of the new DataCenter", label="DataCenter")
 
     leaf_count = IntegerVar(description="Number of Leaf Switch", label="Leaf switches count", min_value=1, max_value=4)
 
@@ -46,34 +46,35 @@ class CreateAristaPod(Job):
         # ----------------------------------------------------------------------------
         # Find or Create Site
         # ----------------------------------------------------------------------------
-        pod_code = data["pod_code"].lower()
+        dc_code = data["dc_code"].lower()
         region = data["region"]
         site_status = Status.objects.get_for_model(Site).get(slug="active")
-        self.site, created = Site.objects.get_or_create(name=pod_code, region=region, slug=pod_code, status=site_status)
-        self.site.custom_field_data["site_type"] = "POD"
+        self.site, created = Site.objects.get_or_create(name=dc_code, region=region, slug=dc_code, status=site_status)
+        self.site.custom_field_data["site_type"] = "DATACENTER"
         self.site.save()
-        self.log_success(self.site, f"Site {pod_code} successfully created")
+        self.log_success(self.site, f"Site {dc_code} successfully created")
         
         # Reference Vars
-        TOP_LEVEL_PREFIX_ROLE = "pod"
+        TOP_LEVEL_PREFIX_ROLE = "datacenter"
         SITE_PREFIX_SIZE = "24"    
         RACK_HEIGHT = "42"
         RACK_TYPE = "4-post-frame"
         ROLES = {}
+        ROLES["spine"] = {}
         ROLES["leaf"] = {}
         ROLES["leaf"]["nbr"] = data["leaf_count"]
 
 
         # ----------------------------------------------------------------------------
-        # Allocate Prefixes for this POP
+        # Allocate Prefixes for this DataCenter
         # ----------------------------------------------------------------------------
         # Search if there is already a POP prefix associated with this side
         # if not search the Top Level Prefix and create a new one
-        pod_role, _ = Role.objects.get_or_create(name=pod_code, slug=pod_code)
+        dc_role, _ = Role.objects.get_or_create(name=dc_code, slug=dc_code)
         container_status = Status.objects.get_for_model(Prefix).get(slug="container")
-        pod_prefix = Prefix.objects.filter(site=self.site, status=container_status, role=pod_role).first()
+        dc_prefix = Prefix.objects.filter(site=self.site, status=container_status, role=dc_role).first()
 
-        if not pod_prefix:
+        if not dc_prefix:
             top_level_prefix = Prefix.objects.filter(
                 role__slug=slugify(TOP_LEVEL_PREFIX_ROLE), status=container_status
             ).first()
@@ -83,9 +84,9 @@ class CreateAristaPod(Job):
 
             first_avail = top_level_prefix.get_first_available_prefix()
             prefix = list(first_avail.subnet(SITE_PREFIX_SIZE))[0]
-            pod_prefix = Prefix.objects.create(prefix=prefix, site=self.site, status=container_status, role=pod_role)
+            dc_prefix = Prefix.objects.create(prefix=prefix, site=self.site, status=container_status, role=dc_role)
 
-        iter_subnet = IPv4Network(str(pod_prefix.prefix)).subnets(new_prefix=21)
+        iter_subnet = IPv4Network(str(dc_prefix.prefix)).subnets(new_prefix=21)
 
         # Allocate the subnet by block of /21
         underlay_p2p = next(iter_subnet)
@@ -94,32 +95,32 @@ class CreateAristaPod(Job):
         mlag_leaf_l3 = next(iter_subnet)
         mlag_peer = next(iter_subnet)
 
-        pod_role, _ = Role.objects.get_or_create(name=pod_code, slug=pod_code)
+        dc_role, _ = Role.objects.get_or_create(name=dc_code, slug=dc_code)
 
         
-        underlay_role, _ = Role.objects.get_or_create(name=f"{pod_code}_underlay", slug=f"{pod_code}_underlay")
+        underlay_role, _ = Role.objects.get_or_create(name=f"{dc_code}_underlay", slug=f"{dc_code}_underlay")
         Prefix.objects.get_or_create(
             prefix=str(underlay_p2p), site=self.site, role=underlay_role, status=container_status
         )
 
-        overlay_role, _ = Role.objects.get_or_create(name=f"{pod_code}_overlay", slug=f"{pod_code}_overlay")
+        overlay_role, _ = Role.objects.get_or_create(name=f"{dc_code}_overlay", slug=f"{dc_code}_overlay")
         Prefix.objects.get_or_create(prefix=str(overlay_loopback), site=self.site, role=overlay_role, status=container_status)
 
-        vtep_role, _ = Role.objects.get_or_create(name=f"{pod_code}_vtep_loopback", slug=f"{pod_code}_vtep_loopback")
+        vtep_role, _ = Role.objects.get_or_create(name=f"{dc_code}_vtep_loopback", slug=f"{dc_code}_vtep_loopback")
         Prefix.objects.get_or_create(
             prefix=str(vtep_loopback),
             site=self.site,
             role=vtep_role,
         )
 
-        mlag_leaf_l3_role, _ = Role.objects.get_or_create(name=f"{pod_code}_mlag_leaf_l3", slug=f"{pod_code}_mlag_leaf_l3")
+        mlag_leaf_l3_role, _ = Role.objects.get_or_create(name=f"{dc_code}_mlag_leaf_l3", slug=f"{dc_code}_mlag_leaf_l3")
         Prefix.objects.get_or_create(
             prefix=str(mlag_leaf_l3),
             site=self.site,
             role=mlag_leaf_l3_role,
         )
 
-        mlag_peer_role, _ = Role.objects.get_or_create(name=f"{pod_code}_mlag_peer", slug=f"{pod_code}_mlag_peer")
+        mlag_peer_role, _ = Role.objects.get_or_create(name=f"{dc_code}_mlag_peer", slug=f"{dc_code}_mlag_peer")
         Prefix.objects.get_or_create(
             prefix=str(mlag_peer),
             site=self.site,
@@ -131,7 +132,7 @@ class CreateAristaPod(Job):
         # ----------------------------------------------------------------------------
         rack_status = Status.objects.get_for_model(Rack).get(slug="active")
         for i in range(1, data["leaf"]["nbr"] + 1):
-            rack_name = f"{pod_code}-{100 + i}"
+            rack_name = f"{dc_code}-{100 + i}"
             rack = Rack.objects.get_or_create(
                 name=rack_name, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
             )
@@ -142,10 +143,10 @@ class CreateAristaPod(Job):
         for role, data in ROLES.items():
             for i in range(1, data.get("nbr", 2) + 1):
 
-                rack_name = f"{pod_code}-{100 + i}"
+                rack_name = f"{dc_code}-{100 + i}"
                 rack = Rack.objects.filter(name=rack_name, site=self.site).first()
 
-                device_name = f"{pod_code}-{role}-{i:02}"
+                device_name = f"{dc_code}-{role}-{i:02}"
 
                 device = Device.objects.filter(name=device_name).first()
                 if device:
