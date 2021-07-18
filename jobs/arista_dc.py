@@ -56,8 +56,8 @@ class CreateAristaPod(Job):
         
         # Reference Vars
         TOP_LEVEL_PREFIX_ROLE = "datacenter"
-        SITE_PREFIX_SIZE = "24"    
-        RACK_HEIGHT = "42"
+        SITE_PREFIX_SIZE = 24 
+        RACK_HEIGHT = 42
         RACK_TYPE = "4-post-frame"
         ROLES = {}
         ROLES["spine"] = {}
