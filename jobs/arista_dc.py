@@ -134,7 +134,7 @@ class CreateAristaPod(Job):
         # Create Racks
         # ----------------------------------------------------------------------------
         rack_status = Status.objects.get_for_model(Rack).get(slug="active")
-        for i in range(1, data["leaf"]["nbr"] + 1):
+        for i in range(1, ROLES["leaf"]["nbr"] + 1):
             rack_name = f"{dc_code}-{100 + i}"
             rack = Rack.objects.get_or_create(
                 name=rack_name, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
