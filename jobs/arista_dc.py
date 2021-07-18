@@ -30,6 +30,8 @@ class CreateAristaPod(Job):
 
     leaf_count = IntegerVar(description="Number of Leaf Switch", label="Leaf switches count", min_value=1, max_value=4)
 
+    spine_count = "2"
+
     def run(self, data=None, commit=None):
         """Main function for CreatePop."""
         self.devices = {}
@@ -58,8 +60,9 @@ class CreateAristaPod(Job):
         RACK_HEIGHT = "42"
         RACK_TYPE = "4-post-frame"
         # ROLES Reference
-        ROLES = {}
-        # ROLES["spine"]["count"] = "2"
+        ROLES = []
+        
+        ROLES["spine"]["nbr"] = data["spine_count"]
         ROLES["leaf"]["nbr"] = data["leaf_count"]
 
         # ----------------------------------------------------------------------------
