@@ -6,7 +6,7 @@ from nautobot.extras.models import CustomField, Job, Status
 from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar
 from nautobot.circuits.models import Provider, CircuitType, Circuit, CircuitTermination
 
-ROLES = ['spine', 'leaf']
+ROLES = {'spine', 'leaf'}
     
 RACK_HEIGHT = "42"
 RACK_TYPE = "4-post-frame"
@@ -33,36 +33,6 @@ class CreateAristaPod(Job):
     pod_code = StringVar(description="Name of the new Pod", label="Pod")
 
     leaf_count = IntegerVar(description="Number of Leaf Switch", label="Leaf switches count", min_value=1, max_value=4)
-
-    def create_p2p_link(self, intf1, intf2):
-        """Create a Point to Point link between 2 interfaces.
-
-        This function will:
-        - Connect the 2 interfaces with a cable
-        - Generate a new Prefix from a "point-to-point" container associated with this site
-        - Assign one IP address to each interface from the previous prefix
-        """
-        P2P_PREFIX_SIZE = "31"
-        if intf1.cable or intf2.cable:
-            self.log_warning(
-                message=f"Unable to create a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}"
-            )
-            return False
-
-        status = Status.objects.get_for_model(Cable).get(slug="connected")
-        cable = Cable.objects.create(termination_a=intf1, termination_b=intf2, status=status)
-        cable.save()
-
-        # Find Next available Network
-        prefix = Prefix.objects.filter(site=self.site, role__name="underlay_p2p").first()
-        first_avail = prefix.get_first_available_prefix()
-        subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
-
-        Prefix.objects.create(prefix=str(subnet))
-
-        # Create IP Addresses on both sides
-        ip1 = IPAddress.objects.create(address=str(subnet[0]), assigned_object=intf1)
-        ip2 = IPAddress.objects.create(address=str(subnet[1]), assigned_object=intf2)
 
     def run(self, data=None, commit=None):
         """Main function for CreatePop."""
@@ -233,5 +203,35 @@ class CreateAristaPod(Job):
                         intf = next(intfs)
                         intf._custom_field_data = {"role": int_role}
                         intf.save()
+
+    def create_p2p_link(self, intf1, intf2):
+        """Create a Point to Point link between 2 interfaces.
+
+        This function will:
+        - Connect the 2 interfaces with a cable
+        - Generate a new Prefix from a "point-to-point" container associated with this site
+        - Assign one IP address to each interface from the previous prefix
+        """
+        P2P_PREFIX_SIZE = "31"
+        if intf1.cable or intf2.cable:
+            self.log_warning(
+                message=f"Unable to create a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}"
+            )
+            return False
+
+        status = Status.objects.get_for_model(Cable).get(slug="connected")
+        cable = Cable.objects.create(termination_a=intf1, termination_b=intf2, status=status)
+        cable.save()
+
+        # Find Next available Network
+        prefix = Prefix.objects.filter(site=self.site, role__name="underlay_p2p").first()
+        first_avail = prefix.get_first_available_prefix()
+        subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
+
+        Prefix.objects.create(prefix=str(subnet))
+
+        # Create IP Addresses on both sides
+        ip1 = IPAddress.objects.create(address=str(subnet[0]), assigned_object=intf1)
+        ip2 = IPAddress.objects.create(address=str(subnet[1]), assigned_object=intf2)
 
 
