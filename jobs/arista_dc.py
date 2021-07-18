@@ -117,6 +117,7 @@ class CreateAristaPod(Job):
             site=self.site,
             role=vtep_role,
         )
+        self.log_success(obj=vtep_loopback, message="Created new vtep prefix")
 
         mlag_leaf_l3_role, _ = Role.objects.get_or_create(name=f"{dc_code}_mlag_leaf_l3", slug=f"{dc_code}_mlag_leaf_l3")
         Prefix.objects.get_or_create(
@@ -124,6 +125,7 @@ class CreateAristaPod(Job):
             site=self.site,
             role=mlag_leaf_l3_role,
         )
+        self.log_success(obj=mlag_leaf_l3, message="Created new mlag leaf L3 prefix")
 
         mlag_peer_role, _ = Role.objects.get_or_create(name=f"{dc_code}_mlag_peer", slug=f"{dc_code}_mlag_peer")
         Prefix.objects.get_or_create(
@@ -131,6 +133,7 @@ class CreateAristaPod(Job):
             site=self.site,
             role=mlag_peer_role,
         )
+        self.log_success(obj=mlag_peer, message="Created new mlag peer prefix")
 
         # ----------------------------------------------------------------------------
         # Create Racks
@@ -141,6 +144,7 @@ class CreateAristaPod(Job):
             rack = Rack.objects.get_or_create(
                 name=rack_name, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
             )
+            self.log_success(obj=rack, message=f"Created Relay Rack {rack_name}")
 
         # ----------------------------------------------------------------------------
         # Create Devices
@@ -184,7 +188,7 @@ class CreateAristaPod(Job):
 
                 loopback0_prefix = Prefix.objects.get(
                     site=self.site,
-                    role__name="overlay_role",
+                    role__name=f"{dc_code}_overlay",
                 )
 
                 available_ips = loopback0_prefix.get_available_ips()
@@ -199,7 +203,7 @@ class CreateAristaPod(Job):
 
                 loopback1_prefix = Prefix.objects.get(
                     site=self.site,
-                    role__name="vtep_role",
+                    role__name=f"{dc_code}_vtep_loopback",
                 )
 
                 available_ips = loopback1_prefix.get_available_ips()
