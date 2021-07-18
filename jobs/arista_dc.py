@@ -5,8 +5,9 @@ from nautobot.ipam.models import Role, Prefix, IPAddress
 from nautobot.extras.models import CustomField, Job, Status
 from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar
 from nautobot.circuits.models import Provider, CircuitType, Circuit, CircuitTermination
+import ipaddress
 
-
+IPv4Network = ipaddress.ip_network
 class CreateAristaPod(Job):
     """Job to create a new site and datacenter pod."""
 
@@ -57,7 +58,7 @@ class CreateAristaPod(Job):
         
         # Reference Vars
         TOP_LEVEL_PREFIX_ROLE = "datacenter"
-        SITE_PREFIX_SIZE = 24 
+        SITE_PREFIX_SIZE = 16 
         RACK_HEIGHT = 42
         RACK_TYPE = "4-post-frame"
         ROLES = {}
@@ -87,7 +88,7 @@ class CreateAristaPod(Job):
             prefix = list(first_avail.subnet(SITE_PREFIX_SIZE))[0]
             dc_prefix = Prefix.objects.create(prefix=prefix, site=self.site, status=container_status, role=dc_role)
 
-        iter_subnet = IPv4Network(str(dc_prefix.prefix)).subnets(new_prefix=21)
+        iter_subnet = IPv4Network(str(dc_prefix.prefix)).subnets(new_prefix=24)
 
         # Allocate the subnet by block of /21
         underlay_p2p = next(iter_subnet)
