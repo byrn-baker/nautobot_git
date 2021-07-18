@@ -59,11 +59,12 @@ class CreateAristaPod(Job):
         SITE_PREFIX_SIZE = "24"    
         RACK_HEIGHT = "42"
         RACK_TYPE = "4-post-frame"
-        # ROLES Reference
-        ROLES = {}
-        ROLES = DeviceRole.objects.all()
-        
-        ROLES["leaf"]["nbr"] = data["leaf_count"]
+        ROLES = {
+            "spine" : "spine",
+            "leaf" : "leaf"
+        }
+
+
 
         # ----------------------------------------------------------------------------
         # Allocate Prefixes for this POP
@@ -131,7 +132,7 @@ class CreateAristaPod(Job):
         # Create Racks
         # ----------------------------------------------------------------------------
         rack_status = Status.objects.get_for_model(Rack).get(slug="active")
-        for i in range(1, ROLES["leaf"]["nbr"] + 1):
+        for i in range(1, data["leaf"]["nbr"] + 1):
             rack_name = f"{pod_code}-{100 + i}"
             rack = Rack.objects.get_or_create(
                 name=rack_name, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
