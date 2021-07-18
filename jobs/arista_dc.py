@@ -6,7 +6,8 @@ from nautobot.extras.models import CustomField, Job, Status
 from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar
 from nautobot.circuits.models import Provider, CircuitType, Circuit, CircuitTermination
 
-ROLES = [['spine', 2]]
+
+ROLES = [['spine'], ['leaf']]
     
 RACK_HEIGHT = "42"
 RACK_TYPE = "4-post-frame"
