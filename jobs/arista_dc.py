@@ -5,12 +5,18 @@ from nautobot.ipam.models import Role, Prefix, IPAddress
 from nautobot.extras.models import CustomField, Job, Status
 from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar
 from nautobot.circuits.models import Provider, CircuitType, Circuit, CircuitTermination
+from netaddr import IPv4Network
 
 
-ROLES = ['spine'], ['leaf']
-    
+# Reference Vars
+TOP_LEVEL_PREFIX_ROLE = "pod"
+SITE_PREFIX_SIZE = "24"    
 RACK_HEIGHT = "42"
 RACK_TYPE = "4-post-frame"
+
+# ROLES Reference
+ROLES = {}
+ROLES["spine"]["count"] = "2"
 class CreateAristaPod(Job):
     """Job to create a new site and datacenter pod."""
 
@@ -57,8 +63,6 @@ class CreateAristaPod(Job):
         self.site.save()
         self.log_success(self.site, f"Site {pod_code} successfully created")
         
-        TOP_LEVEL_PREFIX_ROLE = "pod"
-        SITE_PREFIX_SIZE = "24"
         ROLES["leaf"]["nbr"] = data["leaf_count"]
 
         # ----------------------------------------------------------------------------
