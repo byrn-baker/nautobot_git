@@ -5,7 +5,7 @@ from nautobot.ipam.models import Role, Prefix, IPAddress
 from nautobot.extras.models import CustomField, Job, Status
 from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar
 from nautobot.circuits.models import Provider, CircuitType, Circuit, CircuitTermination
-from netaddr import IPv4Network
+from netaddr import *
 
 class CreateAristaPod(Job):
     """Job to create a new site and datacenter pod."""
