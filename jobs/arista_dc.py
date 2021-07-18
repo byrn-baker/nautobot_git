@@ -63,7 +63,7 @@ class CreateAristaPod(Job):
             "spine" : "spine",
             "leaf" : "leaf"
         }
-
+        ROLES["leaf"]["nbr"] = data["leaf_count"]
 
 
         # ----------------------------------------------------------------------------
