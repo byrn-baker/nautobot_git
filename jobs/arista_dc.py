@@ -59,7 +59,7 @@ class CreateAristaPod(Job):
         RACK_TYPE = "4-post-frame"
         # ROLES Reference
         ROLES = {}
-        ROLES["spine"]["count"] = "2"
+        # ROLES["spine"]["count"] = "2"
         ROLES["leaf"]["nbr"] = data["leaf_count"]
 
         # ----------------------------------------------------------------------------
