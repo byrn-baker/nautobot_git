@@ -212,15 +212,12 @@ class CreateAristaPod(Job):
                 loopback1_ip = IPAddress.objects.create(address=str(lo1_address), assigned_object=loopback1_intf)
 
                 # Assign Role to Interfaces
-                intfs = iter(Interface.objects.filter(device=device))
-                data["interfaces"] = {
-                    "role": "leaf", "cnt": "Ethernet1"
-                }
-                for int_role, cnt in data["interfaces"]:
-                    for i in range(0, cnt):
-                        intf = next(intfs)
-                        intf._custom_field_data = {"role": int_role}
-                        intf.save()
+                # intfs = iter(Interface.objects.filter(device=device))
+                # for int_role, cnt in data["interfaces"]:
+                #     for i in range(0, cnt):
+                #         intf = next(intfs)
+                #         intf._custom_field_data = {"role": int_role}
+                #         intf.save()
 
     def create_p2p_link(self, intf1, intf2):
         """Create a Point to Point link between 2 interfaces.
