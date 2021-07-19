@@ -222,12 +222,12 @@ class CreateAristaPod(Job):
                 loopback1_ip = IPAddress.objects.create(address=str(lo1_address), assigned_object=loopback1_intf)
 
                 # Assign Role to Interfaces
-                intfs = iter(Interface.objects.filter(device=device))
-                for intf_name, intf_items in data["interfaces"].items():
-                    for i in intf_name:
-                        intf = next(intfs)
-                        intf._custom_field_data = {"role": intf_items["role"]}
-                        intf.save()
+                # intfs = iter(Interface.objects.filter(device=device))
+                # for intf_name, intf_items in data["interfaces"].items():
+                #     for i in intf_name:
+                #         intf = next(intfs)
+                #         intf._custom_field_data = {"role": intf_items["role"]}
+                #         intf.save()
 
                 # if role == "leaf":
                 #     for vlan_name, vlan_data in VLANS.items():
