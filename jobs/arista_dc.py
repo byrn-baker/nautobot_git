@@ -225,7 +225,7 @@ class CreateAristaPod(Job):
 
                 # Assign Role to Interfaces
                 intfs = iter(Interface.objects.filter(device=device))
-                for int_role, cnt in data["interfaces"].items():
+                for int_role, cnt in data["interfaces"]:
                     for i in range(0, cnt):
                         intf = next(intfs)
                         intf._custom_field_data = {"role": int_role}
