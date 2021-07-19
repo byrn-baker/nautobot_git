@@ -62,8 +62,12 @@ class CreateAristaPod(Job):
         RACK_HEIGHT = 42
         RACK_TYPE = "4-post-frame"
         ROLES = {
-            "spine": {"device_type": "spine_veos", "interfaces": {"role": "leaf", "interface": ["Ethernet1", "Ethernet2", "Ethernet3", "Ethernet4"]}},
-            "leaf": {"device_type": "leaf_veos", "interfaces": {"role": "spine", "interface": ["Ethernet1", "Ethernet2"]}},
+            "spine": {"device_type": "spine_veos", "interfaces": {
+                "leaf": ["Ethernet1","Ethernet2"]}
+                },
+            "leaf": {"device_type": "leaf_veos", "interfaces": {
+                "spine": ["Ethernet1", "Ethernet2"]}
+                },
         }
         ROLES["leaf"]["nbr"] = data["leaf_count"]
 
