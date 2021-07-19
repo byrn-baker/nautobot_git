@@ -62,12 +62,8 @@ class CreateAristaPod(Job):
         RACK_HEIGHT = 42
         RACK_TYPE = "4-post-frame"
         ROLES = {
-            "spine": {"device_type": "spine_veos", "interfaces": {
-                "leaf": {"cnt": "Ethernet1"}
-                }},
-            "leaf": {"device_type": "leaf_veos", "interfaces": {
-                "spine": {"cnt": "Ethernet1"}
-                }},
+            "spine": {"device_type": "spine_veos"},
+            "leaf": {"device_type": "leaf_veos"},
             }
         
         ROLES["leaf"]["nbr"] = data["leaf_count"]
@@ -217,6 +213,9 @@ class CreateAristaPod(Job):
 
                 # Assign Role to Interfaces
                 intfs = iter(Interface.objects.filter(device=device))
+                data["interfaces"] = {
+                    "role": "leaf", "cnt": ["Ethernet1", "Ethernet2", "Ethernet3", "Ethernet4"]
+                }
                 for int_role, cnt in data["interfaces"]:
                     for i in range(0, cnt):
                         intf = next(intfs)
