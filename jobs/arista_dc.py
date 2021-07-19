@@ -214,7 +214,7 @@ class CreateAristaPod(Job):
                 # Assign Role to Interfaces
                 intfs = iter(Interface.objects.filter(device=device))
                 data["interfaces"] = {
-                    "role": "leaf", "cnt": ["Ethernet1", "Ethernet2", "Ethernet3", "Ethernet4"]
+                    "role": "leaf", "cnt": "Ethernet1"
                 }
                 for int_role, cnt in data["interfaces"]:
                     for i in range(0, cnt):
