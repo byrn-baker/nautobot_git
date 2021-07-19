@@ -62,8 +62,16 @@ class CreateAristaPod(Job):
         RACK_HEIGHT = 42
         RACK_TYPE = "4-post-frame"
         ROLES = {
-            "spine": {"device_type": "spine_veos"},
-            "leaf": {"device_type": "leaf_veos"},
+            "spine": {"device_type": "spine_veos", "interfaces": {
+                "Ethernet1": {"descriptions": "TO LEAF1", "role": "leaf" },
+                "Ethernet2": {"descriptions": "TO LEAF2", "role": "leaf" },
+                "Ethernet3": {"descriptions": "TO LEAF3", "role": "leaf" },
+                "Ethernet4": {"descriptions": "TO LEAF4", "role": "leaf" },}
+                },
+            "leaf": {"device_type": "leaf_veos", "interfaces": {
+                "Ethernet1": {"descriptions": "TO SPINE1", "role": "spine" },
+                "Ethernet2": {"descriptions": "TO SPINE2", "role": "spine" },}
+                },
             }
         
         ROLES["leaf"]["nbr"] = data["leaf_count"]
@@ -212,12 +220,37 @@ class CreateAristaPod(Job):
                 loopback1_ip = IPAddress.objects.create(address=str(lo1_address), assigned_object=loopback1_intf)
 
                 # Assign Role to Interfaces
-                # intfs = iter(Interface.objects.filter(device=device))
-                # for int_role, cnt in data["interfaces"]:
-                #     for i in range(0, cnt):
-                #         intf = next(intfs)
-                #         intf._custom_field_data = {"role": int_role}
-                #         intf.save()
+                intfs = iter(Interface.objects.filter(device=device))
+                for int_role, cnt in data["interfaces"]:
+                    for i in range(0, cnt):
+                        intf = next(intfs)
+                        intf._custom_field_data = {"role": int_role}
+                        intf.save()
+
+
+                # if role == "leaf":
+                #     for vlan_name, vlan_data in VLANS.items():
+                #         prefix_role = Role.objects.get(slug=vlan_name)
+                #         vlan = VLAN.objects.create(
+                #             vid=vlan_data["vlan_id"], name=f"{rack_name}-{vlan_name}", site=self.site, role=prefix_role
+                #         )
+                #         vlan_block = Prefix.objects.filter(
+                #             site=self.site, status=container_status, role=prefix_role
+                #         ).first()
+
+                #         # Find Next available Network
+                #         first_avail = vlan_block.get_first_available_prefix()
+                #         subnet = list(first_avail.subnet(24))[0]
+                #         vlan_prefix = Prefix.objects.create(prefix=str(subnet), vlan=vlan)
+                #         vlan_prefix.save()
+
+                #         intf_name = f"vlan{vlanx_data['vlan_id']}"
+                #         intf = Interface.objects.create(
+                #             name=intf_name, device=device, type=InterfaceTypeChoices.TYPE_VIRTUAL
+                #         )
+
+                #         # Create IP Addresses on both sides
+                #         vlan_ip = IPAddress.objects.create(address=str(subnet[0]), assigned_object=intf)
 
     def create_p2p_link(self, intf1, intf2):
         """Create a Point to Point link between 2 interfaces.
