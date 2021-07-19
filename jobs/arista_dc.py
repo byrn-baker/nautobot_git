@@ -62,16 +62,8 @@ class CreateAristaPod(Job):
         RACK_HEIGHT = 42
         RACK_TYPE = "4-post-frame"
         ROLES = {
-            "spine": {"device_type": "spine_veos", "interfaces": {
-                "Ethernet1": {"descriptions": "TO LEAF1", "role": "leaf" },
-                "Ethernet2": {"descriptions": "TO LEAF2", "role": "leaf" },
-                "Ethernet3": {"descriptions": "TO LEAF3", "role": "leaf" },
-                "Ethernet4": {"descriptions": "TO LEAF4", "role": "leaf" },}
-                },
-            "leaf": {"device_type": "leaf_veos", "interfaces": {
-                "Ethernet1": {"descriptions": "TO SPINE1", "role": "spine" },
-                "Ethernet2": {"descriptions": "TO SPINE2", "role": "spine" },}
-                },
+            "spine": {"device_type": "spine_veos"},
+            "leaf": {"device_type": "leaf_veos"},
             }
         
         ROLES["leaf"]["nbr"] = data["leaf_count"]
@@ -220,14 +212,25 @@ class CreateAristaPod(Job):
                 loopback1_ip = IPAddress.objects.create(address=str(lo1_address), assigned_object=loopback1_intf)
 
                 # Assign Role to Interfaces
+                interfaces = {
+                    "spine": {
+                        "Ethernet1": {"descriptions": "TO LEAF1", "role": "leaf" },
+                        "Ethernet2": {"descriptions": "TO LEAF2", "role": "leaf" },
+                        "Ethernet3": {"descriptions": "TO LEAF3", "role": "leaf" },
+                        "Ethernet4": {"descriptions": "TO LEAF4", "role": "leaf" },
+                    },
+                    "leaf": {
+                        "Ethernet1": {"descriptions": "TO SPINE1", "role": "spine" },
+                        "Ethernet2": {"descriptions": "TO SPINE2", "role": "spine" },
+                    }
+                }
                 intfs = iter(Interface.objects.filter(device=device))
-                for int_role, cnt in data["interfaces"]:
+                for int_role, cnt in interfaces:
                     for i in range(0, cnt):
                         intf = next(intfs)
                         intf._custom_field_data = {"role": int_role}
                         intf.save()
-
-
+                        
                 # if role == "leaf":
                 #     for vlan_name, vlan_data in VLANS.items():
                 #         prefix_role = Role.objects.get(slug=vlan_name)
