@@ -225,12 +225,12 @@ class CreateAristaPod(Job):
                     }
                 }
                 intfs = iter(Interface.objects.filter(device=device))
-                for int_role, cnt in interfaces:
+                for int_role, cnt in interfaces.items():
                     for i in range(0, cnt):
                         intf = next(intfs)
                         intf._custom_field_data = {"role": int_role}
                         intf.save()
-                        
+
                 # if role == "leaf":
                 #     for vlan_name, vlan_data in VLANS.items():
                 #         prefix_role = Role.objects.get(slug=vlan_name)
