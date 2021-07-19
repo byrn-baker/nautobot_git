@@ -64,14 +64,10 @@ class CreateAristaPod(Job):
         ROLES = {
             "spine": {"device_type": "spine_veos", "interfaces": {
                 "Ethernet1": {"descriptions": "TO LEAF1", "role": "leaf" },
-                "Ethernet2": {"descriptions": "TO LEAF2", "role": "leaf" },
-                "Ethernet3": {"descriptions": "TO LEAF3", "role": "leaf" },
-                "Ethernet4": {"descriptions": "TO LEAF4", "role": "leaf" },
                     },
                 },
             "leaf": {"device_type": "leaf_veos", "interfaces": {
                 "Ethernet1": {"descriptions": "TO SPINE1", "role": "spine" },
-                "Ethernet2": {"descriptions": "TO SPINE2", "role": "spine" },
                     },
                 },
             }
@@ -127,6 +123,7 @@ class CreateAristaPod(Job):
             prefix=str(vtep_loopback),
             site=self.site,
             role=vtep_role,
+            status=container_status,
         )
         self.log_success(obj=vtep_loopback, message="Created new vtep prefix")
 
@@ -135,6 +132,7 @@ class CreateAristaPod(Job):
             prefix=str(mlag_leaf_l3),
             site=self.site,
             role=mlag_leaf_l3_role,
+            status=container_status,
         )
         self.log_success(obj=mlag_leaf_l3, message="Created new mlag leaf L3 prefix")
 
@@ -143,6 +141,7 @@ class CreateAristaPod(Job):
             prefix=str(mlag_peer),
             site=self.site,
             role=mlag_peer_role,
+            status=container_status,
         )
         self.log_success(obj=mlag_peer, message="Created new mlag peer prefix")
 
@@ -221,39 +220,10 @@ class CreateAristaPod(Job):
                 lo1_address = list(available_ips)[0]
                 loopback1_ip = IPAddress.objects.create(address=str(lo1_address), assigned_object=loopback1_intf)
 
-                # Assign Role to Interfaces
-                intfs = iter(Interface.objects.filter(device=device))
-                for intf_name, intf_items in data["interfaces"].items():
-                    for i in intf_name:
-                        intf = next(intfs)
-                        intf._custom_field_data = {"role": intf_items["role"]}
-                        intf.save()
 
-                # if role == "leaf":
-                #     for vlan_name, vlan_data in VLANS.items():
-                #         prefix_role = Role.objects.get(slug=vlan_name)
-                #         vlan = VLAN.objects.create(
-                #             vid=vlan_data["vlan_id"], name=f"{rack_name}-{vlan_name}", site=self.site, role=prefix_role
-                #         )
-                #         vlan_block = Prefix.objects.filter(
-                #             site=self.site, status=container_status, role=prefix_role
-                #         ).first()
-
-                #         # Find Next available Network
-                #         first_avail = vlan_block.get_first_available_prefix()
-                #         subnet = list(first_avail.subnet(24))[0]
-                #         vlan_prefix = Prefix.objects.create(prefix=str(subnet), vlan=vlan)
-                #         vlan_prefix.save()
-
-                #         intf_name = f"vlan{vlanx_data['vlan_id']}"
-                #         intf = Interface.objects.create(
-                #             name=intf_name, device=device, type=InterfaceTypeChoices.TYPE_VIRTUAL
-                #         )
-
-                #         # Create IP Addresses on both sides
-                #         vlan_ip = IPAddress.objects.create(address=str(subnet[0]), assigned_object=intf)
-
+                
     def create_p2p_link(self, intf1, intf2):
+        
         """Create a Point to Point link between 2 interfaces.
 
         This function will:
@@ -282,5 +252,3 @@ class CreateAristaPod(Job):
         # Create IP Addresses on both sides
         ip1 = IPAddress.objects.create(address=str(subnet[0]), assigned_object=intf1)
         ip2 = IPAddress.objects.create(address=str(subnet[1]), assigned_object=intf2)
-
-
