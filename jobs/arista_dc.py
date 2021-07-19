@@ -63,17 +63,15 @@ class CreateAristaPod(Job):
         RACK_TYPE = "4-post-frame"
         ROLES = {
             "spine": {"device_type": "spine_veos", "interfaces": {
-                "role": "leaf", "cnt": 4
-                # "Ethernet1": {"descriptions": "TO LEAF1", "role": "leaf" },
-                # "Ethernet2": {"descriptions": "TO LEAF2", "role": "leaf" },
-                # "Ethernet3": {"descriptions": "TO LEAF3", "role": "leaf" },
-                # "Ethernet4": {"descriptions": "TO LEAF4", "role": "leaf" },
+                "Ethernet1": {"descriptions": "TO LEAF1", "role": "leaf" },
+                "Ethernet2": {"descriptions": "TO LEAF2", "role": "leaf" },
+                "Ethernet3": {"descriptions": "TO LEAF3", "role": "leaf" },
+                "Ethernet4": {"descriptions": "TO LEAF4", "role": "leaf" },
                     },
                 },
             "leaf": {"device_type": "leaf_veos", "interfaces": {
-                "role": "leaf", "cnt": 2
-                # "Ethernet1": {"descriptions": "TO SPINE1", "role": "spine" },
-                # "Ethernet2": {"descriptions": "TO SPINE2", "role": "spine" },
+                "Ethernet1": {"descriptions": "TO SPINE1", "role": "spine" },
+                "Ethernet2": {"descriptions": "TO SPINE2", "role": "spine" },
                     },
                 },
             }
@@ -225,10 +223,10 @@ class CreateAristaPod(Job):
 
                 # Assign Role to Interfaces
                 intfs = iter(Interface.objects.filter(device=device))
-                for int_role, cnt in data["interfaces"]:
-                    for i in range(0, cnt):
+                for intf_name, intf_items in data["interfaces"].items():
+                    for i in range(0, intf_name):
                         intf = next(intfs)
-                        intf._custom_field_data = {"role": int_role}
+                        intf._custom_field_data = {"role": intf_items["role"]}
                         intf.save()
 
                 # if role == "leaf":
