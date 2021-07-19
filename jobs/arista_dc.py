@@ -63,15 +63,17 @@ class CreateAristaPod(Job):
         RACK_TYPE = "4-post-frame"
         ROLES = {
             "spine": {"device_type": "spine_veos", "interfaces": {
-                "Ethernet1": {"descriptions": "TO LEAF1", "role": "leaf" },
-                "Ethernet2": {"descriptions": "TO LEAF2", "role": "leaf" },
-                "Ethernet3": {"descriptions": "TO LEAF3", "role": "leaf" },
-                "Ethernet4": {"descriptions": "TO LEAF4", "role": "leaf" },
+                "role": "leaf", "cnt": 4
+                # "Ethernet1": {"descriptions": "TO LEAF1", "role": "leaf" },
+                # "Ethernet2": {"descriptions": "TO LEAF2", "role": "leaf" },
+                # "Ethernet3": {"descriptions": "TO LEAF3", "role": "leaf" },
+                # "Ethernet4": {"descriptions": "TO LEAF4", "role": "leaf" },
                     },
                 },
             "leaf": {"device_type": "leaf_veos", "interfaces": {
-                "Ethernet1": {"descriptions": "TO SPINE1", "role": "spine" },
-                "Ethernet2": {"descriptions": "TO SPINE2", "role": "spine" },
+                "role": "leaf", "cnt": 2
+                # "Ethernet1": {"descriptions": "TO SPINE1", "role": "spine" },
+                # "Ethernet2": {"descriptions": "TO SPINE2", "role": "spine" },
                     },
                 },
             }
