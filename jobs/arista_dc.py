@@ -71,7 +71,6 @@ class CreateAristaPod(Job):
             }
         
         ROLES["leaf"]["nbr"] = data["leaf_count"]
-        ROLES["spine"]["count"] = data["spine_count"]
 
         # ----------------------------------------------------------------------------
         # Allocate Prefixes for this DataCenter
