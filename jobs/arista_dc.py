@@ -32,8 +32,6 @@ class CreateAristaPod(Job):
 
     leaf_count = IntegerVar(description="Number of Leaf Switch", label="Leaf switches count", min_value=1, max_value=4)
 
-    spine_count = IntegerVar(description="Number of Spine Switch", label="Spine switches count", min_value=2, max_value=2)
-
     def run(self, data=None, commit=None):
         """Main function for CreatePop."""
         self.devices = {}
@@ -200,7 +198,7 @@ class CreateAristaPod(Job):
                         self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
 
                 elif device.device_role.slug == "leaf":
-                    for i in range(1, data.get("count", 2) + 1):
+                    for i in range(1, 2 + 1):
                         intf_name = Interface.objects.get_or_create(
                             name=f"Ethernet{i}", type="1000base-t", device=device, _custom_field_data = {"role": "spine"}
                         )
