@@ -192,7 +192,6 @@ class CreateAristaPod(Job):
                 self.log_success(device, f"Device {device_name} successfully created")
 
                 # Create physical interfaces
-                dev_role = DeviceRole.objects.get()
                 if device.device_role == "spine":
                     for i in range(1,data.get("nbr", 2) + 1):
                         intf_name = Interface.objects.get_or_create(
