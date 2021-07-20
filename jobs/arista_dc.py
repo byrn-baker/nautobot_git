@@ -196,7 +196,6 @@ class CreateAristaPod(Job):
                     intf_name = Interface.objects.get_or_create(
                         name=f"Ethernet{i}", type="1000base-t", device=device, _custom_field_data = {"role": role}
                     )
-                    intf_name.save()
                     intf_name.log_success(intf_name), f"{intf_name} successfully created on {device_name}"
 
 
