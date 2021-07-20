@@ -189,8 +189,9 @@ class CreateAristaPod(Job):
                 self.log_success(device, f"Device {device_name} successfully created")
 
                 # Create physical interfaces
+                nbr = data.get("nbr")
                 if device.device_role.slug == "spine":
-                    for i in range(1, data["nbr"] + 1):
+                    for i in range(1, nbr + 1):
                         intf_name = Interface.objects.get_or_create(
                             name=f"Ethernet{i}", type="1000base-t", device=device, _custom_field_data = {"role": "leaf"}
                         )
