@@ -32,7 +32,7 @@ class CreateAristaPod(Job):
 
     leaf_count = IntegerVar(description="Number of Leaf Switch", label="Leaf switches count", min_value=1, max_value=4)
 
-    spine_count = "2"
+    spine_count = IntegerVar(description="Number of Spine Switch", label="Spine switches count", min_value=2, max_value=2)
 
     def run(self, data=None, commit=None):
         """Main function for CreatePop."""
