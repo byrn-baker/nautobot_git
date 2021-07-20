@@ -192,19 +192,22 @@ class CreateAristaPod(Job):
                 self.log_success(device, f"Device {device_name} successfully created")
 
                 # Create physical interfaces
-                if "spine" in device.device_role:
+                if device.device_role == {"DeviceRole": "spine"}:
                     for i in range(1,data.get("nbr", 2) + 1):
                         intf_name = Interface.objects.get_or_create(
                             name=f"Ethernet{i}", type="1000base-t", device=device, _custom_field_data = {"role": "leaf"}
                         )
                         self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
 
-                if "leaf" in device.device_role:
+                elif device.device_role == {"DeviceRole": "leaf"}:
                     for i in range(1,data.get("count", 2) + 1):
                         intf_name = Interface.objects.get_or_create(
                             name=f"Ethernet{i}", type="1000base-t", device=device, _custom_field_data = {"role": "spine"}
                         )
                         self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
+
+                else:
+                    "Nothing is matching"
 
 
                 # Generate Loopback0 interface and assign Loopback0 address
