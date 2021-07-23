@@ -2,7 +2,7 @@ from django.utils.text import slugify
 import yaml
 from nautobot.dcim.models import Site, Device, Rack, Region, Cable, DeviceRole, DeviceType, Interface
 from nautobot.ipam.models import Role, Prefix, IPAddress
-from nautobot.extras.models import CustomField, Job, Status
+from nautobot.extras.models import CustomField, Job, Status, ContentType
 from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar, BooleanVar
 from nautobot.circuits.models import Provider, CircuitType, Circuit, CircuitTermination
 import ipaddress
