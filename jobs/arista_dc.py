@@ -1,11 +1,31 @@
 from django.utils.text import slugify
-
+import yaml
 from nautobot.dcim.models import Site, Device, Rack, Region, Cable, DeviceRole, DeviceType, Interface
 from nautobot.ipam.models import Role, Prefix, IPAddress
 from nautobot.extras.models import CustomField, Job, Status
-from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar
+from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar, BooleanVar
 from nautobot.circuits.models import Provider, CircuitType, Circuit, CircuitTermination
 import ipaddress
+
+CUSTOM_FIELDS = {
+    "role": {"models": [Interface], "label": "Role"},
+    "site_type": {"models": [Site], "label": "Type of Site"},
+    "device_bgp": {"models": [Device], "label": "Device BGP ASN"}
+}
+def create_custom_fields():
+    """Create all relationships defined in CUSTOM_FIELDS."""
+    for cf_name, field in CUSTOM_FIELDS.items():
+        try:
+            cf = CustomField.objects.get(name=cf_name)
+        except CustomField.DoesNotExist:
+            cf = CustomField.objects.create(name=cf_name)
+            if "label" in field:
+                cf.label = field.get("label")
+            cf.validated_save()
+        for model in field["models"]:
+            ct = ContentType.objects.get_for_model(model)
+            cf.content_types.add(ct)
+            cf.validated_save()
 
 IPv4Network = ipaddress.ip_network
 class CreateAristaPod(Job):
@@ -29,8 +49,14 @@ class CreateAristaPod(Job):
     region = ObjectVar(model=Region)
 
     dc_code = StringVar(description="Name of the new DataCenter", label="DataCenter")
+    
+    spine_count = IntegerVar(description="Number of Spine Switches", label="Spine switches count", min_value=1, max_value=3)
 
-    leaf_count = IntegerVar(description="Number of Leaf Switch", label="Leaf switches count", min_value=1, max_value=4)
+    borderleaf_count = IntegerVar(description="Number of Border Leaf Switches", label="Border Leaf switches count", min_value=1, max_value=2)
+
+    leaf_count = IntegerVar(description="Number of Leaf Switches", label="Leaf switches count", min_value=1, max_value=4)
+
+    dci_count = BooleanVar(description="Does this DataCenter require an interconnect?", label="DCI required")
 
     def run(self, data=None, commit=None):
         """Main function for CreatePop."""
@@ -39,7 +65,7 @@ class CreateAristaPod(Job):
         # ----------------------------------------------------------------------------
         # Initialize the database with all required objects
         # ----------------------------------------------------------------------------
-        # create_custom_fields()
+        create_custom_fields()
         # create_relationships()
         # create_prefix_roles()
 
@@ -56,21 +82,20 @@ class CreateAristaPod(Job):
         
         # Reference Vars
         TOP_LEVEL_PREFIX_ROLE = "datacenter"
-        SITE_PREFIX_SIZE = 16 
+        SITE_PREFIX_SIZE = 22 
         RACK_HEIGHT = 42
         RACK_TYPE = "4-post-frame"
         ROLES = {
-            "spine": {"device_type": "spine_veos", "interfaces": {
-                "Ethernet1": {"descriptions": "TO LEAF1", "role": "leaf" },
-                    },
-                },
-            "leaf": {"device_type": "leaf_veos", "interfaces": {
-                "Ethernet1": {"descriptions": "TO SPINE1", "role": "spine" },
-                    },
-                },
-            }
+            "spine": {"device_type": "spine_veos", "rack_elevation": 42 },
+            "leaf": {"device_type": "leaf_veos", "rack_elevation": 42 },
+            "borderleaf": {"device_type": "leaf_veos", "rack_elevation": 42 },
+            "dci": {"device_type": "spine_veos", "rack_elevation": 42 },
+        }
         
         ROLES["leaf"]["nbr"] = data["leaf_count"]
+        ROLES["borderleaf"]["nbr"] = data["borderleaf_count"]
+        ROLES["spine"]["nbr"] = data["spine_count"]
+        ROLES["dci"]["nbr"] = data["dci_count"]
 
         # ----------------------------------------------------------------------------
         # Allocate Prefixes for this DataCenter
@@ -96,20 +121,22 @@ class CreateAristaPod(Job):
         iter_subnet = IPv4Network(str(dc_prefix.prefix)).subnets(new_prefix=24)
 
         # Allocate the subnet by block of /24
-        underlay_p2p = next(iter_subnet)
+        mlag_peer = next(iter_subnet)
         overlay_loopback = next(iter_subnet)
         vtep_loopback = next(iter_subnet)
-        mlag_leaf_l3 = next(iter_subnet)
-        mlag_peer = next(iter_subnet)
+        underlay_p2p = next(iter_subnet)
+        dci_p2p = next(iter_subnet)
 
         dc_role, _ = Role.objects.get_or_create(name=dc_code, slug=dc_code)
 
-        
-        underlay_role, _ = Role.objects.get_or_create(name=f"{dc_code}_underlay", slug=f"{dc_code}_underlay")
+        mlag_peer_role, _ = Role.objects.get_or_create(name=f"{dc_code}_mlag_peer", slug=f"{dc_code}_mlag_peer")
         Prefix.objects.get_or_create(
-            prefix=str(underlay_p2p), site=self.site, role=underlay_role, status=container_status
+            prefix=str(mlag_peer),
+            site=self.site,
+            role=mlag_peer_role,
+            status=container_status,
         )
-        self.log_success(obj=underlay_p2p, message="Created new underlay prefix")
+        self.log_success(obj=mlag_peer, message="Created new mlag peer prefix")
 
         overlay_role, _ = Role.objects.get_or_create(name=f"{dc_code}_overlay", slug=f"{dc_code}_overlay")
         Prefix.objects.get_or_create(prefix=str(overlay_loopback), site=self.site, role=overlay_role, status=container_status)
@@ -124,30 +151,40 @@ class CreateAristaPod(Job):
         )
         self.log_success(obj=vtep_loopback, message="Created new vtep prefix")
 
-        mlag_leaf_l3_role, _ = Role.objects.get_or_create(name=f"{dc_code}_mlag_leaf_l3", slug=f"{dc_code}_mlag_leaf_l3")
+        underlay_role, _ = Role.objects.get_or_create(name=f"{dc_code}_underlay_p2p", slug=f"{dc_code}_underlay_p2p")
         Prefix.objects.get_or_create(
-            prefix=str(mlag_leaf_l3),
-            site=self.site,
-            role=mlag_leaf_l3_role,
-            status=container_status,
+            prefix=str(underlay_p2p), site=self.site, role=underlay_role, status=container_status
         )
-        self.log_success(obj=mlag_leaf_l3, message="Created new mlag leaf L3 prefix")
+        self.log_success(obj=underlay_p2p, message="Created new underlay p2p prefix")
 
-        mlag_peer_role, _ = Role.objects.get_or_create(name=f"{dc_code}_mlag_peer", slug=f"{dc_code}_mlag_peer")
+        dci_p2p_role, _ = Role.objects.get_or_create(name=f"{dc_code}_dci_p2p", slug=f"{dc_code}_dci_p2p")
         Prefix.objects.get_or_create(
-            prefix=str(mlag_peer),
+            prefix=str(dci_p2p),
             site=self.site,
-            role=mlag_peer_role,
+            role=dci_p2p_role,
             status=container_status,
         )
-        self.log_success(obj=mlag_peer, message="Created new mlag peer prefix")
+        self.log_success(obj=dci_p2p, message="Created new dci p2p prefix")
 
         # ----------------------------------------------------------------------------
         # Create Racks
         # ----------------------------------------------------------------------------
         rack_status = Status.objects.get_for_model(Rack).get(slug="active")
+
+        rack_name_spine = f"{dc_code}-spine-rr-1"
+        rack = Rack.objects.get_or_create(
+            name=rack_name_spine, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
+        )
+        self.log_success(obj=rack, message=f"Created Relay Rack {rack_name_spine}")
+
+        rack_name_edge = f"{dc_code}-edge-rr-1"
+        rack = Rack.objects.get_or_create(
+            name=rack_name_edge, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
+        )
+        self.log_success(obj=rack, message=f"Created Relay Rack {rack_name_edge}")
+
         for i in range(1, ROLES["leaf"]["nbr"] + 1):
-            rack_name = f"{dc_code}-{100 + i}"
+            rack_name = f"{dc_code}-leaf-rr-{i}"
             rack = Rack.objects.get_or_create(
                 name=rack_name, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
             )
@@ -156,7 +193,6 @@ class CreateAristaPod(Job):
         # ----------------------------------------------------------------------------
         # Create Devices
         # ----------------------------------------------------------------------------
-        spine_nbr = data["leaf_count"]
         for role, data in ROLES.items():
             for i in range(1, data.get("nbr", 2) + 1):
 
