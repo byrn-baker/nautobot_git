@@ -88,10 +88,10 @@ class CreateAristaPod(Job):
         RACK_HEIGHT = 42
         RACK_TYPE = "4-post-frame"
         ROLES = {
-            "spine": {"device_type": "spine_veos", "rack_elevation": 42 },
-            "leaf": {"device_type": "leaf_veos", "rack_elevation": 42 },
-            "borderleaf": {"device_type": "leaf_veos", "rack_elevation": 42 },
-            "dci": {"device_type": "spine_veos", "rack_elevation": 42 },
+            "spine": {"device_type": "spine_veos", "rack_elevation": [0,42] },
+            "leaf": {"device_type": "leaf_veos", "rack_elevation": [0,42] },
+            "borderleaf": {"device_type": "leaf_veos", "rack_elevation": [0,42] },
+            "dci": {"device_type": "spine_veos", "rack_elevation": [0,42] },
         }
         
         ROLES["leaf"]["nbr"] = data["leaf_count"]
@@ -205,6 +205,7 @@ class CreateAristaPod(Job):
         # ----------------------------------------------------------------------------
         for role, data in ROLES.items():
             for i in range(1, data.get("nbr", 2) + 1):
+                rack_elevation = i
 
                 if 'spine' in role:
                     rack_name = f"{dc_code}-spine-rr-1"
@@ -233,7 +234,7 @@ class CreateAristaPod(Job):
                     status=device_status,
                     device_role=device_role,
                     rack=rack,
-                    position=data.get("rack_elevation"),
+                    position=rack_elevation,
                     face="front",
                 )
 
