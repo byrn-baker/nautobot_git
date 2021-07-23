@@ -57,18 +57,8 @@ class CreateAristaPod(Job):
     leaf_count = IntegerVar(description="Number of Leaf Switches", label="Leaf switches count", min_value=1, max_value=4)
 
     borderleaf = BooleanVar(description="Does this DataCenter require Border Leaf switches?", label="borderleaf required")
-
-    if borderleaf == True:
-        borderleaf_count = 2
-    elif borderleaf == False:
-        borderleaf_count = 0
     
     dci = BooleanVar(description="Does this DataCenter require an interconnect?", label="DCI required")
-
-    if dci == True:
-        dci_count = 1
-    elif dci == False:
-        dci_count = 0
     
 
     def run(self, data=None, commit=None):
@@ -106,9 +96,15 @@ class CreateAristaPod(Job):
         }
         # Number of devices to provision
         ROLES["leaf"]["nbr"] = data["leaf_count"]
-        ROLES["borderleaf"]["nbr"] = data["borderleaf_count"]
+        if data["borderleaf"] == True:
+            ROLES["borderleaf"]["nbr"] = 2
+        else:
+            ROLES["borderleaf"]["nbr"] = 0
         ROLES["spine"]["nbr"] = data["spine_count"] + data["borderleaf_count"]
-        ROLES["dci"]["nbr"] = data["dci_count"]
+        if data["dci"] == True:
+            ROLES["dci"]["nbr"] = 1
+        else:
+            ROLES["dci"]["nbr"] = 0
         
         # Number of interfaces to provision
         ROLES["leaf"]["int_cnt"] = data["spine_count"]
