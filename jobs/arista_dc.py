@@ -96,22 +96,15 @@ class CreateAristaPod(Job):
         }
         # Number of devices to provision
         ROLES["leaf"]["nbr"] = data["leaf_count"]
+        ROLES["spine"]["nbr"] = data["spine_count"]
         if data["borderleaf"] == True:
             ROLES["borderleaf"]["nbr"] = 2
-            ROLES["spine"]["nbr"] = data["spine_count"] + 2
         else:
             ROLES["borderleaf"]["nbr"] = 0
-            ROLES["spine"]["nbr"] = data["spine_count"]
         if data["dci"] == True:
             ROLES["dci"]["nbr"] = 1
         else:
             ROLES["dci"]["nbr"] = 0
-        
-        # Number of interfaces to provision
-        ROLES["leaf"]["int_cnt"] = data["spine_count"]
-        ROLES["borderleaf"]["int_cnt"] = data["spine_count"]
-        ROLES["spine"]["int_cnt"] = data["leaf_count"]
-        ROLES["dci"]["int_cnt"] = data["borderleaf_count"]
 
         # ----------------------------------------------------------------------------
         # Allocate Prefixes for this DataCenter
@@ -292,18 +285,19 @@ class CreateAristaPod(Job):
                 
 
                 # Generate Loopback1 interface and assign Loopback1 address
-                loopback1_intf = Interface.objects.create(
-                    name="Loopback1", type="virtual", device=device
-                )
+                if device.device_role.slug == "leaf" or "borderleaf":
+                    loopback1_intf = Interface.objects.create(
+                        name="Loopback1", type="virtual", device=device
+                    )
 
-                loopback1_prefix = Prefix.objects.get(
-                    site=self.site,
-                    role__name=f"{dc_code}_vtep_loopback",
-                )
+                    loopback1_prefix = Prefix.objects.get(
+                        site=self.site,
+                        role__name=f"{dc_code}_vtep_loopback",
+                    )
 
-                available_ips = loopback1_prefix.get_available_ips()
-                lo1_address = list(available_ips)[0]
-                loopback1_ip = IPAddress.objects.create(address=str(lo1_address), assigned_object=loopback1_intf)
+                    available_ips = loopback1_prefix.get_available_ips()
+                    lo1_address = list(available_ips)[0]
+                    loopback1_ip = IPAddress.objects.create(address=str(lo1_address), assigned_object=loopback1_intf)
 
     INTERFACES = """
     dci:
