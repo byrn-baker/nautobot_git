@@ -251,22 +251,42 @@ class CreateAristaPod(Job):
                 self.log_success(device, f"Device {device_name} successfully created")
 
                 # Create physical interfaces
-                if device.device_role.slug == "spine":
-                    for i in range(1, data.get("nbr", 2) + 1):
-                        intf_name = Interface.objects.get_or_create(
-                            name=f"Ethernet{i}", type="1000base-t", device=device, _custom_field_data = {"role": "leaf"}
-                        )
-                        self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
+                SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
+                for iface in SWITCHES[device_name]['interfaces']:
+                    intf_name = Interface.objects.get_or_create(
+                        name=iface, 
+                        type="1000base-t",
+                        mtu=9214, 
+                        device=device, 
+                    )
+                    self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
+                
+                if device.device_role.slug == "leaf" or "borderleaf":
+                    intf_name = Interface.objects.get_or_create(
+                            name="Port-Channel10", 
+                            type="lag",
+                            mode="tagged-all",
+                            mtu=1500, 
+                            device=device, 
+                    )
+                    self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
+                    intf_name = Interface.objects.get_or_create(
+                        name="Ethernet1", 
+                        type="1000base-t",
+                        mode="tagged-all",
+                        mtu=1500, 
+                        device=device, 
+                    )
+                    self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
+                    intf_name = Interface.objects.get_or_create(
+                        name="Ethernet2", 
+                        type="1000base-t",
+                        mode="tagged-all",
+                        mtu=1500, 
+                        device=device, 
+                    )
+                    self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
 
-                elif device.device_role.slug == "leaf":
-                    for i in range(1, data.get("nbr", 2) + 1):
-                        intf_name = Interface.objects.get_or_create(
-                            name=f"Ethernet{i}", type="1000base-t", device=device, _custom_field_data = {"role": "spine"}
-                        )
-                        self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
-
-                else:
-                    "Nothing is matching"
 
 
                 # Generate Loopback0 interface and assign Loopback0 address
@@ -299,185 +319,185 @@ class CreateAristaPod(Job):
                     lo1_address = list(available_ips)[0]
                     loopback1_ip = IPAddress.objects.create(address=str(lo1_address), assigned_object=loopback1_intf)
 
-    INTERFACES = """
-    dci:
-  interfaces:
+config = """
+dci:
+interfaces:
     Ethernet1:
-      b_device: borderleaf-01
-      b_int: 12
+    b_device: borderleaf-01
+    b_int: 12
     Ethernet2:
-      b_device: borderleaf-02
-      b_int: 12
+    b_device: borderleaf-02
+    b_int: 12
 borderleaf-01: 
-  interfaces:
+interfaces:
     Ethernet1:
-      b_device: borderleaf-02
-      b_int: 1
+    b_device: borderleaf-02
+    b_int: 1
     Ethernet2:
-      b_device: borderleaf-02
-      b_int: 2
+    b_device: borderleaf-02
+    b_int: 2
     Ethernet3:
-      b_device: spine-01
-      b_int: 6
+    b_device: spine-01
+    b_int: 6
     Ethernet4:
-      b_device: spine-02
-      b_int: 6
+    b_device: spine-02
+    b_int: 6
     Ethernet5:
-      b_device: spine-03
-      b_int: 6
+    b_device: spine-03
+    b_int: 6
     Ethernet12:
-      b_device: dci-01
-      b_int: 1
+    b_device: dci-01
+    b_int: 1
 borderleaf-02: 
-  device_type: "leaf_veos"
-  interfaces:
+device_type: "leaf_veos"
+interfaces:
     Ethernet1:
-      b_device: borderleaf-01
-      b_int: 1
+    b_device: borderleaf-01
+    b_int: 1
     Ethernet2:
-      b_device: borderleaf-01
-      b_int: 2
+    b_device: borderleaf-01
+    b_int: 2
     Ethernet3:
-      b_device: spine-01
-      b_int: 7
+    b_device: spine-01
+    b_int: 7
     Ethernet4:
-      b_device: spine-02
-      b_int: 7
+    b_device: spine-02
+    b_int: 7
     Ethernet5:
-      b_device: spine-03
-      b_int: 7
+    b_device: spine-03
+    b_int: 7
     Ethernet12:
-      b_device: dci-01
-      b_int: 2
+    b_device: dci-01
+    b_int: 2
 spine-01:
-  device_type: "spine_veos"
-  interfaces:
+device_type: "spine_veos"
+interfaces:
     Ethernet2:
-      b_device: leaf-01
-      b_int: 3
+    b_device: leaf-01
+    b_int: 3
     Ethernet3:
-      b_device: leaf-02
-      b_int: 3
+    b_device: leaf-02
+    b_int: 3
     Ethernet4:
-      b_device: leaf-03
-      b_int: 3
+    b_device: leaf-03
+    b_int: 3
     Ethernet5:
-      b_device: leaf-04
-      b_int: 3
+    b_device: leaf-04
+    b_int: 3
     Ethernet6:
-      b_device: borderleaf-01
-      b_int: 3
+    b_device: borderleaf-01
+    b_int: 3
     Ethernet7: 
-      b_device: borderleaf-02
-      b_int: 3
+    b_device: borderleaf-02
+    b_int: 3
 spine-02:
-  interfaces:
+interfaces:
     Ethernet2:
-      b_device: leaf-01
-      b_int: 4
+    b_device: leaf-01
+    b_int: 4
     Ethernet3:
-      b_device: leaf-02
-      b_int: 4
+    b_device: leaf-02
+    b_int: 4
     Ethernet4:
-      b_device: leaf-03
-      b_int: 4
+    b_device: leaf-03
+    b_int: 4
     Ethernet5:
-      b_device: leaf-04
-      b_int: 4
+    b_device: leaf-04
+    b_int: 4
     Ethernet6:
-      b_device: borderleaf-01
-      b_int: 4
+    b_device: borderleaf-01
+    b_int: 4
     Ethernet7: 
-      b_device: borderleaf-02
-      b_int: 4
+    b_device: borderleaf-02
+    b_int: 4
 spine-03:
-  interfaces:
+interfaces:
     Ethernet2:
-      b_device: leaf-01
-      b_int: 5
+    b_device: leaf-01
+    b_int: 5
     Ethernet3:
-      b_device: leaf-02
-      b_int: 5
+    b_device: leaf-02
+    b_int: 5
     Ethernet4:
-      b_device: leaf-03
-      b_int: 5
+    b_device: leaf-03
+    b_int: 5
     Ethernet5:
-      b_device: leaf-04
-      b_int: 5
+    b_device: leaf-04
+    b_int: 5
     Ethernet6:
-      b_device: borderleaf-01
-      b_int: 5
+    b_device: borderleaf-01
+    b_int: 5
     Ethernet7: 
-      b_device: borderleaf-02
-      b_int: 5
+    b_device: borderleaf-02
+    b_int: 5
 leaf-01:
-  interfaces:
+interfaces:
     Ethernet1:
-      b_device: leaf-02
-      b_int: 1
+    b_device: leaf-02
+    b_int: 1
     Ethernet2:
-      b_device: leaf-02
-      b_int: 2
+    b_device: leaf-02
+    b_int: 2
     Ethernet3:
-      b_device: spine-01
-      b_int: 2
+    b_device: spine-01
+    b_int: 2
     Ethernet4:
-      b_device: spine-02
-      b_int: 3
+    b_device: spine-02
+    b_int: 3
     Ethernet5:
-      b_device: spine-03
-      b_int: 4
+    b_device: spine-03
+    b_int: 4
 leaf-02:
-  interfaces:
+interfaces:
     Ethernet1:
-      b_device: leaf-01
-      b_int: 1
+    b_device: leaf-01
+    b_int: 1
     Ethernet2:
-      b_device: leaf-01
-      b_int: 2
+    b_device: leaf-01
+    b_int: 2
     Ethernet3:
-      b_device: spine-01
-      b_int: 2
+    b_device: spine-01
+    b_int: 2
     Ethernet4:
-      b_device: spine-02
-      b_int: 3
+    b_device: spine-02
+    b_int: 3
     Ethernet5:
-      b_device: spine-03
-      b_int: 4
+    b_device: spine-03
+    b_int: 4
 leaf-03:
-  interfaces:
+interfaces:
     Ethernet1:
-      b_device: leaf-02
-      b_int: 1
+    b_device: leaf-02
+    b_int: 1
     Ethernet2:
-      b_device: leaf-02
-      b_int: 2
+    b_device: leaf-02
+    b_int: 2
     Ethernet3:
-      b_device: spine-01
-      b_int: 2
+    b_device: spine-01
+    b_int: 2
     Ethernet4:
-      b_device: spine-02
-      b_int: 3
+    b_device: spine-02
+    b_int: 3
     Ethernet5:
-      b_device: spine-03
-      b_int: 4
+    b_device: spine-03
+    b_int: 4
 leaf-04:
-  interfaces:
+interfaces:
     Ethernet1:
-      b_device: leaf-03
-      b_int: 1
+    b_device: leaf-03
+    b_int: 1
     Ethernet2:
-      b_device: leaf-03
-      b_int: 2
+    b_device: leaf-03
+    b_int: 2
     Ethernet3:
-      b_device: spine-01
-      b_int: 2
+    b_device: spine-01
+    b_int: 2
     Ethernet4:
-      b_device: spine-02
-      b_int: 3
+    b_device: spine-02
+    b_int: 3
     Ethernet5:
-      b_device: spine-03
-      b_int: 4
+    b_device: spine-03
+    b_int: 4
     """
                 
     # def create_p2p_link(self, intf1, intf2):
