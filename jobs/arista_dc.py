@@ -206,8 +206,15 @@ class CreateAristaPod(Job):
         for role, data in ROLES.items():
             for i in range(1, data.get("nbr", 2) + 1):
 
-                rack_name = f"{dc_code}-{100 + i}"
-                rack = Rack.objects.filter(name=rack_name, site=self.site).first()
+                if 'spine' in role:
+                    rack_name = f"{dc_code}-spine-rr-1"
+                    rack = Rack.objects.filter(name=rack_name, site=self.site).first()
+                elif 'leaf' in role:
+                    rack_name = f"{dc_code}-leaf-rr-{i}"
+                    rack = Rack.objects.filter(name=rack_name, site=self.site).first()
+                elif 'borderleaf' in role:
+                    rack_name = f"{dc_code}-edge-rr-1"
+                    rack = Rack.objects.filter(name=rack_name, site=self.site).first()
 
                 device_name = f"{dc_code}-{role}-{i:02}"
 
