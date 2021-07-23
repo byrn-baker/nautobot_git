@@ -54,11 +54,22 @@ class CreateAristaPod(Job):
     
     spine_count = IntegerVar(description="Number of Spine Switches", label="Spine switches count", min_value=1, max_value=3)
 
-    borderleaf_count = IntegerVar(description="Number of Border Leaf Switches", label="Border Leaf switches count", min_value=1, max_value=2)
-
     leaf_count = IntegerVar(description="Number of Leaf Switches", label="Leaf switches count", min_value=1, max_value=4)
 
-    dci_count = BooleanVar(description="Does this DataCenter require an interconnect?", label="DCI required")
+    borderleaf = BooleanVar(description="Does this DataCenter require Border Leaf switches?", label="borderleaf required")
+
+    if borderleaf == True:
+        borderleaf_count = 2
+    elif borderleaf == False:
+        borderleaf_count = 0
+    
+    dci = BooleanVar(description="Does this DataCenter require an interconnect?", label="DCI required")
+
+    if dci == True:
+        dci_count = 1
+    elif dci == False:
+        dci_count = 0
+    
 
     def run(self, data=None, commit=None):
         """Main function for CreatePop."""
@@ -88,16 +99,22 @@ class CreateAristaPod(Job):
         RACK_HEIGHT = 42
         RACK_TYPE = "4-post-frame"
         ROLES = {
-            "spine": {"device_type": "spine_veos", "rack_elevation": [0,42] },
-            "leaf": {"device_type": "leaf_veos", "rack_elevation": [0,42] },
-            "borderleaf": {"device_type": "leaf_veos", "rack_elevation": [0,42] },
-            "dci": {"device_type": "spine_veos", "rack_elevation": [0,42] },
+            "spine": {"device_type": "spine_veos"},
+            "leaf": {"device_type": "leaf_veos"},
+            "borderleaf": {"device_type": "leaf_veos"},
+            "dci": {"device_type": "spine_veos"},
         }
-        
+        # Number of devices to provision
         ROLES["leaf"]["nbr"] = data["leaf_count"]
         ROLES["borderleaf"]["nbr"] = data["borderleaf_count"]
-        ROLES["spine"]["nbr"] = data["spine_count"]
+        ROLES["spine"]["nbr"] = data["spine_count"] + data["borderleaf_count"]
         ROLES["dci"]["nbr"] = data["dci_count"]
+        
+        # Number of interfaces to provision
+        ROLES["leaf"]["int_cnt"] = data["spine_count"]
+        ROLES["borderleaf"]["int_cnt"] = data["spine_count"]
+        ROLES["spine"]["int_cnt"] = data["leaf_count"]
+        ROLES["dci"]["int_cnt"] = data["borderleaf_count"]
 
         # ----------------------------------------------------------------------------
         # Allocate Prefixes for this DataCenter
@@ -291,7 +308,186 @@ class CreateAristaPod(Job):
                 lo1_address = list(available_ips)[0]
                 loopback1_ip = IPAddress.objects.create(address=str(lo1_address), assigned_object=loopback1_intf)
 
-
+    INTERFACES = """
+    dci:
+  interfaces:
+    Ethernet1:
+      b_device: borderleaf-01
+      b_int: 12
+    Ethernet2:
+      b_device: borderleaf-02
+      b_int: 12
+borderleaf-01: 
+  interfaces:
+    Ethernet1:
+      b_device: borderleaf-02
+      b_int: 1
+    Ethernet2:
+      b_device: borderleaf-02
+      b_int: 2
+    Ethernet3:
+      b_device: spine-01
+      b_int: 6
+    Ethernet4:
+      b_device: spine-02
+      b_int: 6
+    Ethernet5:
+      b_device: spine-03
+      b_int: 6
+    Ethernet12:
+      b_device: dci-01
+      b_int: 1
+borderleaf-02: 
+  device_type: "leaf_veos"
+  interfaces:
+    Ethernet1:
+      b_device: borderleaf-01
+      b_int: 1
+    Ethernet2:
+      b_device: borderleaf-01
+      b_int: 2
+    Ethernet3:
+      b_device: spine-01
+      b_int: 7
+    Ethernet4:
+      b_device: spine-02
+      b_int: 7
+    Ethernet5:
+      b_device: spine-03
+      b_int: 7
+    Ethernet12:
+      b_device: dci-01
+      b_int: 2
+spine-01:
+  device_type: "spine_veos"
+  interfaces:
+    Ethernet2:
+      b_device: leaf-01
+      b_int: 3
+    Ethernet3:
+      b_device: leaf-02
+      b_int: 3
+    Ethernet4:
+      b_device: leaf-03
+      b_int: 3
+    Ethernet5:
+      b_device: leaf-04
+      b_int: 3
+    Ethernet6:
+      b_device: borderleaf-01
+      b_int: 3
+    Ethernet7: 
+      b_device: borderleaf-02
+      b_int: 3
+spine-02:
+  interfaces:
+    Ethernet2:
+      b_device: leaf-01
+      b_int: 4
+    Ethernet3:
+      b_device: leaf-02
+      b_int: 4
+    Ethernet4:
+      b_device: leaf-03
+      b_int: 4
+    Ethernet5:
+      b_device: leaf-04
+      b_int: 4
+    Ethernet6:
+      b_device: borderleaf-01
+      b_int: 4
+    Ethernet7: 
+      b_device: borderleaf-02
+      b_int: 4
+spine-03:
+  interfaces:
+    Ethernet2:
+      b_device: leaf-01
+      b_int: 5
+    Ethernet3:
+      b_device: leaf-02
+      b_int: 5
+    Ethernet4:
+      b_device: leaf-03
+      b_int: 5
+    Ethernet5:
+      b_device: leaf-04
+      b_int: 5
+    Ethernet6:
+      b_device: borderleaf-01
+      b_int: 5
+    Ethernet7: 
+      b_device: borderleaf-02
+      b_int: 5
+leaf-01:
+  interfaces:
+    Ethernet1:
+      b_device: leaf-02
+      b_int: 1
+    Ethernet2:
+      b_device: leaf-02
+      b_int: 2
+    Ethernet3:
+      b_device: spine-01
+      b_int: 2
+    Ethernet4:
+      b_device: spine-02
+      b_int: 3
+    Ethernet5:
+      b_device: spine-03
+      b_int: 4
+leaf-02:
+  interfaces:
+    Ethernet1:
+      b_device: leaf-01
+      b_int: 1
+    Ethernet2:
+      b_device: leaf-01
+      b_int: 2
+    Ethernet3:
+      b_device: spine-01
+      b_int: 2
+    Ethernet4:
+      b_device: spine-02
+      b_int: 3
+    Ethernet5:
+      b_device: spine-03
+      b_int: 4
+leaf-03:
+  interfaces:
+    Ethernet1:
+      b_device: leaf-02
+      b_int: 1
+    Ethernet2:
+      b_device: leaf-02
+      b_int: 2
+    Ethernet3:
+      b_device: spine-01
+      b_int: 2
+    Ethernet4:
+      b_device: spine-02
+      b_int: 3
+    Ethernet5:
+      b_device: spine-03
+      b_int: 4
+leaf-04:
+  interfaces:
+    Ethernet1:
+      b_device: leaf-03
+      b_int: 1
+    Ethernet2:
+      b_device: leaf-03
+      b_int: 2
+    Ethernet3:
+      b_device: spine-01
+      b_int: 2
+    Ethernet4:
+      b_device: spine-02
+      b_int: 3
+    Ethernet5:
+      b_device: spine-03
+      b_int: 4
+    """
                 
     # def create_p2p_link(self, intf1, intf2):
         
@@ -323,3 +519,4 @@ class CreateAristaPod(Job):
     #     # Create IP Addresses on both sides
     #     ip1 = IPAddress.objects.create(address=str(subnet[0]), assigned_object=intf1)
     #     ip2 = IPAddress.objects.create(address=str(subnet[1]), assigned_object=intf2)
+
