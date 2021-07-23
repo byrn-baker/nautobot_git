@@ -123,7 +123,7 @@ class CreateAristaPod(Job):
         iter_subnet = IPv4Network(str(dc_prefix.prefix)).subnets(new_prefix=24)
 
         # Allocate the subnet by block of /24
-        mlag_peer = next(iter_subnet)
+        # mlag_peer = next(iter_subnet)
         overlay_loopback = next(iter_subnet)
         vtep_loopback = next(iter_subnet)
         underlay_p2p = next(iter_subnet)
@@ -131,17 +131,22 @@ class CreateAristaPod(Job):
 
         dc_role, _ = Role.objects.get_or_create(name=dc_code, slug=dc_code)
 
-        mlag_peer_role, _ = Role.objects.get_or_create(name=f"{dc_code}_mlag_peer", slug=f"{dc_code}_mlag_peer")
-        Prefix.objects.get_or_create(
-            prefix=str(mlag_peer),
-            site=self.site,
-            role=mlag_peer_role,
-            status=container_status,
-        )
-        self.log_success(obj=mlag_peer, message="Created new mlag peer prefix")
+        # mlag_peer_role, _ = Role.objects.get_or_create(name=f"{dc_code}_mlag_peer", slug=f"{dc_code}_mlag_peer")
+        # Prefix.objects.get_or_create(
+        #     prefix=str(mlag_peer),
+        #     site=self.site,
+        #     role=mlag_peer_role,
+        #     status=container_status,
+        # )
+        # self.log_success(obj=mlag_peer, message="Created new mlag peer prefix")
 
         overlay_role, _ = Role.objects.get_or_create(name=f"{dc_code}_overlay", slug=f"{dc_code}_overlay")
-        Prefix.objects.get_or_create(prefix=str(overlay_loopback), site=self.site, role=overlay_role, status=container_status)
+        Prefix.objects.get_or_create(
+            prefix=str(overlay_loopback),
+            site=self.site,
+            role=overlay_role,
+            status=container_status,
+        )
         self.log_success(obj=overlay_loopback, message="Created new overlay prefix")
 
         vtep_role, _ = Role.objects.get_or_create(name=f"{dc_code}_vtep_loopback", slug=f"{dc_code}_vtep_loopback")
@@ -155,7 +160,10 @@ class CreateAristaPod(Job):
 
         underlay_role, _ = Role.objects.get_or_create(name=f"{dc_code}_underlay_p2p", slug=f"{dc_code}_underlay_p2p")
         Prefix.objects.get_or_create(
-            prefix=str(underlay_p2p), site=self.site, role=underlay_role, status=container_status
+            prefix=str(underlay_p2p), 
+            site=self.site, 
+            role=underlay_role, 
+            status=container_status,
         )
         self.log_success(obj=underlay_p2p, message="Created new underlay p2p prefix")
 
