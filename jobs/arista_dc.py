@@ -1,10 +1,15 @@
 from django.utils.text import slugify
 import yaml
-from nautobot.dcim.models import Site, Device, Rack, Region, Cable, DeviceRole, DeviceType, Interface, ContentType
-from nautobot.ipam.models import Role, Prefix, IPAddress
-from nautobot.extras.models import CustomField, Job, Status
-from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar, BooleanVar
-from nautobot.circuits.models import Provider, CircuitType, Circuit, CircuitTermination
+# from nautobot.dcim.models import Site, Device, Rack, Region, Cable, DeviceRole, DeviceType, Interface
+# from nautobot.ipam.models import Role, Prefix, IPAddress
+# from nautobot.extras.models import CustomField, Job, Status
+# from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar, BooleanVar
+# from nautobot.circuits.models import Provider, CircuitType, Circuit, CircuitTermination
+from nautobot.dcim.models import *
+from nautobot.ipam.models import *
+from nautobot.extras.models import *
+from nautobot.extras.jobs import *
+from nautobot.circuits.models import *
 import ipaddress
 
 CUSTOM_FIELDS = {
