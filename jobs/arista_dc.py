@@ -252,7 +252,7 @@ class CreateAristaPod(Job):
 
                 # Create physical interfaces
                 SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
-                for iface in SWITCHES[device_name]['interfaces']:
+                for iface in SWITCHES[device_name.replace(f"{dc_code}-","")]['interfaces']:
                     intf_name = Interface.objects.get_or_create(
                         name=iface, 
                         type="1000base-t",
