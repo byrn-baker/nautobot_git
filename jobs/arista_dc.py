@@ -441,7 +441,7 @@ class CreateAristaPod(Job):
                     )
                     self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
                 
-                if device.device_role.slug == "leaf" or "borderleaf":
+                if device.device_role.slug == "leaf":
                     intf_name = Interface.objects.get_or_create(
                             name="Port-Channel10", 
                             type="lag",
