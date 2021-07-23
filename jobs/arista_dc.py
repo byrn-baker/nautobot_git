@@ -98,9 +98,10 @@ class CreateAristaPod(Job):
         ROLES["leaf"]["nbr"] = data["leaf_count"]
         if data["borderleaf"] == True:
             ROLES["borderleaf"]["nbr"] = 2
+            ROLES["spine"]["nbr"] = data["spine_count"] + 2
         else:
             ROLES["borderleaf"]["nbr"] = 0
-        ROLES["spine"]["nbr"] = data["spine_count"] + data["borderleaf_count"]
+            ROLES["spine"]["nbr"] = data["spine_count"]
         if data["dci"] == True:
             ROLES["dci"]["nbr"] = 1
         else:
