@@ -11,179 +11,243 @@ config = """
 dci:
   interfaces:
     Ethernet1:
+      type: "1000base-t"
       b_device: borderleaf-01
       b_int: 12
     Ethernet2:
+      type: "1000base-t"
       b_device: borderleaf-02
       b_int: 12
 borderleaf-01: 
   interfaces:
     Ethernet1:
+      type: "1000base-t"
+      mode: "tagged-all"
       b_device: borderleaf-02
       b_int: 1
     Ethernet2:
+      type: "1000base-t"
+      mode: "tagged-all"
       b_device: borderleaf-02
       b_int: 2
     Ethernet3:
+      type: "1000base-t"
       b_device: spine-01
       b_int: 6
     Ethernet4:
+      type: "1000base-t"
       b_device: spine-02
       b_int: 6
     Ethernet5:
+      type: "1000base-t"
       b_device: spine-03
       b_int: 6
     Ethernet12:
+      type: "1000base-t"
       b_device: dci-01
       b_int: 1
 borderleaf-02: 
   device_type: "leaf_veos"
   interfaces:
     Ethernet1:
+      type: "1000base-t"
+      mode: "tagged-all"
       b_device: borderleaf-01
       b_int: 1
     Ethernet2:
+      type: "1000base-t"
+      mode: "tagged-all"
       b_device: borderleaf-01
       b_int: 2
     Ethernet3:
+      type: "1000base-t"
       b_device: spine-01
       b_int: 7
     Ethernet4:
+      type: "1000base-t"
       b_device: spine-02
       b_int: 7
     Ethernet5:
+      type: "1000base-t"
       b_device: spine-03
       b_int: 7
     Ethernet12:
+      type: "1000base-t"
       b_device: dci-01
       b_int: 2
 spine-01:
   device_type: "spine_veos"
   interfaces:
     Ethernet2:
+      type: "1000base-t"
       b_device: leaf-01
       b_int: 3
     Ethernet3:
+      type: "1000base-t"
       b_device: leaf-02
       b_int: 3
     Ethernet4:
+      type: "1000base-t"
       b_device: leaf-03
       b_int: 3
     Ethernet5:
+      type: "1000base-t"
       b_device: leaf-04
       b_int: 3
     Ethernet6:
+      type: "1000base-t"
       b_device: borderleaf-01
       b_int: 3
     Ethernet7: 
+      type: "1000base-t"
       b_device: borderleaf-02
       b_int: 3
 spine-02:
   interfaces:
     Ethernet2:
+      type: "1000base-t"
       b_device: leaf-01
       b_int: 4
     Ethernet3:
+      type: "1000base-t"
       b_device: leaf-02
       b_int: 4
     Ethernet4:
+      type: "1000base-t"
       b_device: leaf-03
       b_int: 4
     Ethernet5:
+      type: "1000base-t"
       b_device: leaf-04
       b_int: 4
     Ethernet6:
+      type: "1000base-t"
       b_device: borderleaf-01
       b_int: 4
     Ethernet7: 
+      type: "1000base-t"
       b_device: borderleaf-02
       b_int: 4
 spine-03:
   interfaces:
     Ethernet2:
+      type: "1000base-t"
       b_device: leaf-01
       b_int: 5
     Ethernet3:
+      type: "1000base-t"
       b_device: leaf-02
       b_int: 5
     Ethernet4:
+      type: "1000base-t"
       b_device: leaf-03
       b_int: 5
     Ethernet5:
+      type: "1000base-t"
       b_device: leaf-04
       b_int: 5
     Ethernet6:
+      type: "1000base-t"
       b_device: borderleaf-01
       b_int: 5
     Ethernet7: 
+      type: "1000base-t"
       b_device: borderleaf-02
       b_int: 5
 leaf-01:
   interfaces:
     Ethernet1:
+      type: "1000base-t"
+      mode: "tagged-all"
       b_device: leaf-02
       b_int: 1
     Ethernet2:
+      type: "1000base-t"
+      mode: "tagged-all"
       b_device: leaf-02
       b_int: 2
     Ethernet3:
+      type: "1000base-t"
       b_device: spine-01
       b_int: 2
     Ethernet4:
+      type: "1000base-t"
       b_device: spine-02
       b_int: 3
     Ethernet5:
+      type: "1000base-t"
       b_device: spine-03
       b_int: 4
 leaf-02:
   interfaces:
     Ethernet1:
+      type: "1000base-t"
+      mode: "tagged-all"
       b_device: leaf-01
       b_int: 1
     Ethernet2:
+      type: "1000base-t"
+      mode: "tagged-all"
       b_device: leaf-01
       b_int: 2
     Ethernet3:
+      type: "1000base-t"
       b_device: spine-01
       b_int: 2
     Ethernet4:
+      type: "1000base-t"
       b_device: spine-02
       b_int: 3
     Ethernet5:
+      type: "1000base-t"
       b_device: spine-03
       b_int: 4
 leaf-03:
   interfaces:
     Ethernet1:
+      type: "1000base-t"
+      mode: "tagged-all"
       b_device: leaf-02
       b_int: 1
     Ethernet2:
+      type: "1000base-t"
+      mode: "tagged-all"
       b_device: leaf-02
       b_int: 2
     Ethernet3:
+      type: "1000base-t"
       b_device: spine-01
       b_int: 2
     Ethernet4:
+      type: "1000base-t"
       b_device: spine-02
       b_int: 3
     Ethernet5:
+      type: "1000base-t"
       b_device: spine-03
       b_int: 4
 leaf-04:
   interfaces:
     Ethernet1:
+      type: "1000base-t"
+      mode: "tagged-all"
       b_device: leaf-03
       b_int: 1
     Ethernet2:
+      type: "1000base-t"
+      mode: "tagged-all"
       b_device: leaf-03
       b_int: 2
     Ethernet3:
+      type: "1000base-t"
       b_device: spine-01
       b_int: 2
     Ethernet4:
+      type: "1000base-t"
       b_device: spine-02
       b_int: 3
     Ethernet5:
+      type: "1000base-t"
       b_device: spine-03
       b_int: 4
 """
@@ -433,29 +497,22 @@ class CreateAristaPod(Job):
                 dev_name = device_name.replace(f"{dc_code}-","")
                 SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
                 for iface in SWITCHES[dev_name]['interfaces']:
-                    if device.device_role.slug == "leaf":
-                        if iface =='Ethernet1':
-                            eth1 = Interface.objects.get_or_create(
-                                name=iface, type="lag", mode="tagged-all", mtu=1500, device=device
-                                )
-                            self.log_success(obj=eth1, message=f"{eth1} successfully created on {device_name}")
-                        if iface =='Ethernet2':
-                            eth2 = Interface.objects.get_or_create(
-                                name=iface, type="lag", mode="tagged-all", mtu=1500, device=device
-                            )
-                            self.log_success(obj=eth2, message=f"{eth2} successfully created on {device_name}")
-                        portchannel_intf = Interface.objects.create(
-                            name="Port-Channel", type="lag", mode="tagged-all",device=device
-                        )
-                        self.log_success(obj=portchannel_intf, message=f"{portchannel_intf} successfully created on {device_name}")
-                    else:
-                        intf_name = Interface.objects.get_or_create(
+                    intf_name = Interface.objects.get_or_create(
                             name=iface,
-                            type="1000base-t",
-                            mtu=9214,
+                            type=iface["type"],
                             device=device, 
-                        )
-                        self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
+                    )
+                    self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
+                    if "mode" in iface.keys():
+                        intf_name.mode = iface["mode"]
+
+
+                # MLAG Port Channel
+                if device.device_role.slug == "leaf":
+                    portchannel_intf = Interface.objects.create(
+                        name="Port-Channel10", type="lag", mode="tagged-all", device=device
+                    )
+                    self.log_success(obj=portchannel_intf, message=f"{portchannel_intf} successfully created on {device_name}")
 
                 # Generate Loopback0 interface and assign Loopback0 address
                 loopback0_intf = Interface.objects.create(
