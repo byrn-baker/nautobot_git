@@ -467,7 +467,7 @@ class CreateAristaPod(Job):
                     rack_elevation = i + 1
                     rack_name = f"{dc_code}-spine-rr-1"
                     rack = Rack.objects.filter(name=rack_name, site=self.site).first()
-                elif 'leaf' in role:
+                elif role == 'leaf':
                     rack_elevation = i + 1
                     rack_name = f"{dc_code}-leaf-rr-{i}"
                     rack = Rack.objects.filter(name=rack_name, site=self.site).first()
