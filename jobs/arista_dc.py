@@ -557,7 +557,7 @@ class CreateAristaPod(Job):
         for role, data in ROLES.items():
             for i in range(1, data.get("nbr", 2) + 1):
                 device_name = f"{dc_code}-{role}-{i:02}"
-                device = Device.objects.get(name=f"{dc_code}-{role}-{i:02}")
+                device = Device.objects.get(name=device_name)
                 dev_name = device_name.replace(f"{dc_code}-","")
         
                 for iface in SWITCHES[dev_name]['interfaces']:
