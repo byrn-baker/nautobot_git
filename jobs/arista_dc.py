@@ -567,13 +567,14 @@ class CreateAristaPod(Job):
                             intf1 = interface
                             intf2 = iface['b_int']
                             status = Status.objects.get_for_model(Cable).get(slug="connected")
-                            cable = Cable.objects.create(
-                                termination_a_type="dcim.interface",
-                                termination_a_id=intf1,
-                                termination_b_type="dcim.interface",
-                                termination_b_id=intf2,
-                                type="cat5e",
-                                status=status)
+                            cable = Cable.objects.create(termination_a=intf1, termination_b=intf2, status=status)
+                            # cable = Cable.objects.create(
+                            #     termination_a_type="dcim.interface",
+                            #     termination_a_id=intf1,
+                            #     termination_b_type="dcim.interface",
+                            #     termination_b_id=intf2,
+                            #     type="cat5e",
+                            #     status=status)
                             cable.save()
     
     
