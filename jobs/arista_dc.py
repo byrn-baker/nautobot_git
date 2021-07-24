@@ -595,13 +595,6 @@ class CreateAristaPod(Job):
                                 )
                                 return False
                             cable = Cable.objects.create(termination_a=intf1, termination_b=intf2, status=status)
-                            # cable = Cable.objects.create(
-                            #     termination_a_type="dcim.interface",
-                            #     termination_a_id=intf1,
-                            #     termination_b_type="dcim.interface",
-                            #     termination_b_id=intf2,
-                            #     type="cat5e",
-                            #     status=status)
                             cable.save()
                             self.log_success(message=f"Created a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
                             # Find Next available Network
@@ -616,16 +609,3 @@ class CreateAristaPod(Job):
                                 # Create IP Addresses on both sides
                                 ip1 = IPAddress.objects.create(address=str(subnet[0]), assigned_object=intf1)
                                 ip2 = IPAddress.objects.create(address=str(subnet[1]), assigned_object=intf2)
-
-
-        # Find Next available Network
-        # prefix = Prefix.objects.filter(site=self.site, role__name="underlay_p2p").first()
-        # first_avail = prefix.get_first_available_prefix()
-        # subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
-
-        # Prefix.objects.create(prefix=str(subnet))
-
-        # # Create IP Addresses on both sides
-        # ip1 = IPAddress.objects.create(address=str(subnet[0]), assigned_object=intf1)
-        # ip2 = IPAddress.objects.create(address=str(subnet[1]), assigned_object=intf2)
-
