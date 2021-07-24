@@ -571,6 +571,11 @@ class CreateAristaPod(Job):
                             intf1 = interface
                             intf2 = bside_interface
                             status = Status.objects.get_for_model(Cable).get(slug="connected")
+                            if intf1.cable or intf2.cable:
+                                self.log_warning(
+                                    message=f"Unable to create a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}"
+                                )
+                                return False
                             cable = Cable.objects.create(termination_a=intf1, termination_b=intf2, status=status)
                             # cable = Cable.objects.create(
                             #     termination_a_type="dcim.interface",
