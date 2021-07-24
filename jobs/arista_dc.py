@@ -451,14 +451,14 @@ class CreateAristaPod(Job):
                     )
                     self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
 
-                    query_name = Device.objects.get(name=device_name)
-                    ethernet1 = Interface.objects.get(name="Ethernet1", device=query_name)
+                    # query_name = Device.objects.get(name=device_name)
+                    ethernet1 = Interface.objects.get(name="Ethernet1", device=device_name.id)
                     ethernet1.type = "lag"
                     ethernet1.mode = "tagged-all"
                     ethernet1.mtu = 1500
                     ethernet1.validated_save()
 
-                    ethernet2 = Interface.objects.get(name="ethernet2", device=query_name)
+                    ethernet2 = Interface.objects.get(name="ethernet2", device=device_name.id)
                     ethernet2.type = "lag"
                     ethernet2.mode = "tagged-all"
                     ethernet2.mtu = 1500
