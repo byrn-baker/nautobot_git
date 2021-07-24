@@ -498,13 +498,13 @@ class CreateAristaPod(Job):
                 SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
                 for iface in SWITCHES[dev_name]['interfaces']:
                     intf_name = Interface.objects.get_or_create(
-                            name=iface,
+                            name=iface['name'],
                             type="1000base-t",
                             device=device, 
                     )
                     self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
-                    # if "mode" in iface.keys:
-                    #     intf_name.mode = iface["mode"]
+                    if "mode" in iface.keys:
+                        intf_name.mode = iface["mode"]
 
 
                 # MLAG Port Channel
