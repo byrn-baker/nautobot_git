@@ -463,15 +463,16 @@ class CreateAristaPod(Job):
         # ----------------------------------------------------------------------------
         for role, data in ROLES.items():
             for i in range(1, data.get("nbr", 2) + 1):
-                rack_elevation = i + 1
-
                 if 'spine' in role:
+                    rack_elevation = i + 1
                     rack_name = f"{dc_code}-spine-rr-1"
                     rack = Rack.objects.filter(name=rack_name, site=self.site).first()
                 elif 'leaf' in role:
+                    rack_elevation = i + 1
                     rack_name = f"{dc_code}-leaf-rr-{i}"
                     rack = Rack.objects.filter(name=rack_name, site=self.site).first()
                 elif role == 'borderleaf':
+                    rack_elevation = i + 3
                     rack_name = f"{dc_code}-borderleaf-rr-1"
                     rack = Rack.objects.filter(name=rack_name, site=self.site).first()
                 elif 'dci' in role:
@@ -495,7 +496,7 @@ class CreateAristaPod(Job):
                     status=device_status,
                     device_role=device_role,
                     rack=rack,
-                    position=rack_elevation.first(),
+                    position=rack_elevation,
                     face="front",
                 )
 
