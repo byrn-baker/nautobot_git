@@ -504,7 +504,7 @@ class CreateAristaPod(Job):
                     )
                     self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
                     if "mode" in iface.keys():
-                        intf_name.mode = iface[intf_name]["mode"]
+                        intf_name.mode = iface['name']["mode"]
 
 
                 # MLAG Port Channel
