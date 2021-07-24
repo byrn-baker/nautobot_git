@@ -443,26 +443,26 @@ class CreateAristaPod(Job):
                     
                     self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
             
-                for iface in SWITCHES[dev_name]['interfaces']:
-                    if iface =='Ethernet1' or 'Ethernet2':
-                        portchannel = Interface.objects.get(name="Port-Channel10", device=device)
-                        intf_name = Interface.objects.get_or_create(
-                            name=iface,
-                            type="lag",
-                            mode="tagged-all",
-                            mtu=1500,
-                            lag=portchannel,
-                            device=device,
-                        )
-                        
-                    else:
-                        intf_name = Interface.objects.get_or_create(
-                            name=iface,
-                            type="1000base-t",
-                            mtu=9214,
-                            device=device, 
-                        )
-                        self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
+                    for iface in SWITCHES[dev_name]['interfaces']:
+                        if iface =='Ethernet1' or 'Ethernet2':
+                            portchannel = Interface.objects.get(name="Port-Channel10", device=device)
+                            intf_name = Interface.objects.get_or_create(
+                                name=iface,
+                                type="lag",
+                                mode="tagged-all",
+                                mtu=1500,
+                                lag=portchannel,
+                                device=device,
+                            )
+                            
+                        else:
+                            intf_name = Interface.objects.get_or_create(
+                                name=iface,
+                                type="1000base-t",
+                                mtu=9214,
+                                device=device, 
+                            )
+                            self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
                 else:
                     for iface in SWITCHES[dev_name]['interfaces']:
                         intf_name = Interface.objects.get_or_create(
