@@ -495,7 +495,7 @@ class CreateAristaPod(Job):
                     status=device_status,
                     device_role=device_role,
                     rack=rack,
-                    position=rack_elevation,
+                    position=rack_elevation.first(),
                     face="front",
                 )
 
