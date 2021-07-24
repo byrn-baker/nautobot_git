@@ -455,7 +455,7 @@ class CreateAristaPod(Job):
         # ----------------------------------------------------------------------------
         for role, data in ROLES.items():
             for i in range(1, data.get("nbr", 2) + 1):
-                rack_elevation = i
+                rack_elevation = i + 1
 
                 if 'spine' in role:
                     rack_name = f"{dc_code}-spine-rr-1"
@@ -546,34 +546,34 @@ class CreateAristaPod(Job):
                     lo1_address = list(available_ips)[0]
                     loopback1_ip = IPAddress.objects.create(address=str(lo1_address), assigned_object=loopback1_intf)
                 
-    # def create_p2p_link(self, intf1, intf2):
+    def create_p2p_link(self, intf1, intf2):
         
-    #     """Create a Point to Point link between 2 interfaces.
+        """Create a Point to Point link between 2 interfaces.
 
-    #     This function will:
-    #     - Connect the 2 interfaces with a cable
-    #     - Generate a new Prefix from a "point-to-point" container associated with this site
-    #     - Assign one IP address to each interface from the previous prefix
-    #     """
-    #     P2P_PREFIX_SIZE = "31"
-    #     if intf1.cable or intf2.cable:
-    #         self.log_warning(
-    #             message=f"Unable to create a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}"
-    #         )
-    #         return False
+        This function will:
+        - Connect the 2 interfaces with a cable
+        - Generate a new Prefix from a "point-to-point" container associated with this site
+        - Assign one IP address to each interface from the previous prefix
+        """
+        P2P_PREFIX_SIZE = "31"
+        if intf1.cable or intf2.cable:
+            self.log_warning(
+                message=f"Unable to create a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}"
+            )
+            return False
 
-    #     status = Status.objects.get_for_model(Cable).get(slug="connected")
-    #     cable = Cable.objects.create(termination_a=intf1, termination_b=intf2, status=status)
-    #     cable.save()
+        status = Status.objects.get_for_model(Cable).get(slug="connected")
+        cable = Cable.objects.create(termination_a=intf1, termination_b=intf2, status=status)
+        cable.save()
 
-    #     # Find Next available Network
-    #     prefix = Prefix.objects.filter(site=self.site, role__name="underlay_p2p").first()
-    #     first_avail = prefix.get_first_available_prefix()
-    #     subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
+        # Find Next available Network
+        prefix = Prefix.objects.filter(site=self.site, role__name="underlay_p2p").first()
+        first_avail = prefix.get_first_available_prefix()
+        subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
 
-    #     Prefix.objects.create(prefix=str(subnet))
+        Prefix.objects.create(prefix=str(subnet))
 
-    #     # Create IP Addresses on both sides
-    #     ip1 = IPAddress.objects.create(address=str(subnet[0]), assigned_object=intf1)
-    #     ip2 = IPAddress.objects.create(address=str(subnet[1]), assigned_object=intf2)
+        # Create IP Addresses on both sides
+        ip1 = IPAddress.objects.create(address=str(subnet[0]), assigned_object=intf1)
+        ip2 = IPAddress.objects.create(address=str(subnet[1]), assigned_object=intf2)
 
