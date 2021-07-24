@@ -499,7 +499,7 @@ class CreateAristaPod(Job):
                 for iface in SWITCHES[dev_name]['interfaces']:
                     intf_name = Interface.objects.get_or_create(
                             name=iface,
-                            type=iface["type"],
+                            type="1000base-t",
                             device=device, 
                     )
                     self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
