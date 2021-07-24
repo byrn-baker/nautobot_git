@@ -8,7 +8,7 @@ from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar, BooleanV
 from nautobot.circuits.models import Provider, CircuitType, Circuit, CircuitTermination
 import ipaddress
 config = """
-dci:
+dci-01:
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
@@ -438,18 +438,11 @@ class CreateAristaPod(Job):
         self.log_success(obj=rack, message=f"Created Relay Rack {rack_name_spine}")
 
         if data["borderleaf"] == True: 
-            rack_name_borderleaf = f"{dc_code}-borderleaf-rr-1"
+            rack_name_edge = f"{dc_code}-edge-rr-1"
             rack = Rack.objects.get_or_create(
-                name=rack_name_borderleaf, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
+                name=rack_name_edge, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
             )
-            self.log_success(obj=rack, message=f"Created Relay Rack {rack_name_borderleaf}")
-
-        if data["dci"] == True:
-            rack_name_dci = f"{dc_code}-dci-rr-1"
-            rack = Rack.objects.get_or_create(
-                name=rack_name_dci, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
-            )
-            self.log_success(obj=rack, message=f"Created Relay Rack {rack_name_dci}")
+            self.log_success(obj=rack, message=f"Created Relay Rack {rack_name_edge}")
 
         for i in range(1, ROLES["leaf"]["nbr"] + 1):
             rack_name = f"{dc_code}-leaf-rr-{i}"
@@ -472,11 +465,12 @@ class CreateAristaPod(Job):
                     rack_name = f"{dc_code}-leaf-rr-{i}"
                     rack = Rack.objects.filter(name=rack_name, site=self.site).first()
                 elif role == 'borderleaf':
-                    rack_elevation = i + 3
-                    rack_name = f"{dc_code}-borderleaf-rr-1"
+                    rack_elevation = i + 1
+                    rack_name = f"{dc_code}-edge-rr-1"
                     rack = Rack.objects.filter(name=rack_name, site=self.site).first()
                 elif 'dci' in role:
-                    rack_name = f"{dc_code}-dci-rr-1"
+                    rack_elevation = i + 3
+                    rack_name = f"{dc_code}-edge-rr-1"
                     rack = Rack.objects.filter(name=rack_name, site=self.site).first()
 
                 device_name = f"{dc_code}-{role}-{i:02}"
