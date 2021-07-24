@@ -442,6 +442,15 @@ class CreateAristaPod(Job):
                             device=device,
                         )
                         self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
+                    elif iface =='Ethernet1':
+                        intf_name = Interface.objects.get_or_create(
+                            name=iface,
+                            type="lag",
+                            mode="tagged-all",
+                            mtu=1500,
+                            device=device,
+                        )
+                        self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
 
 
 
