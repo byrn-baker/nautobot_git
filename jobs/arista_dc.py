@@ -588,7 +588,7 @@ class CreateAristaPod(Job):
                             self.log_success(message=f"Created a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
                             # Find Next available Network
                             P2P_PREFIX_SIZE = 31
-                            prefix = Prefix.objects.filter(site=self.site, role__name="underlay_p2p").first()
+                            prefix = Prefix.objects.filter(site=self.site, role__name=f"{dc_code}_underlay_p2p").first()
                             first_avail = prefix.get_first_available_prefix()
                             subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
 
