@@ -376,7 +376,7 @@ class CreateAristaPod(Job):
         overlay_loopback = next(iter_subnet)
         vtep_loopback = next(iter_subnet)
         underlay_p2p = next(iter_subnet)
-        dci_p2p = next(iter_subnet)
+        # dci_p2p = next(iter_subnet)
 
         dc_role, _ = Role.objects.get_or_create(name=dc_code, slug=dc_code)
 
@@ -416,14 +416,14 @@ class CreateAristaPod(Job):
         )
         self.log_success(obj=underlay_p2p, message="Created new underlay p2p prefix")
 
-        dci_p2p_role, _ = Role.objects.get_or_create(name=f"{dc_code}_dci_p2p", slug=f"{dc_code}_dci_p2p")
-        Prefix.objects.get_or_create(
-            prefix=str(dci_p2p),
-            site=self.site,
-            role=dci_p2p_role,
-            status=container_status,
-        )
-        self.log_success(obj=dci_p2p, message="Created new dci p2p prefix")
+        # dci_p2p_role, _ = Role.objects.get_or_create(name=f"{dc_code}_dci_p2p", slug=f"{dc_code}_dci_p2p")
+        # Prefix.objects.get_or_create(
+        #     prefix=str(dci_p2p),
+        #     site=self.site,
+        #     role=dci_p2p_role,
+        #     status=container_status,
+        # )
+        # self.log_success(obj=dci_p2p, message="Created new dci p2p prefix")
 
         # ----------------------------------------------------------------------------
         # Create Racks
@@ -587,16 +587,17 @@ class CreateAristaPod(Job):
                             cable.save()
                             self.log_success(message=f"Created a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
                             # Find Next available Network
-                            P2P_PREFIX_SIZE = 31
-                            prefix = Prefix.objects.filter(site=self.site, role__name=f"{dc_code}_underlay_p2p").first()
-                            first_avail = prefix.get_first_available_prefix()
-                            subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
+                            if iface["mode"] is None:
+                                P2P_PREFIX_SIZE = 31
+                                prefix = Prefix.objects.filter(site=self.site, role__name=f"{dc_code}_underlay_p2p").first()
+                                first_avail = prefix.get_first_available_prefix()
+                                subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
 
-                            Prefix.objects.create(prefix=str(subnet))
+                                Prefix.objects.create(prefix=str(subnet))
 
-                            # Create IP Addresses on both sides
-                            ip1 = IPAddress.objects.create(address=str(subnet[0]), assigned_object=intf1)
-                            ip2 = IPAddress.objects.create(address=str(subnet[1]), assigned_object=intf2)
+                                # Create IP Addresses on both sides
+                                ip1 = IPAddress.objects.create(address=str(subnet[0]), assigned_object=intf1)
+                                ip2 = IPAddress.objects.create(address=str(subnet[1]), assigned_object=intf2)
 
 
         # Find Next available Network
