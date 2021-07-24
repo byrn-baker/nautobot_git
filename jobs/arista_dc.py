@@ -530,7 +530,7 @@ class CreateAristaPod(Job):
                 
 
                 # Generate Loopback1 interface and assign Loopback1 address
-                if device.device_role.slug == "leaf" or "borderleaf":
+                if device.device_role.slug == "leaf":
                     loopback1_intf = Interface.objects.create(
                         name="Loopback1", type="virtual", device=device
                     )
