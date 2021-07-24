@@ -466,6 +466,9 @@ class CreateAristaPod(Job):
                 elif 'borderleaf' in role:
                     rack_name = f"{dc_code}-edge-rr-1"
                     rack = Rack.objects.filter(name=rack_name, site=self.site).first()
+                elif 'dci' in role:
+                    rack_name = f"{dc_code}-edge-rr-1"
+                    rack = Rack.objects.filter(name=rack_name, site=self.site).first()
 
                 device_name = f"{dc_code}-{role}-{i:02}"
 
