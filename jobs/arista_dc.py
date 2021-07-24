@@ -251,7 +251,8 @@ leaf-04:
       b_device: spine-03
       b_int: Ethernet4
 """
-
+##########################
+# credit to damien @ NTC #
 CUSTOM_FIELDS = {
     "role": {"models": [Interface], "label": "Role"},
     "site_type": {"models": [Site], "label": "Type of Site"},
@@ -271,7 +272,9 @@ def create_custom_fields():
             ct = ContentType.objects.get_for_model(model)
             cf.content_types.add(ct)
             cf.validated_save()
+############################
 
+# Most of this stuff is pretty much pulled from an NTC Job on the demo site. I filled in some of the blanks
 IPv4Network = ipaddress.ip_network
 class CreateAristaPod(Job):
     """Job to create a new site and datacenter pod."""
@@ -519,7 +522,8 @@ class CreateAristaPod(Job):
                         name="Port-Channel10", type="lag", mode="tagged-all", device=device
                     )
                     self.log_success(obj=portchannel_intf, message=f"{portchannel_intf} successfully created on {device_name}")
-
+                    
+                    # Thanks mcgoo298
                     eth1 = device.interfaces.get(name="Ethernet1")
                     eth2 = device.interfaces.get(name="Ethernet2")
                     po10 = device.interfaces.get(name="Port-Channel10")
