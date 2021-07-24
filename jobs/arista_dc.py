@@ -564,8 +564,11 @@ class CreateAristaPod(Job):
                     interface = Interface.objects.get(name=iface['name'], device=device)
                     if interface.cable is None:
                         if "b_device" in iface.keys():
+                            b_device = iface['b_device']
+                            bside_device = Device.objects.get(name=f"{dc_code}-{b_device}")
+                            bside_interface = Interface.objects.get(name=iface['b_int'],device=bside_device, )
                             intf1 = interface
-                            intf2 = iface['b_int']
+                            intf2 = bside_interface
                             status = Status.objects.get_for_model(Cable).get(slug="connected")
                             cable = Cable.objects.create(termination_a=intf1, termination_b=intf2, status=status)
                             # cable = Cable.objects.create(
