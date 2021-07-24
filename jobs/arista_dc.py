@@ -518,6 +518,7 @@ class CreateAristaPod(Job):
                 loopback0_intf = Interface.objects.create(
                     name="Loopback0", type="virtual", device=device
                 )
+                self.log_success(obj=loopback0_intf, message=f"{loopback0_intf} successfully created on {device_name}")
 
                 loopback0_prefix = Prefix.objects.get(
                     site=self.site, role__name=f"{dc_code}_overlay",
@@ -533,6 +534,7 @@ class CreateAristaPod(Job):
                     loopback1_intf = Interface.objects.create(
                         name="Loopback1", type="virtual", device=device
                     )
+                    self.log_success(obj=loopback1_intf, message=f"{loopback1_intf} successfully created on {device_name}")
 
                     loopback1_prefix = Prefix.objects.get(
                         site=self.site,
