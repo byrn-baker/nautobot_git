@@ -585,6 +585,7 @@ class CreateAristaPod(Job):
                             #     type="cat5e",
                             #     status=status)
                             cable.save()
+                            self.log_success(message=f"Created a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
 
 
         # Find Next available Network
