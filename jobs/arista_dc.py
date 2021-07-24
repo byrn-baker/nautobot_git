@@ -453,7 +453,7 @@ class CreateAristaPod(Job):
                                 mtu=1500,
                                 device=device,
                             )
-                            intf_name.lag
+
                         elif iface =='Ethernet2':
                             portchannel = Interface.objects.get(name="Port-Channel10", device=device)
                             intf_name = Interface.objects.get_or_create(
