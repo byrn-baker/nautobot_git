@@ -496,15 +496,15 @@ class CreateAristaPod(Job):
                 # Create physical interfaces
                 dev_name = device_name.replace(f"{dc_code}-","")
                 SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
-                for iface in SWITCHES[dev_name]['interfaces']:
+                for iface, iface_attr in SWITCHES[dev_name]['interfaces'].items():
                     intf_name = Interface.objects.get_or_create(
                             name=iface,
                             type="1000base-t",
                             device=device, 
                     )
                     self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
-                    if "mode" in iface.keys():
-                        intf_name.mode = iface["mode"]
+                    if "mode" in iface_attr:
+                        intf_name.mode = iface_attr["mode"]
 
 
                 # MLAG Port Channel
