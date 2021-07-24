@@ -207,12 +207,12 @@ leaf-03:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf-02
+      b_device: leaf-04
       b_int: Ethernet1
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf-02
+      b_device: leaf-04
       b_int: Ethernet2
     - name: Ethernet3
       type: "1000base-t"
@@ -585,40 +585,7 @@ class CreateAristaPod(Job):
                             #     type="cat5e",
                             #     status=status)
                             cable.save()
-    
-    
-    # def create_p2p_link(data):
-    # dc_code = data["dc_code"].lower()
-    # P2P_PREFIX_SIZE = "31"
-    # ROLES = {
-    #     "spine": {"device_type": "spine_veos"},
-    #     "leaf": {"device_type": "leaf_veos"},
-    #     "borderleaf": {"device_type": "leaf_veos"},
-    #     "dci": {"device_type": "spine_veos"},
-    # }
-    # # Number of devices to provision
-    # ROLES["leaf"]["nbr"] = data["leaf_count"]
-    # ROLES["spine"]["nbr"] = data["spine_count"]
-    # if data["borderleaf"] == True:
-    #     ROLES["borderleaf"]["nbr"] = 2
-    # else:
-    #     ROLES["borderleaf"]["nbr"] = 0
-    # if data["dci"] == True:
-    #     ROLES["dci"]["nbr"] = 1
-    # else:
-    #     ROLES["dci"]["nbr"] = 0
-    # SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
-              
-        
-        # if intf1.cable or intf2.cable:
-        #     self.log_warning(
-        #         message=f"Unable to create a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}"
-        #     )
-        #     return False
 
-        # status = Status.objects.get_for_model(Cable).get(slug="connected")
-        # cable = Cable.objects.create(termination_a=intf1, termination_b=intf2, status=status)
-        # cable.save()
 
         # Find Next available Network
         # prefix = Prefix.objects.filter(site=self.site, role__name="underlay_p2p").first()
