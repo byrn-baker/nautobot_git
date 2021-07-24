@@ -520,6 +520,22 @@ class CreateAristaPod(Job):
                     )
                     self.log_success(obj=portchannel_intf, message=f"{portchannel_intf} successfully created on {device_name}")
 
+                    eth1 = device.interfaces.get(name="Ethernet1")
+                    eth2 = device.interfaces.get(name="Ethernet2")
+                    po10 = device.interfaces.get(name="Port-Channel10")
+                    eth1.lag = po10
+                    eth1.validated_save()
+                    eth2.lag = po10
+                    eth2.validated_save()
+
+                if device.device_role.slug == "borderleaf":
+                    portchannel_intf = Interface.objects.create(
+                        name="Port-Channel10", type="lag", mode="tagged-all", device=device
+                    )
+                    self.log_success(obj=portchannel_intf, message=f"{portchannel_intf} successfully created on {device_name}")
+
+
+
                 # Generate Loopback0 interface and assign Loopback0 address
                 loopback0_intf = Interface.objects.create(
                     name="Loopback0", type="virtual", device=device
