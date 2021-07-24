@@ -435,33 +435,34 @@ class CreateAristaPod(Job):
                 for iface in SWITCHES[dev_name]['interfaces']:
                     if iface =='Ethernet1':
                         eth1 = Interface.objects.get_or_create(
-                            name=iface,
-                            type="lag",
-                            mode="tagged-all",
-                            mtu=1500,
-                            device=device,
-                        )
+                            name=iface, type="lag", mode="tagged-all", mtu=1500, device=device
+                            )
                         self.log_success(obj=eth1, message=f"{eth1} successfully created on {device_name}")
-                    elif iface =='Ethernet1':
+                    if iface =='Ethernet1':
                         eth2 = Interface.objects.get_or_create(
-                            name=iface,
-                            type="lag",
-                            mode="tagged-all",
-                            mtu=1500,
-                            device=device,
+                            name=iface, type="lag", mode="tagged-all", mtu=1500, device=device
                         )
                         self.log_success(obj=eth2, message=f"{eth2} successfully created on {device_name}")
+                    else:
+                        intf_name = Interface.objects.get_or_create(
+                            name=iface,
+                            type="1000base-t",
+                            mtu=9214,
+                            device=device, 
+                        )
+                        self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
 
-
-
+                portchannel_intf = Interface.objects.create(
+                    name="Port-Channel", type="lag", mode="tagged-all",device=device
+                )
+                self.log_success(obj=portchannel_intf, message=f"{portchannel_intf} successfully created on {device_name}")
                 # Generate Loopback0 interface and assign Loopback0 address
                 loopback0_intf = Interface.objects.create(
                     name="Loopback0", type="virtual", device=device
                 )
 
                 loopback0_prefix = Prefix.objects.get(
-                    site=self.site,
-                    role__name=f"{dc_code}_overlay",
+                    site=self.site, role__name=f"{dc_code}_overlay",
                 )
 
                 available_ips = loopback0_prefix.get_available_ips()
