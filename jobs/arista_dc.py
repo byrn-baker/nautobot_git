@@ -433,16 +433,21 @@ class CreateAristaPod(Job):
                 dev_name = device_name.replace(f"{dc_code}-","")
                 SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
                 for iface in SWITCHES[dev_name]['interfaces']:
-                    if iface =='Ethernet1':
-                        eth1 = Interface.objects.get_or_create(
-                            name=iface, type="lag", mode="tagged-all", mtu=1500, device=device
+                    if device.device_role.slug == "leaf":
+                        if iface =='Ethernet1':
+                            eth1 = Interface.objects.get_or_create(
+                                name=iface, type="lag", mode="tagged-all", mtu=1500, device=device
+                                )
+                            self.log_success(obj=eth1, message=f"{eth1} successfully created on {device_name}")
+                        if iface =='Ethernet2':
+                            eth2 = Interface.objects.get_or_create(
+                                name=iface, type="lag", mode="tagged-all", mtu=1500, device=device
                             )
-                        self.log_success(obj=eth1, message=f"{eth1} successfully created on {device_name}")
-                    if iface =='Ethernet1':
-                        eth2 = Interface.objects.get_or_create(
-                            name=iface, type="lag", mode="tagged-all", mtu=1500, device=device
+                            self.log_success(obj=eth2, message=f"{eth2} successfully created on {device_name}")
+                        portchannel_intf = Interface.objects.create(
+                            name="Port-Channel", type="lag", mode="tagged-all",device=device
                         )
-                        self.log_success(obj=eth2, message=f"{eth2} successfully created on {device_name}")
+                        self.log_success(obj=portchannel_intf, message=f"{portchannel_intf} successfully created on {device_name}")
                     else:
                         intf_name = Interface.objects.get_or_create(
                             name=iface,
@@ -452,10 +457,6 @@ class CreateAristaPod(Job):
                         )
                         self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
 
-                portchannel_intf = Interface.objects.create(
-                    name="Port-Channel", type="lag", mode="tagged-all",device=device
-                )
-                self.log_success(obj=portchannel_intf, message=f"{portchannel_intf} successfully created on {device_name}")
                 # Generate Loopback0 interface and assign Loopback0 address
                 loopback0_intf = Interface.objects.create(
                     name="Loopback0", type="virtual", device=device
