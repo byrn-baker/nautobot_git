@@ -13,39 +13,39 @@ dci-01:
     - name: Ethernet1
       type: "1000base-t"
       b_device: borderleaf-01
-      b_int: 12
+      b_int: Ethernet12
     - name: Ethernet2
       type: "1000base-t"
       b_device: borderleaf-02
-      b_int: 12
+      b_int: Ethernet12
 borderleaf-01: 
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
       b_device: borderleaf-02
-      b_int: 1
+      b_int: Ethernet1
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
       b_device: borderleaf-02
-      b_int: 2
+      b_int: Ethernet2
     - name: Ethernet3
       type: "1000base-t"
       b_device: spine-01
-      b_int: 6
+      b_int: Ethernet6
     - name: Ethernet4
       type: "1000base-t"
       b_device: spine-02
-      b_int: 6
+      b_int: Ethernet6
     - name: Ethernet5
       type: "1000base-t"
       b_device: spine-03
-      b_int: 6
+      b_int: Ethernet6
     - name: Ethernet12
       type: "1000base-t"
       b_device: dci-01
-      b_int: 1
+      b_int: Ethernet1
 borderleaf-02: 
   device_type: "leaf_veos"
   interfaces:
@@ -53,203 +53,203 @@ borderleaf-02:
       type: "1000base-t"
       mode: "tagged-all"
       b_device: borderleaf-01
-      b_int: 1
+      b_int: Ethernet1
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
       b_device: borderleaf-01
-      b_int: 2
+      b_int: Ethernet2
     - name: Ethernet3
       type: "1000base-t"
       b_device: spine-01
-      b_int: 7
+      b_int: Ethernet7
     - name: Ethernet4
       type: "1000base-t"
       b_device: spine-02
-      b_int: 7
+      b_int: Ethernet7
     - name: Ethernet5
       type: "1000base-t"
       b_device: spine-03
-      b_int: 7
+      b_int: Ethernet7
     - name: Ethernet12
       type: "1000base-t"
       b_device: dci-01
-      b_int: 2
+      b_int: Ethernet2
 spine-01:
   device_type: "spine_veos"
   interfaces:
     - name: Ethernet2
       type: "1000base-t"
       b_device: leaf-01
-      b_int: 3
+      b_int: Ethernet3
     - name: Ethernet3
       type: "1000base-t"
       b_device: leaf-02
-      b_int: 3
+      b_int: Ethernet3
     - name: Ethernet4
       type: "1000base-t"
       b_device: leaf-03
-      b_int: 3
+      b_int: Ethernet3
     - name: Ethernet5
       type: "1000base-t"
       b_device: leaf-04
-      b_int: 3
+      b_int: Ethernet3
     - name: Ethernet6
       type: "1000base-t"
       b_device: borderleaf-01
-      b_int: 3
+      b_int: Ethernet3
     - name: Ethernet7 
       type: "1000base-t"
       b_device: borderleaf-02
-      b_int: 3
+      b_int: Ethernet3
 spine-02:
   interfaces:
     - name: Ethernet2
       type: "1000base-t"
       b_device: leaf-01
-      b_int: 4
+      b_int: Ethernet4
     - name: Ethernet3
       type: "1000base-t"
       b_device: leaf-02
-      b_int: 4
+      b_int: Ethernet4
     - name: Ethernet4
       type: "1000base-t"
       b_device: leaf-03
-      b_int: 4
+      b_int: Ethernet4
     - name: Ethernet5
       type: "1000base-t"
       b_device: leaf-04
-      b_int: 4
+      b_int: Ethernet4
     - name: Ethernet6
       type: "1000base-t"
       b_device: borderleaf-01
-      b_int: 4
+      b_int: Ethernet4
     - name: Ethernet7 
       type: "1000base-t"
       b_device: borderleaf-02
-      b_int: 4
+      b_int: Ethernet4
 spine-03:
   interfaces:
     - name: Ethernet2
       type: "1000base-t"
       b_device: leaf-01
-      b_int: 5
+      b_int: Ethernet5
     - name: Ethernet3
       type: "1000base-t"
       b_device: leaf-02
-      b_int: 5
+      b_int: Ethernet5
     - name: Ethernet4
       type: "1000base-t"
       b_device: leaf-03
-      b_int: 5
+      b_int: Ethernet5
     - name: Ethernet5
       type: "1000base-t"
       b_device: leaf-04
-      b_int: 5
+      b_int: Ethernet5
     - name: Ethernet6
       type: "1000base-t"
       b_device: borderleaf-01
-      b_int: 5
+      b_int: Ethernet5
     - name: Ethernet7 
       type: "1000base-t"
       b_device: borderleaf-02
-      b_int: 5
+      b_int: Ethernet5
 leaf-01:
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
       b_device: leaf-02
-      b_int: 1
+      b_int: Ethernet1
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
       b_device: leaf-02
-      b_int: 2
+      b_int: Ethernet2
     - name: Ethernet3
       type: "1000base-t"
       b_device: spine-01
-      b_int: 2
+      b_int: Ethernet2
     - name: Ethernet4
       type: "1000base-t"
       b_device: spine-02
-      b_int: 3
+      b_int: Ethernet3
     - name: Ethernet5
       type: "1000base-t"
       b_device: spine-03
-      b_int: 4
+      b_int: Ethernet4
 leaf-02:
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
       b_device: leaf-01
-      b_int: 1
+      b_int: Ethernet1
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
       b_device: leaf-01
-      b_int: 2
+      b_int: Ethernet2
     - name: Ethernet3
       type: "1000base-t"
       b_device: spine-01
-      b_int: 2
+      b_int: Ethernet2
     - name: Ethernet4
       type: "1000base-t"
       b_device: spine-02
-      b_int: 3
+      b_int: Ethernet3
     - name: Ethernet5
       type: "1000base-t"
       b_device: spine-03
-      b_int: 4
+      b_int: Ethernet4
 leaf-03:
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
       b_device: leaf-02
-      b_int: 1
+      b_int: Ethernet1
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
       b_device: leaf-02
-      b_int: 2
+      b_int: Ethernet2
     - name: Ethernet3
       type: "1000base-t"
       b_device: spine-01
-      b_int: 2
+      b_int: Ethernet2
     - name: Ethernet4
       type: "1000base-t"
       b_device: spine-02
-      b_int: 3
+      b_int: Ethernet3
     - name: Ethernet5
       type: "1000base-t"
       b_device: spine-03
-      b_int: 4
+      b_int: Ethernet4
 leaf-04:
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
       b_device: leaf-03
-      b_int: 1
+      b_int: Ethernet1
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
       b_device: leaf-03
-      b_int: 2
+      b_int: Ethernet2
     - name: Ethernet3
       type: "1000base-t"
       b_device: spine-01
-      b_int: 2
+      b_int: Ethernet2
     - name: Ethernet4
       type: "1000base-t"
       b_device: spine-02
-      b_int: 3
+      b_int: Ethernet3
     - name: Ethernet5
       type: "1000base-t"
       b_device: spine-03
-      b_int: 4
+      b_int: Ethernet4
 """
 
 CUSTOM_FIELDS = {
@@ -552,52 +552,64 @@ class CreateAristaPod(Job):
                     lo1_address = list(available_ips)[0]
                     loopback1_ip = IPAddress.objects.create(address=str(lo1_address), assigned_object=loopback1_intf)
                 
-    # def create_p2p_link(self, data, commit):
-    #     dc_code = data["dc_code"].lower()
-    #     ROLES = {
-    #         "spine": {"device_type": "spine_veos"},
-    #         "leaf": {"device_type": "leaf_veos"},
-    #         "borderleaf": {"device_type": "leaf_veos"},
-    #         "dci": {"device_type": "spine_veos"},
-    #     }
-    #     # Number of devices to provision
-    #     ROLES["leaf"]["nbr"] = data["leaf_count"]
-    #     ROLES["spine"]["nbr"] = data["spine_count"]
-    #     if data["borderleaf"] == True:
-    #         ROLES["borderleaf"]["nbr"] = 2
-    #     else:
-    #         ROLES["borderleaf"]["nbr"] = 0
-    #     if data["dci"] == True:
-    #         ROLES["dci"]["nbr"] = 1
-    #     else:
-    #         ROLES["dci"]["nbr"] = 0
-    #     SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
+    def create_p2p_link(self, data, commit):
+        dc_code = data["dc_code"].lower()
+        P2P_PREFIX_SIZE = "31"
+        ROLES = {
+            "spine": {"device_type": "spine_veos"},
+            "leaf": {"device_type": "leaf_veos"},
+            "borderleaf": {"device_type": "leaf_veos"},
+            "dci": {"device_type": "spine_veos"},
+        }
+        # Number of devices to provision
+        ROLES["leaf"]["nbr"] = data["leaf_count"]
+        ROLES["spine"]["nbr"] = data["spine_count"]
+        if data["borderleaf"] == True:
+            ROLES["borderleaf"]["nbr"] = 2
+        else:
+            ROLES["borderleaf"]["nbr"] = 0
+        if data["dci"] == True:
+            ROLES["dci"]["nbr"] = 1
+        else:
+            ROLES["dci"]["nbr"] = 0
+        SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
 
 
-    #     for role, data in ROLES.items():
-    #         for i in range(1, data.get("nbr", 2) + 1):
-    #             for device in SWITCHES:
-    #                 device_name = Device.objects.get(f"{dc_code}-{role}-{i:02}")
+        for role, data in ROLES.items():
+            for i in range(1, data.get("nbr", 2) + 1):
+                device_name = Device.objects.get(name=f"{dc_code}-{role}-{i:02}")
+                dev_name = device_name.replace(f"{dc_code}-","")
+                for iface in SWITCHES[dev_name]['interfaces']:
+                    interface = Interface.objects.get(name=iface['name'], device=device_name)
+                    if interface.cable is None:
+                        if "b_device" in iface.keys():
+                            intf1 = interface
+                            intf2 = iface['b_int']
+                            status = Status.objects.get_for_model(Cable).get(slug="connected")
+                            cable = Cable.objects.create(termination_a=intf1, termination_b=intf2, status=status)
+                            cable.save()
 
-    #     P2P_PREFIX_SIZE = "31"
-    #     if intf1.cable or intf2.cable:
-    #         self.log_warning(
-    #             message=f"Unable to create a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}"
-    #         )
-    #         return False
+        
+        
+        
+        # if intf1.cable or intf2.cable:
+        #     self.log_warning(
+        #         message=f"Unable to create a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}"
+        #     )
+        #     return False
 
-    #     status = Status.objects.get_for_model(Cable).get(slug="connected")
-    #     cable = Cable.objects.create(termination_a=intf1, termination_b=intf2, status=status)
-    #     cable.save()
+        # status = Status.objects.get_for_model(Cable).get(slug="connected")
+        # cable = Cable.objects.create(termination_a=intf1, termination_b=intf2, status=status)
+        # cable.save()
 
-    #     # Find Next available Network
-    #     prefix = Prefix.objects.filter(site=self.site, role__name="underlay_p2p").first()
-    #     first_avail = prefix.get_first_available_prefix()
-    #     subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
+        # Find Next available Network
+        # prefix = Prefix.objects.filter(site=self.site, role__name="underlay_p2p").first()
+        # first_avail = prefix.get_first_available_prefix()
+        # subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
 
-    #     Prefix.objects.create(prefix=str(subnet))
+        # Prefix.objects.create(prefix=str(subnet))
 
-    #     # Create IP Addresses on both sides
-    #     ip1 = IPAddress.objects.create(address=str(subnet[0]), assigned_object=intf1)
-    #     ip2 = IPAddress.objects.create(address=str(subnet[1]), assigned_object=intf2)
+        # # Create IP Addresses on both sides
+        # ip1 = IPAddress.objects.create(address=str(subnet[0]), assigned_object=intf1)
+        # ip2 = IPAddress.objects.create(address=str(subnet[1]), assigned_object=intf2)
 
