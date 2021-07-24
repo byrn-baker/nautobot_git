@@ -440,8 +440,9 @@ class CreateAristaPod(Job):
                             mtu=1500, 
                             device=device, 
                     )
+                    portchannel = intf_name.id
                     self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
-
+            
                 for iface in SWITCHES[dev_name]['interfaces']:
                     if iface =='Ethernet1' or 'Ethernet2':
                         intf_name = Interface.objects.get_or_create(
@@ -449,7 +450,7 @@ class CreateAristaPod(Job):
                             type="lag",
                             mode="tagged-all",
                             mtu=1500,
-                            lag="Port-Channel10",
+                            lag=portchannel,
                             device=device,
                         )
                         
