@@ -437,11 +437,19 @@ class CreateAristaPod(Job):
         )
         self.log_success(obj=rack, message=f"Created Relay Rack {rack_name_spine}")
 
-        rack_name_edge = f"{dc_code}-edge-rr-1"
-        rack = Rack.objects.get_or_create(
-            name=rack_name_edge, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
-        )
-        self.log_success(obj=rack, message=f"Created Relay Rack {rack_name_edge}")
+        if data["borderleaf"] == True: 
+            rack_name_borderleaf = f"{dc_code}-borderleaf-rr-1"
+            rack = Rack.objects.get_or_create(
+                name=rack_name_borderleaf, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
+            )
+            self.log_success(obj=rack, message=f"Created Relay Rack {rack_name_borderleaf}")
+
+        if data["dci"] == True:
+            rack_name_dci = f"{dc_code}-dci-rr-1"
+            rack = Rack.objects.get_or_create(
+                name=rack_name_dci, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
+            )
+            self.log_success(obj=rack, message=f"Created Relay Rack {rack_name_dci}")
 
         for i in range(1, ROLES["leaf"]["nbr"] + 1):
             rack_name = f"{dc_code}-leaf-rr-{i}"
@@ -477,7 +485,7 @@ class CreateAristaPod(Job):
                     self.devices[device_name] = device
                     self.log_success(obj=device, message=f"Device {device_name} already present")
                     continue
-
+                
                 device_status = Status.objects.get_for_model(Device).get(slug="active")
                 device_role, _ = DeviceRole.objects.get_or_create(name=role, slug=slugify(role))
                 device = Device.objects.create(
