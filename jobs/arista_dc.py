@@ -432,15 +432,6 @@ class CreateAristaPod(Job):
                 # Create physical interfaces
                 dev_name = device_name.replace(f"{dc_code}-","")
                 SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
-                for iface in SWITCHES[dev_name]['interfaces']:
-                    intf_name = Interface.objects.get_or_create(
-                        name=iface, 
-                        type="1000base-t",
-                        mtu=9214, 
-                        device=device, 
-                    )
-                    self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
-                
                 if device.device_role.slug == "leaf":
                     intf_name = Interface.objects.get_or_create(
                             name="Port-Channel10", 
@@ -451,18 +442,25 @@ class CreateAristaPod(Job):
                     )
                     self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
 
-                    query_name = Device.objects.get(name=device_name)
-                    ethernet1 = Interface.objects.get(name="Ethernet1", device=query_name.id)
-                    ethernet1.type = "lag"
-                    ethernet1.mode = "tagged-all"
-                    ethernet1.mtu = 1500
-                    ethernet1.validated_save()
-
-                    ethernet2 = Interface.objects.get(name="ethernet2", device=query_name.id)
-                    ethernet2.type = "lag"
-                    ethernet2.mode = "tagged-all"
-                    ethernet2.mtu = 1500
-                    ethernet2.validated_save()
+                for iface in SWITCHES[dev_name]['interfaces']:
+                    if iface =='Ethernet1' or 'Ethernet2':
+                        intf_name = Interface.objects.get_or_create(
+                            name=iface,
+                            type="lag",
+                            mode="tagged-all",
+                            mtu=1500,
+                            lag="Port-Channel10",
+                            device=device,
+                        )
+                        
+                    else:
+                        intf_name = Interface.objects.get_or_create(
+                            name=iface,
+                            type="1000base-t",
+                            mtu=9214,
+                            device=device, 
+                        )
+                        self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
 
 
 
