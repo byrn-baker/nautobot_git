@@ -303,6 +303,42 @@ class CreateAristaPod(Job):
     
     dci = BooleanVar(description="Does this DataCenter require an interconnect?", label="DCI required")
     
+def create_p2p_link(data):
+    dc_code = data["dc_code"].lower()
+    P2P_PREFIX_SIZE = "31"
+    ROLES = {
+        "spine": {"device_type": "spine_veos"},
+        "leaf": {"device_type": "leaf_veos"},
+        "borderleaf": {"device_type": "leaf_veos"},
+        "dci": {"device_type": "spine_veos"},
+    }
+    # Number of devices to provision
+    ROLES["leaf"]["nbr"] = data["leaf_count"]
+    ROLES["spine"]["nbr"] = data["spine_count"]
+    if data["borderleaf"] == True:
+        ROLES["borderleaf"]["nbr"] = 2
+    else:
+        ROLES["borderleaf"]["nbr"] = 0
+    if data["dci"] == True:
+        ROLES["dci"]["nbr"] = 1
+    else:
+        ROLES["dci"]["nbr"] = 0
+    SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
+
+
+    for role, data in ROLES.items():
+        for i in range(1, data.get("nbr", 2) + 1):
+            device_name = Device.objects.get(name=f"{dc_code}-{role}-{i:02}")
+            dev_name = device_name.replace(f"{dc_code}-","")
+            for iface in SWITCHES[dev_name]['interfaces']:
+                interface = Interface.objects.get(name=iface['name'], device=device_name)
+                if interface.cable is None:
+                    if "b_device" in iface.keys():
+                        intf1 = interface
+                        intf2 = iface['b_int']
+                        status = Status.objects.get_for_model(Cable).get(slug="connected")
+                        cable = Cable.objects.create(termination_a=intf1, termination_b=intf2, type="cat5e", status=status)
+                        cable.save()
 
     def run(self, data=None, commit=None):
         """Main function for CreatePop."""
@@ -551,43 +587,12 @@ class CreateAristaPod(Job):
                     available_ips = loopback1_prefix.get_available_ips()
                     lo1_address = list(available_ips)[0]
                     loopback1_ip = IPAddress.objects.create(address=str(lo1_address), assigned_object=loopback1_intf)
-                
-    def create_p2p_link(self, data, commit):
-        dc_code = data["dc_code"].lower()
-        P2P_PREFIX_SIZE = "31"
-        ROLES = {
-            "spine": {"device_type": "spine_veos"},
-            "leaf": {"device_type": "leaf_veos"},
-            "borderleaf": {"device_type": "leaf_veos"},
-            "dci": {"device_type": "spine_veos"},
-        }
-        # Number of devices to provision
-        ROLES["leaf"]["nbr"] = data["leaf_count"]
-        ROLES["spine"]["nbr"] = data["spine_count"]
-        if data["borderleaf"] == True:
-            ROLES["borderleaf"]["nbr"] = 2
-        else:
-            ROLES["borderleaf"]["nbr"] = 0
-        if data["dci"] == True:
-            ROLES["dci"]["nbr"] = 1
-        else:
-            ROLES["dci"]["nbr"] = 0
-        SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
 
-
-        for role, data in ROLES.items():
-            for i in range(1, data.get("nbr", 2) + 1):
-                device_name = Device.objects.get(name=f"{dc_code}-{role}-{i:02}")
-                dev_name = device_name.replace(f"{dc_code}-","")
-                for iface in SWITCHES[dev_name]['interfaces']:
-                    interface = Interface.objects.get(name=iface['name'], device=device_name)
-                    if interface.cable is None:
-                        if "b_device" in iface.keys():
-                            intf1 = interface
-                            intf2 = iface['b_int']
-                            status = Status.objects.get_for_model(Cable).get(slug="connected")
-                            cable = Cable.objects.create(termination_a=intf1, termination_b=intf2, status=status)
-                            cable.save()
+            #######################################
+            # Creating Cables between interfaces  #
+            #######################################
+            create_p2p_link()
+             
 
         
         
