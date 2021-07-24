@@ -525,8 +525,10 @@ class CreateAristaPod(Job):
                     po10 = device.interfaces.get(name="Port-Channel10")
                     eth1.lag = po10
                     eth1.validated_save()
+                    self.log_success(message=f"Moved {eth1} succesfully to {po10}")
                     eth2.lag = po10
                     eth2.validated_save()
+                    self.log_success(message=f"Moved {eth2} succesfully to {po10}")
 
                 if device.device_role.slug == "borderleaf":
                     portchannel_intf = Interface.objects.create(
