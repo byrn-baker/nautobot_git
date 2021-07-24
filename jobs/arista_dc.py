@@ -456,11 +456,13 @@ class CreateAristaPod(Job):
                     ethernet1.type = "lag"
                     ethernet1.mode = "tagged-all"
                     ethernet1.mtu = 1500
+                    ethernet1.validated_save()
 
                     ethernet2 = Interface.objects.get(name="ethernet2", device=query_name)
                     ethernet2.type = "lag"
                     ethernet2.mode = "tagged-all"
                     ethernet2.mtu = 1500
+                    ethernet2.validated_save()
 
 
 
