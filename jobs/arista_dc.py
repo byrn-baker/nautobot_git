@@ -583,33 +583,35 @@ class CreateAristaPod(Job):
                 dev_name = device_name.replace(f"{dc_code}-","")
         
                 for iface in SWITCHES[dev_name]['interfaces']:
+                    existing_ifaces = Interface.objects.filter(device=device)
                     interface = Interface.objects.get(name=iface['name'], device=device)
-                    if interface.cable is None:
-                        if "b_device" in iface.keys():
-                            b_device = iface['b_device']
-                            b_dev_name = f"{dc_code}-{b_device}"
-                            bside_device = Device.objects.get(name=b_dev_name)
-                            bside_interface = Interface.objects.get(name=iface['b_int'],device=bside_device, )
-                            intf1 = interface
-                            intf2 = bside_interface
-                            status = Status.objects.get_for_model(Cable).get(slug="connected")
-                            if intf1.cable or intf2.cable:
-                                self.log_warning(
-                                    message=f"Unable to create a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}"
-                                )
-                                return False
-                            cable = Cable.objects.create(termination_a=intf1, termination_b=intf2, status=status)
-                            cable.save()
-                            self.log_success(message=f"Created a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
-                            # Find Next available Network
-                            if "mode" not in iface.keys():
-                                P2P_PREFIX_SIZE = 31
-                                prefix = Prefix.objects.filter(site=self.site, role__name=f"{dc_code}_underlay_p2p").first()
-                                first_avail = prefix.get_first_available_prefix()
-                                subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
+                    if iface in existing_ifaces:
+                        if interface.cable is None:
+                            if "b_device" in iface.keys():
+                                b_device = iface['b_device']
+                                b_dev_name = f"{dc_code}-{b_device}"
+                                bside_device = Device.objects.get(name=b_dev_name)
+                                bside_interface = Interface.objects.get(name=iface['b_int'],device=bside_device, )
+                                intf1 = interface
+                                intf2 = bside_interface
+                                status = Status.objects.get_for_model(Cable).get(slug="connected")
+                                if intf1.cable or intf2.cable:
+                                    self.log_warning(
+                                        message=f"Unable to create a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}"
+                                    )
+                                    return False
+                                cable = Cable.objects.create(termination_a=intf1, termination_b=intf2, status=status)
+                                cable.save()
+                                self.log_success(message=f"Created a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
+                                # Find Next available Network
+                                if "mode" not in iface.keys():
+                                    P2P_PREFIX_SIZE = 31
+                                    prefix = Prefix.objects.filter(site=self.site, role__name=f"{dc_code}_underlay_p2p").first()
+                                    first_avail = prefix.get_first_available_prefix()
+                                    subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
 
-                                Prefix.objects.create(prefix=str(subnet))
+                                    Prefix.objects.create(prefix=str(subnet))
 
-                                # Create IP Addresses on both sides
-                                ip1 = IPAddress.objects.create(address=str(subnet[0]), assigned_object=intf1)
-                                ip2 = IPAddress.objects.create(address=str(subnet[1]), assigned_object=intf2)
+                                    # Create IP Addresses on both sides
+                                    ip1 = IPAddress.objects.create(address=str(subnet[0]), assigned_object=intf1)
+                                    ip2 = IPAddress.objects.create(address=str(subnet[1]), assigned_object=intf2)
