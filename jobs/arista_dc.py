@@ -527,7 +527,7 @@ class CreateAristaPod(Job):
                         self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
 
 
-                # MLAG Port Channel
+                # LEAF MLAG Port Channel
                 if device.device_role.slug == "leaf":
                     portchannel_intf = Interface.objects.create(
                         name="Port-Channel10", type="lag", mode="tagged-all", device=device
@@ -554,7 +554,7 @@ class CreateAristaPod(Job):
                     #######################################
                     # Creating IP addresses for MLAG Peer #
                     #######################################
-                    if device == f"{dc_code}-leaf-01":
+                    if f"{dc_code}-leaf-01" == device:
                         interface = Interface.objects.get(name="Vlan4094", device=device)
                         ip = IPAddress.objects.create('192.168.255.1/30', assigned_object=interface)
                         self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
@@ -574,6 +574,7 @@ class CreateAristaPod(Job):
                         ip = IPAddress.objects.create('192.168.255.2/30', assigned_object=interface)
                         self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
 
+                # BORDERLEAF MLAG Port Channel
                 if device.device_role.slug == "borderleaf":
                     portchannel_intf = Interface.objects.create(
                         name="Port-Channel10", type="lag", mode="tagged-all", device=device
