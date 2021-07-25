@@ -259,7 +259,7 @@ class CreateAristaPod(Job):
                 self.log_success(device, f"Device {device_name} successfully created")
 
                 # Create physical interfaces
-                device_standards = ".standards/arista_dc_interfaces.yaml"
+                device_standards = "./standards/arista_dc_interfaces.yaml"
                 with open(device_standards) as f:
                     SWITCHES = yaml.safe_load(f.read())
 
