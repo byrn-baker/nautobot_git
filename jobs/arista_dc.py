@@ -10,6 +10,7 @@ dci-01:
       b_device: borderleaf-02
       b_int: Ethernet12
 borderleaf-01: 
+  mlag: "odd"
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
@@ -38,7 +39,7 @@ borderleaf-01:
       b_device: dci-01
       b_int: Ethernet1
 borderleaf-02: 
-  device_type: "leaf_veos"
+  mlag: "even"
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
@@ -146,6 +147,7 @@ spine-03:
       b_device: borderleaf-02
       b_int: Ethernet5
 leaf-01:
+  mlag: "odd"
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
@@ -170,6 +172,7 @@ leaf-01:
       b_device: spine-03
       b_int: Ethernet4
 leaf-02:
+  mlag: "even"
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
@@ -194,6 +197,7 @@ leaf-02:
       b_device: spine-03
       b_int: Ethernet4
 leaf-03:
+  mlag: "odd"
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
@@ -218,6 +222,7 @@ leaf-03:
       b_device: spine-03
       b_int: Ethernet4
 leaf-04:
+  mlag: "even"
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
@@ -622,7 +627,7 @@ class CreateAristaPod(Job):
                                 return False
                             cable = Cable.objects.create(termination_a=intf1, termination_b=intf2, status=status)
                             cable.save()
-                            self.log_success(message=f"Created a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
+                            self.log_success(message=f"Created a cable between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
                             # Find Next available Network
                             if "mode" not in iface.keys():
                                 P2P_PREFIX_SIZE = 31
@@ -635,3 +640,8 @@ class CreateAristaPod(Job):
                                 # Create IP Addresses on both sides
                                 ip1 = IPAddress.objects.create(address=str(subnet[0]), assigned_object=intf1)
                                 ip2 = IPAddress.objects.create(address=str(subnet[1]), assigned_object=intf2)
+                                self.log_success(message=f"Created a IP Address between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
+
+                #######################################
+                # Creating IP addresses for MLAG Peer #
+                #######################################
