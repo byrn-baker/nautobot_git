@@ -10,7 +10,8 @@ dci-01:
       b_device: borderleaf-02
       b_int: Ethernet12
 borderleaf-01: 
-  mlag: "odd"
+  mlag: 
+    - odd
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
@@ -39,7 +40,8 @@ borderleaf-01:
       b_device: dci-01
       b_int: Ethernet1
 borderleaf-02: 
-  mlag: "even"
+  mlag: 
+    - even
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
@@ -147,7 +149,8 @@ spine-03:
       b_device: borderleaf-02
       b_int: Ethernet5
 leaf-01:
-  mlag: "odd"
+  mlag: 
+    - odd
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
@@ -172,7 +175,8 @@ leaf-01:
       b_device: spine-03
       b_int: Ethernet4
 leaf-02:
-  mlag: "even"
+  mlag:
+    - even
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
@@ -197,7 +201,8 @@ leaf-02:
       b_device: spine-03
       b_int: Ethernet4
 leaf-03:
-  mlag: "odd"
+  mlag: 
+    - odd
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
@@ -222,7 +227,8 @@ leaf-03:
       b_device: spine-03
       b_int: Ethernet4
 leaf-04:
-  mlag: "even"
+  mlag: 
+    - even
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
@@ -645,13 +651,13 @@ class CreateAristaPod(Job):
                 #######################################
                 # Creating IP addresses for MLAG Peer #
                 #######################################
-                for iface in SWITCHES[dev_name]['mlag']:
-                    if "odd" in iface:
+                for mlag in SWITCHES[dev_name]['mlag']:
+                    if "odd" in mlag:
                         interface = Interface.objects.get(name="Vlan4094", device=device)
                         ip = IPAddress.objects.create('192.168.255.1/30', assigned_object=interface)
                         self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
 
-                    elif "even" in iface:
+                    elif "even" in mlag:
                         interface = Interface.objects.get(name="Vlan4094", device=device)
                         ip = IPAddress.objects.create('192.168.255.2/30', assigned_object=interface)
                         self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
