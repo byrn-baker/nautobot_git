@@ -1,0 +1,241 @@
+dci-01:
+  Ethernet1:
+    type: "1000base-t"
+    b_device: borderleaf-01
+    b_int: Ethernet12
+  Ethernet2:
+    type: "1000base-t"
+    b_device: borderleaf-02
+    b_int: Ethernet12
+borderleaf-01: 
+  
+  Ethernet1:
+    type: "1000base-t"
+    mode: "tagged-all"
+    b_device: borderleaf-02
+    b_int: Ethernet1
+  Ethernet2:
+    type: "1000base-t"
+    mode: "tagged-all"
+    b_device: borderleaf-02
+    b_int: Ethernet2
+  Ethernet3:
+    type: "1000base-t"
+    b_device: spine-01
+    b_int: Ethernet6
+  Ethernet4:
+    type: "1000base-t"
+    b_device: spine-02
+    b_int: Ethernet6
+  Ethernet5:
+    type: "1000base-t"
+    b_device: spine-03
+    b_int: Ethernet6
+  Ethernet12:
+    type: "1000base-t"
+    b_device: dci-01
+    b_int: Ethernet1
+borderleaf-02: 
+
+  
+    Ethernet1
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: borderleaf-01
+      b_int: Ethernet1
+    Ethernet2
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: borderleaf-01
+      b_int: Ethernet2
+    Ethernet3
+      type: "1000base-t"
+      b_device: spine-01
+      b_int: Ethernet7
+    Ethernet4
+      type: "1000base-t"
+      b_device: spine-02
+      b_int: Ethernet7
+    Ethernet5
+      type: "1000base-t"
+      b_device: spine-03
+      b_int: Ethernet7
+    Ethernet12
+      type: "1000base-t"
+      b_device: dci-01
+      b_int: Ethernet2
+spine-01:
+
+  
+    Ethernet2
+      type: "1000base-t"
+      b_device: leaf-01
+      b_int: Ethernet3
+    Ethernet3
+      type: "1000base-t"
+      b_device: leaf-02
+      b_int: Ethernet3
+    Ethernet4
+      type: "1000base-t"
+      b_device: leaf-03
+      b_int: Ethernet3
+    Ethernet5
+      type: "1000base-t"
+      b_device: leaf-04
+      b_int: Ethernet3
+    Ethernet6
+      type: "1000base-t"
+      b_device: borderleaf-01
+      b_int: Ethernet3
+    Ethernet7 
+      type: "1000base-t"
+      b_device: borderleaf-02
+      b_int: Ethernet3
+spine-02:
+  
+    Ethernet2
+      type: "1000base-t"
+      b_device: leaf-01
+      b_int: Ethernet4
+    Ethernet3
+      type: "1000base-t"
+      b_device: leaf-02
+      b_int: Ethernet4
+    Ethernet4
+      type: "1000base-t"
+      b_device: leaf-03
+      b_int: Ethernet4
+    Ethernet5
+      type: "1000base-t"
+      b_device: leaf-04
+      b_int: Ethernet4
+    Ethernet6
+      type: "1000base-t"
+      b_device: borderleaf-01
+      b_int: Ethernet4
+    Ethernet7 
+      type: "1000base-t"
+      b_device: borderleaf-02
+      b_int: Ethernet4
+spine-03:
+  
+    Ethernet2
+      type: "1000base-t"
+      b_device: leaf-01
+      b_int: Ethernet5
+    Ethernet3
+      type: "1000base-t"
+      b_device: leaf-02
+      b_int: Ethernet5
+    Ethernet4
+      type: "1000base-t"
+      b_device: leaf-03
+      b_int: Ethernet5
+    Ethernet5
+      type: "1000base-t"
+      b_device: leaf-04
+      b_int: Ethernet5
+    Ethernet6
+      type: "1000base-t"
+      b_device: borderleaf-01
+      b_int: Ethernet5
+    Ethernet7 
+      type: "1000base-t"
+      b_device: borderleaf-02
+      b_int: Ethernet5
+leaf-01:
+  
+    Ethernet1
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf-02
+      b_int: Ethernet1
+    Ethernet2
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf-02
+      b_int: Ethernet2
+    Ethernet3
+      type: "1000base-t"
+      b_device: spine-01
+      b_int: Ethernet2
+    Ethernet4
+      type: "1000base-t"
+      b_device: spine-02
+      b_int: Ethernet3
+    Ethernet5
+      type: "1000base-t"
+      b_device: spine-03
+      b_int: Ethernet4
+leaf-02:
+  
+    Ethernet1
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf-01
+      b_int: Ethernet1
+    Ethernet2
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf-01
+      b_int: Ethernet2
+    Ethernet3
+      type: "1000base-t"
+      b_device: spine-01
+      b_int: Ethernet2
+    Ethernet4
+      type: "1000base-t"
+      b_device: spine-02
+      b_int: Ethernet3
+    Ethernet5
+      type: "1000base-t"
+      b_device: spine-03
+      b_int: Ethernet4
+leaf-03:
+  
+    Ethernet1
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf-04
+      b_int: Ethernet1
+    Ethernet2
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf-04
+      b_int: Ethernet2
+    Ethernet3
+      type: "1000base-t"
+      b_device: spine-01
+      b_int: Ethernet2
+    Ethernet4
+      type: "1000base-t"
+      b_device: spine-02
+      b_int: Ethernet3
+    Ethernet5
+      type: "1000base-t"
+      b_device: spine-03
+      b_int: Ethernet4
+leaf-04:
+  
+    Ethernet1
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf-03
+      b_int: Ethernet1
+    Ethernet2
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf-03
+      b_int: Ethernet2
+    Ethernet3
+      type: "1000base-t"
+      b_device: spine-01
+      b_int: Ethernet2
+    Ethernet4
+      type: "1000base-t"
+      b_device: spine-02
+      b_int: Ethernet3
+    Ethernet5
+      type: "1000base-t"
+      b_device: spine-03
+      b_int: Ethernet4
