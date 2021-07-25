@@ -645,13 +645,13 @@ class CreateAristaPod(Job):
                 #######################################
                 # Creating IP addresses for MLAG Peer #
                 #######################################
-                for iface in SWITCHES[dev_name]:
-                    if "odd" in iface['mlag']:
+                for iface in SWITCHES[dev_name]['mlag']:
+                    if "odd" in iface:
                         interface = Interface.objects.get(name="Vlan4094", device=device)
                         ip = IPAddress.objects.create('192.168.255.1/30', assigned_object=interface)
                         self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
 
-                    elif "even" in iface['mlag']:
+                    elif "even" in iface:
                         interface = Interface.objects.get(name="Vlan4094", device=device)
                         ip = IPAddress.objects.create('192.168.255.2/30', assigned_object=interface)
                         self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
