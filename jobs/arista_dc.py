@@ -259,9 +259,9 @@ class CreateAristaPod(Job):
                 self.log_success(device, f"Device {device_name} successfully created")
 
                 # Create physical interfaces
-                device_standards = "/opt/nautobot/git/config_context-jobs/jobs/standards/arista_dc_interfaces.yaml"
+                device_standards = "standards/arista_dc_interfaces.yaml"
                 with open(device_standards) as f:
-                    SWITCHES = yaml.safe_load(f.red())
+                    SWITCHES = yaml.safe_load(f.read())
 
                 dev_name = device_name.replace(f"{dc_code}-","")
                 for iface in SWITCHES[dev_name]['interfaces']:
