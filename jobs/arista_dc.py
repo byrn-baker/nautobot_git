@@ -554,24 +554,24 @@ class CreateAristaPod(Job):
                     #######################################
                     # Creating IP addresses for MLAG Peer #
                     #######################################
-                    if f"{dc_code}-leaf-01" == device_name:
+                    if device_name == f"{dc_code}-leaf-01":
                         interface = Interface.objects.get(name="Vlan4094", device=device)
-                        ip = IPAddress.objects.create('192.168.255.1/30', assigned_object=interface)
+                        ip = IPAddress.objects.create(address='192.168.255.1/30', assigned_object=interface)
                         self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
 
-                    elif device == f"{dc_code}-leaf-02":
+                    elif device_name == f"{dc_code}-leaf-02":
                         interface = Interface.objects.get(name="Vlan4094", device=device)
-                        ip = IPAddress.objects.create('192.168.255.2/30', assigned_object=interface)
+                        ip = IPAddress.objects.create(address='192.168.255.2/30', assigned_object=interface)
                         self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
 
-                    elif device == f"{dc_code}-leaf-03":
+                    elif device_name == f"{dc_code}-leaf-03":
                         interface = Interface.objects.get(name="Vlan4094", device=device)
-                        ip = IPAddress.objects.create('192.168.255.1/30', assigned_object=interface)
+                        ip = IPAddress.objects.create(address='192.168.255.1/30', assigned_object=interface)
                         self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
 
-                    elif device == f"{dc_code}-leaf-04":
+                    elif device_name == f"{dc_code}-leaf-04":
                         interface = Interface.objects.get(name="Vlan4094", device=device)
-                        ip = IPAddress.objects.create('192.168.255.2/30', assigned_object=interface)
+                        ip = IPAddress.objects.create(address='192.168.255.2/30', assigned_object=interface)
                         self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
 
                 # BORDERLEAF MLAG Port Channel
@@ -600,14 +600,14 @@ class CreateAristaPod(Job):
                     #######################################
                     # Creating IP addresses for MLAG Peer #
                     #######################################
-                    if device == f"{dc_code}-borderleaf-01":
+                    if device_name == f"{dc_code}-borderleaf-01":
                         interface = Interface.objects.get(name="Vlan4094", device=device)
-                        ip = IPAddress.objects.create('192.168.255.1/30', assigned_object=interface)
+                        ip = IPAddress.objects.create(address='192.168.255.1/30', assigned_object=interface)
                         self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
 
-                    elif device == f"{dc_code}-borderleaf-02":
+                    elif device_name == f"{dc_code}-borderleaf-02":
                         interface = Interface.objects.get(name="Vlan4094", device=device)
-                        ip = IPAddress.objects.create('192.168.255.2/30', assigned_object=interface)
+                        ip = IPAddress.objects.create(address='192.168.255.2/30', assigned_object=interface)
                         self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
 
 
