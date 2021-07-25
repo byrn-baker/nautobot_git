@@ -545,31 +545,9 @@ class CreateAristaPod(Job):
                     eth2.validated_save()
                     self.log_success(message=f"Moved {eth2} succesfully to {po10}")
 
-                    # MLAG Port Channel
-                    mlag_svi = Interface.objects.create(
-                        name="Vlan4094", type="virtual", mode="tagged-all", device=device
-                    )
-                    self.log_success(obj=mlag_svi, message=f"{mlag_svi} successfully created on {device_name}")
-
-                if device.device_role.slug == "borderleaf":
-                    portchannel_intf = Interface.objects.create(
-                        name="Port-Channel10", type="lag", mode="tagged-all", device=device
-                    )
-                    self.log_success(obj=portchannel_intf, message=f"{portchannel_intf} successfully created on {device_name}")
-
-                    eth1 = device.interfaces.get(name="Ethernet1")
-                    eth2 = device.interfaces.get(name="Ethernet2")
-                    po10 = device.interfaces.get(name="Port-Channel10")
-                    eth1.lag = po10
-                    eth1.validated_save()
-                    self.log_success(message=f"Moved {eth1} succesfully to {po10}")
-                    eth2.lag = po10
-                    eth2.validated_save()
-                    self.log_success(message=f"Moved {eth2} succesfully to {po10}")
-
                     # MLAG SVI
                     mlag_svi = Interface.objects.create(
-                        name="Vlan4094", type="virtual", mode="tagged-all", device=device
+                        name="Vlan4094", type="virtual", device=device
                     )
                     self.log_success(obj=mlag_svi, message=f"{mlag_svi} successfully created on {device_name}")
 
@@ -596,7 +574,40 @@ class CreateAristaPod(Job):
                         ip = IPAddress.objects.create('192.168.255.2/30', assigned_object=interface)
                         self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
 
+                if device.device_role.slug == "borderleaf":
+                    portchannel_intf = Interface.objects.create(
+                        name="Port-Channel10", type="lag", mode="tagged-all", device=device
+                    )
+                    self.log_success(obj=portchannel_intf, message=f"{portchannel_intf} successfully created on {device_name}")
 
+                    eth1 = device.interfaces.get(name="Ethernet1")
+                    eth2 = device.interfaces.get(name="Ethernet2")
+                    po10 = device.interfaces.get(name="Port-Channel10")
+                    eth1.lag = po10
+                    eth1.validated_save()
+                    self.log_success(message=f"Moved {eth1} succesfully to {po10}")
+                    eth2.lag = po10
+                    eth2.validated_save()
+                    self.log_success(message=f"Moved {eth2} succesfully to {po10}")
+
+                    # MLAG SVI
+                    mlag_svi = Interface.objects.create(
+                        name="Vlan4094", type="virtual", device=device
+                    )
+                    self.log_success(obj=mlag_svi, message=f"{mlag_svi} successfully created on {device_name}")
+
+                    #######################################
+                    # Creating IP addresses for MLAG Peer #
+                    #######################################
+                    if device == f"{dc_code}-borderleaf-01":
+                        interface = Interface.objects.get(name="Vlan4094", device=device)
+                        ip = IPAddress.objects.create('192.168.255.1/30', assigned_object=interface)
+                        self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
+
+                    elif device == f"{dc_code}-borderleaf-02":
+                        interface = Interface.objects.get(name="Vlan4094", device=device)
+                        ip = IPAddress.objects.create('192.168.255.2/30', assigned_object=interface)
+                        self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
 
 
 
