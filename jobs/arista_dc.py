@@ -7,6 +7,7 @@ from nautobot.extras.models.customfields import ContentType
 from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar, BooleanVar
 from nautobot.circuits.models import Provider, CircuitType, Circuit, CircuitTermination
 import ipaddress
+import os
 ##########################
 # credit to damien @ NTC #
 CUSTOM_FIELDS = {
@@ -258,7 +259,7 @@ class CreateAristaPod(Job):
                 self.log_success(device, f"Device {device_name} successfully created")
 
                 # Create physical interfaces
-                device_standards = "standards/arista_dc_interfaces.yaml"
+                device_standards = "/standards/arista_dc_interfaces.yaml"
                 with open(device_standards) as f:
                     SWITCHES = yaml.safe_load(f.red())
 
