@@ -582,15 +582,15 @@ class CreateAristaPod(Job):
                 device = Device.objects.get(name=device_name)
                 dev_name = device_name.replace(f"{dc_code}-","")
 
-                for default_iface in SWITCHES[dev_name]['interfaces']:
-                    existing_ifaces = Interface.objects.filter(device=device)
-                    for prov_intf in existing_ifaces:
+                for iface_relation in SWITCHES[dev_name]['interfaces']:
+                    created_ifaces = Interface.objects.filter(device=device)
+                    for iface in created_ifaces:
 
-                        b_device = default_iface['b_device']
+                        b_device = iface_relation['b_device']
                         b_dev_name = f"{dc_code}-{b_device}"
                         bside_device = Device.objects.get(name=b_dev_name)
-                        bside_interface = Interface.objects.get(name=default_iface['b_int'],device=bside_device, )
-                        intf1 = prov_intf
+                        bside_interface = Interface.objects.get(name=iface_relation['b_int'],device=bside_device, )
+                        intf1 = iface
                         intf2 = bside_interface
                         status = Status.objects.get_for_model(Cable).get(slug="connected")
                         if intf1.cable or intf2.cable:
