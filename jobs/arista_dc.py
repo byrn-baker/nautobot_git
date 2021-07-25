@@ -567,11 +567,26 @@ class CreateAristaPod(Job):
                     eth2.validated_save()
                     self.log_success(message=f"Moved {eth2} succesfully to {po10}")
 
-                    # MLAG Port Channel
+                    # MLAG SVI
                     mlag_svi = Interface.objects.create(
                         name="Vlan4094", type="virtual", mode="tagged-all", device=device
                     )
                     self.log_success(obj=mlag_svi, message=f"{mlag_svi} successfully created on {device_name}")
+
+                    #######################################
+                    # Creating IP addresses for MLAG Peer #
+                    #######################################
+                    if 'leaf-01' in device:
+                        interface = Interface.objects.get(name="Vlan4094", device=device)
+                        ip = IPAddress.objects.create('192.168.255.1/30', assigned_object=interface)
+                        self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
+
+                    elif 'leaf-02' in device:
+                        interface = Interface.objects.get(name="Vlan4094", device=device)
+                        ip = IPAddress.objects.create('192.168.255.2/30', assigned_object=interface)
+                        self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
+
+
 
 
 
@@ -647,17 +662,3 @@ class CreateAristaPod(Job):
                                 ip1 = IPAddress.objects.create(address=str(subnet[0]), assigned_object=intf1)
                                 ip2 = IPAddress.objects.create(address=str(subnet[1]), assigned_object=intf2)
                                 self.log_success(message=f"Created a IP Address between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
-
-                #######################################
-                # Creating IP addresses for MLAG Peer #
-                #######################################
-                for mlag in SWITCHES[dev_name]['mlag']:
-                    if "odd" in mlag:
-                        interface = Interface.objects.get(name="Vlan4094", device=device)
-                        ip = IPAddress.objects.create('192.168.255.1/30', assigned_object=interface)
-                        self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
-
-                    elif "even" in mlag:
-                        interface = Interface.objects.get(name="Vlan4094", device=device)
-                        ip = IPAddress.objects.create('192.168.255.2/30', assigned_object=interface)
-                        self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
