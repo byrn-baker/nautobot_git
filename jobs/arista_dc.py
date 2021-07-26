@@ -360,7 +360,6 @@ class CreateAristaPod(Job):
         # Number of devices to provision
         ROLES["leaf"]["nbr"] = data["leaf_count"]
         ROLES["spine"]["nbr"] = data["spine_count"]
-        ROLES["spine"]["bgp"] = data["spine_bgp"]
         if data["borderleaf"] == True:
             ROLES["borderleaf"]["nbr"] = 2
         else:
