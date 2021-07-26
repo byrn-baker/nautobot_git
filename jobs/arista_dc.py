@@ -672,6 +672,21 @@ class CreateAristaPod(Job):
                     lo1_address = list(available_ips)[0]
                     loopback1_ip = IPAddress.objects.create(address=str(lo1_address), description=f"{device_name}::{loopback1_intf}", assigned_object=loopback1_intf)
 
+                elif device.device_role.slug == "borderleaf":
+                    loopback1_intf = Interface.objects.create(
+                        name="Loopback1", type="virtual", device=device
+                    )
+                    self.log_success(obj=loopback1_intf, message=f"{loopback1_intf} successfully created on {device_name}")
+
+                    loopback1_prefix = Prefix.objects.get(
+                        site=self.site,
+                        role__name=f"{dc_code}_vtep_loopback",
+                    )
+
+                    available_ips = loopback1_prefix.get_available_ips()
+                    lo1_address = list(available_ips)[0]
+                    loopback1_ip = IPAddress.objects.create(address=str(lo1_address), description=f"{device_name}::{loopback1_intf}", assigned_object=loopback1_intf)
+
         #######################################
         # Creating Cables between interfaces  #
         #######################################
