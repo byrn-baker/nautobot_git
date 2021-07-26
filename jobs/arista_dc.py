@@ -653,7 +653,7 @@ class CreateAristaPod(Job):
 
                 available_ips = loopback0_prefix.get_available_ips()
                 lo0_address = list(available_ips)[0]
-                loopback0_ip = IPAddress.objects.create(address=str(lo0_address), assigned_object=loopback0_intf)
+                loopback0_ip = IPAddress.objects.create(address=str(lo0_address), description=f"{device_name}::{loopback0_intf}", assigned_object=loopback0_intf)
                 
 
                 # Generate Loopback1 interface and assign Loopback1 address
@@ -670,7 +670,7 @@ class CreateAristaPod(Job):
 
                     available_ips = loopback1_prefix.get_available_ips()
                     lo1_address = list(available_ips)[0]
-                    loopback1_ip = IPAddress.objects.create(address=str(lo1_address), assigned_object=loopback1_intf)
+                    loopback1_ip = IPAddress.objects.create(address=str(lo1_address), description=f"{device_name}::{loopback0_intf}", assigned_object=loopback1_intf)
 
         #######################################
         # Creating Cables between interfaces  #
