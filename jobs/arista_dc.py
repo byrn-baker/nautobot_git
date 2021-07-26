@@ -302,11 +302,14 @@ class CreateAristaPod(Job):
         field_order = [
             "region",
             "dc_code",
-            "dc_asn",
             "spine_count",
+            "spine_bgp",
             "leaf_count",
+            "leaf_bgp",
             "borderleaf",
+            "borderleaf_bgp",
             "dci",
+            "dci_bgp"
         ]
 
     region = ObjectVar(model=Region)
@@ -315,13 +318,19 @@ class CreateAristaPod(Job):
     
     spine_count = IntegerVar(description="Number of Spine Switches", label="Spine switches count", min_value=1, max_value=3)
 
-    dc_asn = IntegerVar(description="BGP AS for the DataCenter", label="DataCenter ASN")
+    spine_bgp = IntegerVar(description="BGP AS for the Spine switches", label="Spine BGP ASN")
 
     leaf_count = IntegerVar(description="Number of Leaf Switches", label="Leaf switches count", min_value=1, max_value=4)
 
+    leaf_bgp = IntegerVar(description="BGP AS range for the Leaf switches", label="Leaf BGP ASN range")
+
     borderleaf = BooleanVar(description="Does this DataCenter require Border Leaf switches?", label="borderleaf required")
+
+    borderleaf_bgp = IntegerVar(description="BGP AS for the Border Leaf switches", label="Border Leaf BGP ASN")
     
     dci = BooleanVar(description="Does this DataCenter require an interconnect?", label="DCI required")
+
+    dci_bgp = IntegerVar(description="BGP AS for the DataCenter Interconnect switch", label="DCI BGP ASN")
     
     def run(self, data=None, commit=None):
         """Main function for CreatePop."""
@@ -337,7 +346,6 @@ class CreateAristaPod(Job):
         # ----------------------------------------------------------------------------
         # Find or Create Site
         # ----------------------------------------------------------------------------
-        bgp = data['dc_asn']
         dc_code = data["dc_code"].lower()
         region = data["region"]
         site_status = Status.objects.get_for_model(Site).get(slug="active")
@@ -359,13 +367,17 @@ class CreateAristaPod(Job):
         }
         # Number of devices to provision
         ROLES["leaf"]["nbr"] = data["leaf_count"]
+        ROLES["leaf"]["bgp"] = data["leaf_bgp"]
         ROLES["spine"]["nbr"] = data["spine_count"]
+        ROLES["spine"]["bgp"] = data["spine_bgp"]
         if data["borderleaf"] == True:
             ROLES["borderleaf"]["nbr"] = 2
+            ROLES["borderleaf"]["bgp"] = data["borderleaf_bgp"]
         else:
             ROLES["borderleaf"]["nbr"] = 0
         if data["dci"] == True:
             ROLES["dci"]["nbr"] = 1
+            ROLES["dci"]["bgp"] = data['dci_bgp']
         else:
             ROLES["dci"]["nbr"] = 0
 
@@ -520,9 +532,30 @@ class CreateAristaPod(Job):
                 self.log_success(device, f"Device {device_name} successfully created")
 
                 # Add the Devices specific BGP assignments
-                for b in range(1, bgp):
+                if device_name == f"{dc_code}-spine-01" or device_name == f"{dc_code}-spine-02" or device_name == f"{dc_code}-spine-03":
+                    bgp = data("bgp")
                     device._custom_field_data = {"device_bgp": bgp}
-                    self.log_success(device, f"Added AS::{b} to Device {device_name}")
+                    self.log_success(device, f"Added AS::{bgp} to Device {device_name}")
+
+                elif device_name == f"{dc_code}-leaf-01" or device_name == f"{dc_code}-leaf-02":
+                    bgp = data("bgp")
+                    device._custom_field_data = {"device_bgp": bgp}
+                    self.log_success(device, f"Added AS::{bgp} to Device {device_name}")
+
+                elif device_name == f"{dc_code}-leaf-03" or device_name == f"{dc_code}-leaf-04":
+                    bgp = data("bgp") + 1
+                    device._custom_field_data = {"device_bgp": bgp}
+                    self.log_success(device, f"Added AS::{bgp} to Device {device_name}")
+
+                elif device_name == f"{dc_code}-borderleaf-01" or device_name == f"{dc_code}-borderleaf-02":
+                    bgp = data("bgp")
+                    device._custom_field_data = {"device_bgp": bgp}
+                    self.log_success(device, f"Added AS::{bgp} to Device {device_name}")
+
+                elif device_name == f"{dc_code}-dci-01":
+                    bgp = data("bgp")
+                    device._custom_field_data = {"device_bgp": bgp}
+                    self.log_success(device, f"Added AS::{bgp} to Device {device_name}")
 
 
                 # Create physical interfaces
