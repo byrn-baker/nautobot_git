@@ -293,17 +293,17 @@ class CreateAristaPod(Job):
     class Meta:
         """Meta class for CreateAristaPod."""
 
-        name = "Create a POD"
+        name = "Create a new Arista DataCenter"
         description = """
-        Create a new Site  with 2 Spine and N leaf switches.
-        A new /21 will automatically be allocated from the 'POD Global Pool' Prefix
+        Create a new Site  with N Spine, leaf switches, borderleaf switchs, and or a DCI switch.
+        A new /22 will automatically be allocated from the 'POD Global Pool' Prefix
         """
-        label = "POD"
+        label = "Arista_DataCenter"
         field_order = [
             "region",
             "dc_code",
             "spine_count",
-            "spine_bgp"
+            "spine_bgp",
             "leaf_count",
             "leaf_bgp",
             "borderleaf",
