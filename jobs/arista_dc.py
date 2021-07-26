@@ -535,7 +535,7 @@ class CreateAristaPod(Job):
                 if "bgp" in data.keys():
                     bgp = data.get("bgp")
                     device._custom_field_data = {"device_bgp": bgp}
-                    self.log_success(device, f"Add BGP AS to Device {device_name}")
+                    self.log_success(device, f"Add AS::{bgp} to Device {device_name}")
 
 
                 # Create physical interfaces
