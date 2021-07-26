@@ -534,7 +534,9 @@ class CreateAristaPod(Job):
                 # Add the Devices specific BGP assignments
                 if "bgp" in data.keys():
                     bgp = data.get("bgp")
-                    device._custom_field_data = bgp
+                    device._custom_field_data = {"device_bgp": bgp}
+                    self.log_success(device, f"Add BGP AS to Device {device_name}")
+
 
                 # Create physical interfaces
                 SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
