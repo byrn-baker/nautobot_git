@@ -339,6 +339,7 @@ class CreateAristaPod(Job):
         # ----------------------------------------------------------------------------
         dc_code = data["dc_code"].lower()
         region = data["region"]
+        bgp = data["spine_bgp"]
         site_status = Status.objects.get_for_model(Site).get(slug="active")
         self.site, created = Site.objects.get_or_create(name=dc_code, region=region, slug=dc_code, status=site_status)
         self.site.custom_field_data["site_type"] = "DATACENTER"
@@ -521,29 +522,28 @@ class CreateAristaPod(Job):
 
                 # Add the Devices specific BGP assignments
                 if device_name == f"{dc_code}-spine-01" or device_name == f"{dc_code}-spine-02" or device_name == f"{dc_code}-spine-03":
-                    bgp = data["spine_bgp"]
                     device._custom_field_data = {"device_bgp": bgp}
                     self.log_success(device, f"Added AS::{bgp} to Device {device_name}")
 
                 elif device_name == f"{dc_code}-leaf-01" or device_name == f"{dc_code}-leaf-02":
-                    bgp = data["spine_bgp"] + 1
-                    device._custom_field_data = {"device_bgp": bgp}
-                    self.log_success(device, f"Added AS::{bgp} to Device {device_name}")
+                    leaf_bgp = bgp + 1
+                    device._custom_field_data = {"device_bgp": leaf_bgp}
+                    self.log_success(device, f"Added AS::{leaf_bgp} to Device {device_name}")
 
                 elif device_name == f"{dc_code}-leaf-03" or device_name == f"{dc_code}-leaf-04":
-                    bgp = data["spine_bgp"] + 2
-                    device._custom_field_data = {"device_bgp": bgp}
-                    self.log_success(device, f"Added AS::{bgp} to Device {device_name}")
+                    leaf_bgp = bgp + 2
+                    device._custom_field_data = {"device_bgp": leaf_bgp}
+                    self.log_success(device, f"Added AS::{leaf_bgp} to Device {device_name}")
 
                 elif device_name == f"{dc_code}-borderleaf-01" or device_name == f"{dc_code}-borderleaf-02":
-                    bgp = data["spine_bgp"] + 3
-                    device._custom_field_data = {"device_bgp": bgp}
-                    self.log_success(device, f"Added AS::{bgp} to Device {device_name}")
+                    borderleaf_bgp = bgp + 3
+                    device._custom_field_data = {"device_bgp": borderleaf_bgp}
+                    self.log_success(device, f"Added AS::{borderleaf_bgp} to Device {device_name}")
 
                 elif device_name == f"{dc_code}-dci-01":
-                    bgp = 65000
-                    device._custom_field_data = {"device_bgp": bgp}
-                    self.log_success(device, f"Added AS::{bgp} to Device {device_name}")
+                    dci_bgp = 65000
+                    device._custom_field_data = {"device_bgp": dci_bgp}
+                    self.log_success(device, f"Added AS::{dci_bgp} to Device {device_name}")
 
 
                 # Create physical interfaces
