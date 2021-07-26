@@ -353,14 +353,14 @@ class CreateAristaPod(Job):
           status=site_status,
           site=self.site
         )
-        vlan.validated_save()
+        # vlan.validated_save()
         self.log_success(obj=vlan, message="Created MLAG VLAN")
 
         vlan_4096_prefix = Prefix.objects.get_or_create(
           prefix="192.168.255.0/30",
           status=site_status,
         )
-        vlan_4096_prefix.validated_save()
+        # vlan_4096_prefix.validated_save()
         self.log_success(obj=vlan_4096_prefix, message="Created MLAG Prefix")
         
         # Reference Vars
