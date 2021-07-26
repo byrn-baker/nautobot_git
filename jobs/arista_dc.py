@@ -520,7 +520,7 @@ class CreateAristaPod(Job):
                 self.log_success(device, f"Device {device_name} successfully created")
 
                 # Add the Devices specific BGP assignments
-                for b in range(1, (bgp, 65000) + 1):
+                for b in range(1, bgp):
                     device._custom_field_data = {"device_bgp": bgp}
                     self.log_success(device, f"Added AS::{b} to Device {device_name}")
 
