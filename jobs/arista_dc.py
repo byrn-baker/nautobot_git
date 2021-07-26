@@ -302,8 +302,8 @@ class CreateAristaPod(Job):
         field_order = [
             "region",
             "dc_code",
+            "dc_bgp",
             "spine_count",
-            "spine_bgp",
             "leaf_count",
             "borderleaf",
             "dci",
@@ -315,7 +315,7 @@ class CreateAristaPod(Job):
     
     spine_count = IntegerVar(description="Number of Spine Switches", label="Spine switches count", min_value=1, max_value=3)
 
-    spine_bgp = IntegerVar(description="BGP AS for the Spine switches", label="Spine BGP ASN")
+    dc_bgp = IntegerVar(description="DataCenter BGP AS", label="DC BGP AS")
 
     leaf_count = IntegerVar(description="Number of Leaf Switches", label="Leaf switches count", min_value=1, max_value=4)
 
@@ -339,7 +339,7 @@ class CreateAristaPod(Job):
         # ----------------------------------------------------------------------------
         dc_code = data["dc_code"].lower()
         region = data["region"]
-        bgp = data["spine_bgp"]
+        bgp = data["dc_bgp"]
         site_status = Status.objects.get_for_model(Site).get(slug="active")
         self.site, created = Site.objects.get_or_create(name=dc_code, region=region, slug=dc_code, status=site_status)
         self.site.custom_field_data["site_type"] = "DATACENTER"
@@ -523,26 +523,31 @@ class CreateAristaPod(Job):
                 # Add the Devices specific BGP assignments
                 if device_name == f"{dc_code}-spine-01" or device_name == f"{dc_code}-spine-02" or device_name == f"{dc_code}-spine-03":
                     device._custom_field_data = {"device_bgp": bgp}
+                    device.validated_save()
                     self.log_success(device, f"Added AS::{bgp} to Device {device_name}")
 
                 elif device_name == f"{dc_code}-leaf-01" or device_name == f"{dc_code}-leaf-02":
                     leaf_bgp = bgp + 1
                     device._custom_field_data = {"device_bgp": leaf_bgp}
+                    device.validated_save()
                     self.log_success(device, f"Added AS::{leaf_bgp} to Device {device_name}")
 
                 elif device_name == f"{dc_code}-leaf-03" or device_name == f"{dc_code}-leaf-04":
                     leaf_bgp = bgp + 2
                     device._custom_field_data = {"device_bgp": leaf_bgp}
+                    device.validated_save()
                     self.log_success(device, f"Added AS::{leaf_bgp} to Device {device_name}")
 
                 elif device_name == f"{dc_code}-borderleaf-01" or device_name == f"{dc_code}-borderleaf-02":
                     borderleaf_bgp = bgp + 3
                     device._custom_field_data = {"device_bgp": borderleaf_bgp}
+                    device.validated_save()
                     self.log_success(device, f"Added AS::{borderleaf_bgp} to Device {device_name}")
 
                 elif device_name == f"{dc_code}-dci-01":
                     dci_bgp = 65000
                     device._custom_field_data = {"device_bgp": dci_bgp}
+                    device.validated_save()
                     self.log_success(device, f"Added AS::{dci_bgp} to Device {device_name}")
 
 
