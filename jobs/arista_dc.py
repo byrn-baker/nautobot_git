@@ -311,11 +311,21 @@ class CreateAristaPod(Job):
     
     spine_count = IntegerVar(description="Number of Spine Switches", label="Spine switches count", min_value=1, max_value=3)
 
+    spine_bgp = IntegerVar(description="BGP AS for the Spine switches", label="Spine BGP ASN")
+
     leaf_count = IntegerVar(description="Number of Leaf Switches", label="Leaf switches count", min_value=1, max_value=4)
 
+    leaf_bgp = IntegerVar(description="BGP AS range for the Leaf switches", label="Leaf BGP ASN range")
+
     borderleaf = BooleanVar(description="Does this DataCenter require Border Leaf switches?", label="borderleaf required")
+
+    if borderleaf == True:
+        borderleaf_bgp = IntegerVar(description="BGP AS for the Border Leaf switches", label="Border Leaf BGP ASN")
     
     dci = BooleanVar(description="Does this DataCenter require an interconnect?", label="DCI required")
+
+    if dci == True:
+        dci_bgp = IntegerVar(description="BGP AS for the DataCenter Interconnect switch", label="DCI BGP ASN")
     
     def run(self, data=None, commit=None):
         """Main function for CreatePop."""
@@ -352,13 +362,17 @@ class CreateAristaPod(Job):
         }
         # Number of devices to provision
         ROLES["leaf"]["nbr"] = data["leaf_count"]
+        ROLES["leaf"]["bgp"] = data["leaf_bgp"]
         ROLES["spine"]["nbr"] = data["spine_count"]
+        ROLES["spine"]["bgp"] = data["spine_bgp"]
         if data["borderleaf"] == True:
             ROLES["borderleaf"]["nbr"] = 2
+            ROLES["borderleaf"]["bgp"] = data["borderleaf_bgp"]
         else:
             ROLES["borderleaf"]["nbr"] = 0
         if data["dci"] == True:
             ROLES["dci"]["nbr"] = 1
+            ROLES["dci"]["bgp"] = data['dci_bgp']
         else:
             ROLES["dci"]["nbr"] = 0
 
@@ -512,6 +526,10 @@ class CreateAristaPod(Job):
                 self.devices[device_name] = device
                 self.log_success(device, f"Device {device_name} successfully created")
 
+                # Add the Devices specific BGP assignments
+                if "bgp" in data.keys():
+                    device.customfields['device_bgp'] = data.get("bgp")
+
                 # Create physical interfaces
                 SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
                 dev_name = device_name.replace(f"{dc_code}-","")
@@ -564,15 +582,6 @@ class CreateAristaPod(Job):
                         ip = IPAddress.objects.create(address='192.168.255.2/30', assigned_object=interface)
                         self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
 
-                    # elif device_name == f"{dc_code}-leaf-03":
-                    #     interface = Interface.objects.get(name="Vlan4094", device=device)
-                    #     ip = IPAddress.objects.create(address='192.168.255.1/30', assigned_object=interface)
-                    #     self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
-
-                    # elif device_name == f"{dc_code}-leaf-04":
-                    #     interface = Interface.objects.get(name="Vlan4094", device=device)
-                    #     ip = IPAddress.objects.create(address='192.168.255.2/30', assigned_object=interface)
-                    #     self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
 
                 # BORDERLEAF MLAG Port Channel
                 if device.device_role.slug == "borderleaf":
