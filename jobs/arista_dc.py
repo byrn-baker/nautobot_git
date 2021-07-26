@@ -302,7 +302,14 @@ class CreateAristaPod(Job):
         field_order = [
             "region",
             "dc_code",
+            "spine_count",
+            "spine_bgp"
             "leaf_count",
+            "leaf_bgp",
+            "borderleaf",
+            "borderleaf_bgp",
+            "dci",
+            "dci_bgp"
         ]
 
     region = ObjectVar(model=Region)
@@ -319,13 +326,11 @@ class CreateAristaPod(Job):
 
     borderleaf = BooleanVar(description="Does this DataCenter require Border Leaf switches?", label="borderleaf required")
 
-    if borderleaf == True:
-        borderleaf_bgp = IntegerVar(description="BGP AS for the Border Leaf switches", label="Border Leaf BGP ASN")
+    borderleaf_bgp = IntegerVar(description="BGP AS for the Border Leaf switches", label="Border Leaf BGP ASN")
     
     dci = BooleanVar(description="Does this DataCenter require an interconnect?", label="DCI required")
 
-    if dci == True:
-        dci_bgp = IntegerVar(description="BGP AS for the DataCenter Interconnect switch", label="DCI BGP ASN")
+    dci_bgp = IntegerVar(description="BGP AS for the DataCenter Interconnect switch", label="DCI BGP ASN")
     
     def run(self, data=None, commit=None):
         """Main function for CreatePop."""
