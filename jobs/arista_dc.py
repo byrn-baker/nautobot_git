@@ -256,7 +256,7 @@ leaf-04:
 from django.utils.text import slugify
 import yaml
 from nautobot.dcim.models import Site, Device, Rack, Region, Cable, DeviceRole, DeviceType, Interface
-from nautobot.ipam.models import Role, Prefix, IPAddress
+from nautobot.ipam.models import Role, Prefix, IPAddress, VLAN
 from nautobot.extras.models import CustomField, Job, Status
 from nautobot.extras.models.customfields import ContentType
 from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar, BooleanVar
@@ -345,6 +345,23 @@ class CreateAristaPod(Job):
         self.site.custom_field_data["site_type"] = "DATACENTER"
         self.site.save()
         self.log_success(self.site, f"Site {dc_code} successfully created")
+
+        # Creating MLAG VLAN
+        vlan = VLAN.objects.get_or_create(
+          name="MLAG_VLAN",
+          vid=4096,
+          status=site_status,
+          site=self.site
+        )
+        vlan.validated_save()
+        self.log_success(obj=vlan, message="Created MLAG VLAN")
+
+        vlan_4096_prefix = Prefix.objects.get_or_create(
+          prefix="192.168.255.0/30",
+          status=site_status,
+        )
+        vlan_4096_prefix.validated_save()
+        self.log_success(obj=vlan_4096_prefix, message="Created MLAG Prefix")
         
         # Reference Vars
         TOP_LEVEL_PREFIX_ROLE = "datacenter"
