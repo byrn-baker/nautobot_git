@@ -1,5 +1,5 @@
 config = """
-dci-01:
+dci1:
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
@@ -9,7 +9,7 @@ dci-01:
       type: "1000base-t"
       b_device: borderleaf-02
       b_int: Ethernet12
-borderleaf-01: 
+borderleaf1: 
   mlag: 
     - odd
   interfaces:
@@ -39,7 +39,7 @@ borderleaf-01:
       type: "1000base-t"
       b_device: dci-01
       b_int: Ethernet1
-borderleaf-02: 
+borderleaf2: 
   mlag: 
     - even
   interfaces:
@@ -69,7 +69,7 @@ borderleaf-02:
       type: "1000base-t"
       b_device: dci-01
       b_int: Ethernet2
-spine-01:
+spine1:
   device_type: "spine_veos"
   interfaces:
     - name: Ethernet2
@@ -96,7 +96,7 @@ spine-01:
       type: "1000base-t"
       b_device: borderleaf-02
       b_int: Ethernet3
-spine-02:
+spine2:
   interfaces:
     - name: Ethernet2
       type: "1000base-t"
@@ -122,7 +122,7 @@ spine-02:
       type: "1000base-t"
       b_device: borderleaf-02
       b_int: Ethernet4
-spine-03:
+spine3:
   interfaces:
     - name: Ethernet2
       type: "1000base-t"
@@ -148,7 +148,7 @@ spine-03:
       type: "1000base-t"
       b_device: borderleaf-02
       b_int: Ethernet5
-leaf-01:
+leaf1:
   mlag: 
     - odd
   interfaces:
@@ -174,7 +174,7 @@ leaf-01:
       type: "1000base-t"
       b_device: spine-03
       b_int: Ethernet4
-leaf-02:
+leaf2:
   mlag:
     - even
   interfaces:
@@ -200,7 +200,7 @@ leaf-02:
       type: "1000base-t"
       b_device: spine-03
       b_int: Ethernet4
-leaf-03:
+leaf3:
   mlag: 
     - odd
   interfaces:
@@ -226,7 +226,7 @@ leaf-03:
       type: "1000base-t"
       b_device: spine-03
       b_int: Ethernet4
-leaf-04:
+leaf4:
   mlag: 
     - even
   interfaces:
