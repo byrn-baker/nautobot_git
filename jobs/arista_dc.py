@@ -540,9 +540,10 @@ class CreateAristaPod(Job):
                 self.log_success(device, f"Device {device_name} successfully created")
 
                 # Building local context for various requirements per device
+                lo0_prefix = Prefix.objects.get(role=overlay_role)
                 global LOCAL_CONTEXT
                 LOCAL_CONTEXT = {
-                  "prefix_list":[str(overlay_loopback)],
+                  "prefix_list":[lo0_prefix],
                   "bgp": {"spine_peers": [], "leaf_peers": [] },
                 }
 
