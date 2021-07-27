@@ -510,7 +510,7 @@ class CreateAristaPod(Job):
                     rack_name = f"{dc_code}-edge-rr-1"
                     rack = Rack.objects.filter(name=rack_name, site=self.site).first()
 
-                device_name = f"{dc_code}-{role}-{i:02}"
+                device_name = f"{role}{i}-{dc_code}"
 
                 device = Device.objects.filter(name=device_name).first()
                 if device:
@@ -537,30 +537,30 @@ class CreateAristaPod(Job):
                 self.log_success(device, f"Device {device_name} successfully created")
 
                 # Add the Devices specific BGP assignments
-                if device_name == f"{dc_code}-spine-01" or device_name == f"{dc_code}-spine-02" or device_name == f"{dc_code}-spine-03":
+                if device_name == f"spine1-{dc_code}" or device_name == f"{dc_code}-spine-02" or device_name == f"spine3"-{dc_code}:
                     device._custom_field_data = {"device_bgp": bgp}
                     device.validated_save()
                     self.log_success(device, f"Added AS::{bgp} to Device {device_name}")
 
-                elif device_name == f"{dc_code}-leaf-01" or device_name == f"{dc_code}-leaf-02":
+                elif device_name == f"leaf1-{dc_code}" or device_name == f"leaf2-{dc_code}":
                     leaf_bgp = bgp + 1
                     device._custom_field_data = {"device_bgp": leaf_bgp}
                     device.validated_save()
                     self.log_success(device, f"Added AS::{leaf_bgp} to Device {device_name}")
 
-                elif device_name == f"{dc_code}-leaf-03" or device_name == f"{dc_code}-leaf-04":
+                elif device_name == f"leaf3-{dc_code}" or device_name == f"leaf4-{dc_code}":
                     leaf_bgp = bgp + 2
                     device._custom_field_data = {"device_bgp": leaf_bgp}
                     device.validated_save()
                     self.log_success(device, f"Added AS::{leaf_bgp} to Device {device_name}")
 
-                elif device_name == f"{dc_code}-borderleaf-01" or device_name == f"{dc_code}-borderleaf-02":
+                elif device_name == f"borderleaf1-{dc_code}" or device_name == f"borderleaf2-{dc_code}":
                     borderleaf_bgp = bgp + 3
                     device._custom_field_data = {"device_bgp": borderleaf_bgp}
                     device.validated_save()
                     self.log_success(device, f"Added AS::{borderleaf_bgp} to Device {device_name}")
 
-                elif device_name == f"{dc_code}-dci-01":
+                elif device_name == f"dci1-{dc_code}":
                     dci_bgp = 65000
                     device._custom_field_data = {"device_bgp": dci_bgp}
                     device.validated_save()
@@ -569,7 +569,7 @@ class CreateAristaPod(Job):
 
                 # Create physical interfaces
                 SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
-                dev_name = device_name.replace(f"{dc_code}-","")
+                dev_name = device_name.replace(f"-{dc_code}","")
                 for iface in SWITCHES[dev_name]['interfaces']:
                     intf_name = Interface.objects.create(
                             name=iface['name'],
@@ -609,12 +609,12 @@ class CreateAristaPod(Job):
                     #######################################
                     # Creating IP addresses for MLAG Peer #
                     #######################################
-                    if device_name == f"{dc_code}-leaf-01" or device_name == f"{dc_code}-leaf-03":
+                    if device_name == f"leaf1-{dc_code}" or device_name == f"leaf3-{dc_code}":
                         interface = Interface.objects.get(name="Vlan4094", device=device)
                         ip = IPAddress.objects.create(address='192.168.255.1/30', assigned_object=interface)
                         self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
 
-                    elif device_name == f"{dc_code}-leaf-02" or device_name == f"{dc_code}-leaf-04":
+                    elif device_name == f"leaf2-{dc_code}" or device_name == f"leaf4-{dc_code}":
                         interface = Interface.objects.get(name="Vlan4094", device=device)
                         ip = IPAddress.objects.create(address='192.168.255.2/30', assigned_object=interface)
                         self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
@@ -646,12 +646,12 @@ class CreateAristaPod(Job):
                     #######################################
                     # Creating IP addresses for MLAG Peer #
                     #######################################
-                    if device_name == f"{dc_code}-borderleaf-01":
+                    if device_name == f"borderleaf1-{dc_code}":
                         interface = Interface.objects.get(name="Vlan4094", device=device)
                         ip = IPAddress.objects.create(address='192.168.255.1/30', assigned_object=interface)
                         self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
 
-                    elif device_name == f"{dc_code}-borderleaf-02":
+                    elif device_name == f"borderleaf2-{dc_code}":
                         interface = Interface.objects.get(name="Vlan4094", device=device)
                         ip = IPAddress.objects.create(address='192.168.255.2/30', assigned_object=interface)
                         self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
@@ -711,14 +711,14 @@ class CreateAristaPod(Job):
             for i in range(1, data.get("nbr", 2) + 1):
                 device_name = f"{dc_code}-{role}-{i:02}"
                 device = Device.objects.get(name=device_name)
-                dev_name = device_name.replace(f"{dc_code}-","")
+                dev_name = device_name.replace(f"-{dc_code}","")
 
                 for iface in SWITCHES[dev_name]['interfaces']:
                     interface = Interface.objects.get(name=iface['name'], device=device)
                     if interface.cable is None:
                         if "b_device" in iface.keys():
                             b_device = iface['b_device']
-                            b_dev_name = f"{dc_code}-{b_device}"
+                            b_dev_name = f"{b_device}-{dc_code}"
                             bside_device = Device.objects.get(name=b_dev_name)
                             bside_interface = Interface.objects.get(name=iface['b_int'],device=bside_device, )
                             intf1 = interface
