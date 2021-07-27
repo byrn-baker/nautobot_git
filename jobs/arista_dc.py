@@ -556,7 +556,6 @@ class CreateAristaPod(Job):
                     device._custom_field_data = {"device_bgp": leaf_bgp}
                     device.validated_save()
                     self.log_success(device, f"Added AS::{leaf_bgp} to Device {device_name}")
-                    LOCAL_CONTEXT["bgp"]["leaf_asn"]
 
                 elif device_name == f"leaf3-{dc_code}" or device_name == f"leaf4-{dc_code}":
                     leaf_bgp = bgp + 2
