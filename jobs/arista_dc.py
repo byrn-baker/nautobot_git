@@ -255,6 +255,7 @@ leaf4:
 """
 from django.utils.text import slugify
 import yaml
+import json
 from nautobot.dcim.models import Site, Device, Rack, Region, Cable, DeviceRole, DeviceType, Interface
 from nautobot.ipam.models import Role, Prefix, IPAddress, VLAN
 from nautobot.extras.models import CustomField, Job, Status
@@ -296,7 +297,7 @@ class CreateAristaPod(Job):
         name = "Create a new Arista DataCenter"
         description = """
         Create a new Site  with N Spine, leaf switches, borderleaf switchs, and or a DCI switch.
-        A new /22 will automatically be allocated from the 'POD Global Pool' Prefix
+        A new /22 will automatically be allocated from the 'Datacenter Global Pool' Prefix
         """
         label = "Arista_DataCenter"
         field_order = [
@@ -755,12 +756,13 @@ class CreateAristaPod(Job):
                                 ip2 = IPAddress.objects.create(address=str(subnet[1]), assigned_object=intf2)
                                 self.log_success(message=f"Created a IP Address between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
 
-                                # Updating local context with Leaf to Spine BGP neighbors
+                                # Updating local context with Prefix list and Leaf to Spine BGP neighbors
                                 if device_name == f"leaf1-{dc_code}" or device_name == f"leaf2-{dc_code}" or device_name == f"leaf3-{dc_code}" or device_name == f"leaf4-{dc_code}":
                                   LOCAL_CONTEXT["bgp"]["spine_asn"] = bgp
                                   LOCAL_CONTEXT["bgp"]["spine_peers"].append(ip2)
 
-                                  device.local_context = LOCAL_CONTEXT
+                                  leaf_context_json = json.dumps(LOCAL_CONTEXT, indent = 4)
+                                  device.local_context = leaf_context_json
                                   device.validated_save()
                                   self.log_success(device, f"Added local context on {device_name}")
 
@@ -770,7 +772,8 @@ class CreateAristaPod(Job):
                                   if  b_dev_name == f"dci1-{dc_code}":
                                     LOCAL_CONTEXT["bgp"]["dci_asn"] = 65000
                                     LOCAL_CONTEXT["bgp"]["dci_peer"] = ip2
-
-                                    device.local_context = LOCAL_CONTEXT
+                                    
+                                    border_context_json = json.dumps(LOCAL_CONTEXT, indent = 4)
+                                    device.local_context = border_context_json
                                     device.validated_save()
                                     self.log_success(device, f"Added local context on {device_name}")
