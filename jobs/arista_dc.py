@@ -537,7 +537,7 @@ class CreateAristaPod(Job):
                 self.log_success(device, f"Device {device_name} successfully created")
 
                 # Add the Devices specific BGP assignments
-                if device_name == f"spine1-{dc_code}" or device_name == f"{dc_code}-spine-02" or device_name == f"spine3"-{dc_code}:
+                if device_name == f"spine1-{dc_code}" or device_name == f"spine2-{dc_code}" or device_name == f"spine3"-{dc_code}:
                     device._custom_field_data = {"device_bgp": bgp}
                     device.validated_save()
                     self.log_success(device, f"Added AS::{bgp} to Device {device_name}")
