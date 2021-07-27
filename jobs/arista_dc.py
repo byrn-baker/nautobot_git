@@ -541,11 +541,14 @@ class CreateAristaPod(Job):
 
                 # Building local context for various requirements per device
                 lo0_prefix = Prefix.objects.get(role=overlay_role)
-                global LOCAL_CONTEXT
+                # global LOCAL_CONTEXT
                 LOCAL_CONTEXT = {
                   "prefix_list":[lo0_prefix],
-                  "bgp": {"spine_peers": [], "leaf_peers": [] },
                 }
+                LOCAL_CONTEXT_JSON = json.dumps(LOCAL_CONTEXT, indent = 4)
+                device.local_context = LOCAL_CONTEXT_JSON
+                device.validated_save()
+                self.log_success(device, f"Added local context on {device_name}")
 
                 # Add the Devices specific BGP assignments
                 if device_name == f"spine1-{dc_code}" or device_name == f"spine2-{dc_code}" or device_name == f"spine3-{dc_code}":
@@ -758,28 +761,28 @@ class CreateAristaPod(Job):
                                 self.log_success(message=f"Created a IP Address between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
 
                                 # Updating local context with Prefix list and Leaf to Spine BGP neighbors
-                                if device_name == f"spine1-{dc_code}" or device_name == f"spine3-{dc_code}" or device_name == f"spine3-{dc_code}":
-                                  spine_context_json = json.dumps(LOCAL_CONTEXT, indent = 4)
-                                  device.local_context = spine_context_json
-                                  device.validated_save()
-                                  self.log_success(device, f"Added local context on {device_name}")
-                                  if b_dev_name == f"leaf1-{dc_code}" or b_dev_name == f"leaf2-{dc_code}" or b_dev_name == f"leaf3-{dc_code}" or b_dev_name == f"leaf4-{dc_code}":
-                                    LOCAL_CONTEXT["bgp"]["spine_asn"] = bgp
-                                    LOCAL_CONTEXT["bgp"]["spine_peers"].append(ip1)
+                                # if device_name == f"spine1-{dc_code}" or device_name == f"spine3-{dc_code}" or device_name == f"spine3-{dc_code}":
+                                #   spine_context_json = json.dumps(LOCAL_CONTEXT, indent = 4)
+                                #   device.local_context = spine_context_json
+                                #   device.validated_save()
+                                #   self.log_success(device, f"Added local context on {device_name}")
+                                #   if b_dev_name == f"leaf1-{dc_code}" or b_dev_name == f"leaf2-{dc_code}" or b_dev_name == f"leaf3-{dc_code}" or b_dev_name == f"leaf4-{dc_code}":
+                                #     LOCAL_CONTEXT["bgp"]["spine_asn"] = bgp
+                                #     LOCAL_CONTEXT["bgp"]["spine_peers"].append(ip1)
 
-                                    leaf_context_json = json.dumps(LOCAL_CONTEXT, indent = 4)
-                                    bside_device.local_context = leaf_context_json
-                                    bside_device.validated_save()
-                                    self.log_success(bside_device, f"Added local context on {b_dev_name}")
+                                #     leaf_context_json = json.dumps(LOCAL_CONTEXT, indent = 4)
+                                #     bside_device.local_context = leaf_context_json
+                                #     bside_device.validated_save()
+                                #     self.log_success(bside_device, f"Added local context on {b_dev_name}")
 
-                                if device_name == f"borderleaf1-{dc_code}" or device_name == f"borderleaf2-{dc_code}":
-                                  LOCAL_CONTEXT["bgp"]["spine_asn"] = bgp
-                                  LOCAL_CONTEXT["bgp"]["spine_peers"].append(ip2)
-                                  if  b_dev_name == f"dci1-{dc_code}":
-                                    LOCAL_CONTEXT["bgp"]["dci_asn"] = 65000
-                                    LOCAL_CONTEXT["bgp"]["dci_peer"] = ip2
+                                # if device_name == f"borderleaf1-{dc_code}" or device_name == f"borderleaf2-{dc_code}":
+                                #   LOCAL_CONTEXT["bgp"]["spine_asn"] = bgp
+                                #   LOCAL_CONTEXT["bgp"]["spine_peers"].append(ip2)
+                                #   if  b_dev_name == f"dci1-{dc_code}":
+                                #     LOCAL_CONTEXT["bgp"]["dci_asn"] = 65000
+                                #     LOCAL_CONTEXT["bgp"]["dci_peer"] = ip2
                                     
-                                    border_context_json = json.dumps(LOCAL_CONTEXT, indent = 4)
-                                    device.local_context = border_context_json
-                                    device.validated_save()
-                                    self.log_success(device, f"Added local context on {device_name}")
+                                #     border_context_json = json.dumps(LOCAL_CONTEXT, indent = 4)
+                                #     device.local_context = border_context_json
+                                #     device.validated_save()
+                                #     self.log_success(device, f"Added local context on {device_name}")
