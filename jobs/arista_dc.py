@@ -543,7 +543,7 @@ class CreateAristaPod(Job):
                 lo0_prefix = Prefix.objects.get(role=overlay_role)
                 # global LOCAL_CONTEXT
                 LOCAL_CONTEXT = {
-                  "prefix_list":[lo0_prefix],
+                  "prefix_list":[str(lo0_prefix)],
                 }
                 LOCAL_CONTEXT_JSON = json.dumps(LOCAL_CONTEXT, indent = 4)
                 device.local_context = LOCAL_CONTEXT_JSON
