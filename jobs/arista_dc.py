@@ -386,6 +386,7 @@ class CreateAristaPod(Job):
         else:
             ROLES["dci"]["nbr"] = 0
 
+        
         # ----------------------------------------------------------------------------
         # Allocate Prefixes for this DataCenter
         # ----------------------------------------------------------------------------
@@ -537,12 +538,12 @@ class CreateAristaPod(Job):
                 self.devices[device_name] = device
                 self.log_success(device, f"Device {device_name} successfully created")
 
-                # Add local context for various requirements per device
-                prefix_list_loopback = [overlay_loopback]
-
-                device.local_context = prefix_list_loopback
-                device.validated_save()
-                self.log_success(device, f"Added prefix list to local context on {device_name}")
+                # Building local context for various requirements per device
+                global LOCAL_CONTEXT
+                LOCAL_CONTEXT = {
+                  "prefix_list":[overlay_loopback],
+                  "bgp": {"spine_peers": [], "leaf_peers": [] },
+                }
 
                 # Add the Devices specific BGP assignments
                 if device_name == f"spine1-{dc_code}" or device_name == f"spine2-{dc_code}" or device_name == f"spine3-{dc_code}":
@@ -753,3 +754,11 @@ class CreateAristaPod(Job):
                                 ip1 = IPAddress.objects.create(address=str(subnet[0]), assigned_object=intf1)
                                 ip2 = IPAddress.objects.create(address=str(subnet[1]), assigned_object=intf2)
                                 self.log_success(message=f"Created a IP Address between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
+
+                                # Updating local context with Leaf to Spine BGP neighbors
+                                if device_name == f"leaf1-{dc_code}" or device_name == f"leaf2-{dc_code}" or device_name == f"leaf3-{dc_code}" or device_name == f"leaf4-{dc_code}" or device_name == f"borderleaf1-{dc_code}" or device_name == f"borderleaf2-{dc_code}":
+                                  LOCAL_CONTEXT["bgp"]["spine_peers"].append(ip2)
+
+                                  device.local_context = LOCAL_CONTEXT
+                                  device.validated_save()
+                                  self.log_success(device, f"Added local context on {device_name}")
