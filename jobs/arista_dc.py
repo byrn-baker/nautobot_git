@@ -3,11 +3,11 @@ dci1:
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
-      b_device: borderleaf-01
+      b_device: borderleaf1
       b_int: Ethernet12
     - name: Ethernet2
       type: "1000base-t"
-      b_device: borderleaf-02
+      b_device: borderleaf2
       b_int: Ethernet12
 borderleaf1: 
   mlag: 
@@ -16,28 +16,28 @@ borderleaf1:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: borderleaf-02
+      b_device: boderleaf2
       b_int: Ethernet1
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: borderleaf-02
+      b_device: boderleaf2
       b_int: Ethernet2
     - name: Ethernet3
       type: "1000base-t"
-      b_device: spine-01
+      b_device: spine1
       b_int: Ethernet6
     - name: Ethernet4
       type: "1000base-t"
-      b_device: spine-02
+      b_device: spine2
       b_int: Ethernet6
     - name: Ethernet5
       type: "1000base-t"
-      b_device: spine-03
+      b_device: spine3
       b_int: Ethernet6
     - name: Ethernet12
       type: "1000base-t"
-      b_device: dci-01
+      b_device: dci1
       b_int: Ethernet1
 borderleaf2: 
   mlag: 
@@ -46,107 +46,107 @@ borderleaf2:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: borderleaf-01
+      b_device: borderleaf1
       b_int: Ethernet1
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: borderleaf-01
+      b_device: borderleaf1
       b_int: Ethernet2
     - name: Ethernet3
       type: "1000base-t"
-      b_device: spine-01
+      b_device: spine1
       b_int: Ethernet7
     - name: Ethernet4
       type: "1000base-t"
-      b_device: spine-02
+      b_device: spine2
       b_int: Ethernet7
     - name: Ethernet5
       type: "1000base-t"
-      b_device: spine-03
+      b_device: spine3
       b_int: Ethernet7
     - name: Ethernet12
       type: "1000base-t"
-      b_device: dci-01
+      b_device: dci1
       b_int: Ethernet2
 spine1:
   device_type: "spine_veos"
   interfaces:
     - name: Ethernet2
       type: "1000base-t"
-      b_device: leaf-01
+      b_device: leaf1
       b_int: Ethernet3
     - name: Ethernet3
       type: "1000base-t"
-      b_device: leaf-02
+      b_device: leaf2
       b_int: Ethernet3
     - name: Ethernet4
       type: "1000base-t"
-      b_device: leaf-03
+      b_device: leaf3
       b_int: Ethernet3
     - name: Ethernet5
       type: "1000base-t"
-      b_device: leaf-04
+      b_device: leaf4
       b_int: Ethernet3
     - name: Ethernet6
       type: "1000base-t"
-      b_device: borderleaf-01
+      b_device: borderleaf1
       b_int: Ethernet3
     - name: Ethernet7 
       type: "1000base-t"
-      b_device: borderleaf-02
+      b_device: boderleaf2
       b_int: Ethernet3
 spine2:
   interfaces:
     - name: Ethernet2
       type: "1000base-t"
-      b_device: leaf-01
+      b_device: leaf1
       b_int: Ethernet4
     - name: Ethernet3
       type: "1000base-t"
-      b_device: leaf-02
+      b_device: leaf2
       b_int: Ethernet4
     - name: Ethernet4
       type: "1000base-t"
-      b_device: leaf-03
+      b_device: leaf3
       b_int: Ethernet4
     - name: Ethernet5
       type: "1000base-t"
-      b_device: leaf-04
+      b_device: leaf4
       b_int: Ethernet4
     - name: Ethernet6
       type: "1000base-t"
-      b_device: borderleaf-01
+      b_device: borderleaf1
       b_int: Ethernet4
     - name: Ethernet7 
       type: "1000base-t"
-      b_device: borderleaf-02
+      b_device: boderleaf2
       b_int: Ethernet4
 spine3:
   interfaces:
     - name: Ethernet2
       type: "1000base-t"
-      b_device: leaf-01
+      b_device: leaf1
       b_int: Ethernet5
     - name: Ethernet3
       type: "1000base-t"
-      b_device: leaf-02
+      b_device: leaf2
       b_int: Ethernet5
     - name: Ethernet4
       type: "1000base-t"
-      b_device: leaf-03
+      b_device: leaf3
       b_int: Ethernet5
     - name: Ethernet5
       type: "1000base-t"
-      b_device: leaf-04
+      b_device: leaf4
       b_int: Ethernet5
     - name: Ethernet6
       type: "1000base-t"
-      b_device: borderleaf-01
+      b_device: borderleaf1
       b_int: Ethernet5
     - name: Ethernet7 
       type: "1000base-t"
-      b_device: borderleaf-02
+      b_device: boderleaf2
       b_int: Ethernet5
 leaf1:
   mlag: 
@@ -155,24 +155,24 @@ leaf1:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf-02
+      b_device: leaf2
       b_int: Ethernet1
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf-02
+      b_device: leaf2
       b_int: Ethernet2
     - name: Ethernet3
       type: "1000base-t"
-      b_device: spine-01
+      b_device: spine1
       b_int: Ethernet2
     - name: Ethernet4
       type: "1000base-t"
-      b_device: spine-02
+      b_device: spine2
       b_int: Ethernet3
     - name: Ethernet5
       type: "1000base-t"
-      b_device: spine-03
+      b_device: spine3
       b_int: Ethernet4
 leaf2:
   mlag:
@@ -181,24 +181,24 @@ leaf2:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf-01
+      b_device: leaf1
       b_int: Ethernet1
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf-01
+      b_device: leaf1
       b_int: Ethernet2
     - name: Ethernet3
       type: "1000base-t"
-      b_device: spine-01
+      b_device: spine1
       b_int: Ethernet2
     - name: Ethernet4
       type: "1000base-t"
-      b_device: spine-02
+      b_device: spine2
       b_int: Ethernet3
     - name: Ethernet5
       type: "1000base-t"
-      b_device: spine-03
+      b_device: spine3
       b_int: Ethernet4
 leaf3:
   mlag: 
@@ -207,24 +207,24 @@ leaf3:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf-04
+      b_device: leaf4
       b_int: Ethernet1
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf-04
+      b_device: leaf4
       b_int: Ethernet2
     - name: Ethernet3
       type: "1000base-t"
-      b_device: spine-01
+      b_device: spine1
       b_int: Ethernet2
     - name: Ethernet4
       type: "1000base-t"
-      b_device: spine-02
+      b_device: spine2
       b_int: Ethernet3
     - name: Ethernet5
       type: "1000base-t"
-      b_device: spine-03
+      b_device: spine3
       b_int: Ethernet4
 leaf4:
   mlag: 
@@ -233,24 +233,24 @@ leaf4:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf-03
+      b_device: leaf3
       b_int: Ethernet1
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf-03
+      b_device: leaf3
       b_int: Ethernet2
     - name: Ethernet3
       type: "1000base-t"
-      b_device: spine-01
+      b_device: spine1
       b_int: Ethernet2
     - name: Ethernet4
       type: "1000base-t"
-      b_device: spine-02
+      b_device: spine2
       b_int: Ethernet3
     - name: Ethernet5
       type: "1000base-t"
-      b_device: spine-03
+      b_device: spine3
       b_int: Ethernet4
 """
 from django.utils.text import slugify
