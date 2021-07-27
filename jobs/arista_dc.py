@@ -756,7 +756,7 @@ class CreateAristaPod(Job):
                                 self.log_success(message=f"Created a IP Address between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
 
                                 # Updating local context with Leaf to Spine BGP neighbors
-                                if device_name == f"leaf1-{dc_code}" or device_name == f"leaf2-{dc_code}" or device_name == f"leaf3-{dc_code}" or device_name == f"leaf4-{dc_code}" or device_name == f"borderleaf1-{dc_code}" or device_name == f"borderleaf2-{dc_code}":
+                                if device_name == f"leaf1-{dc_code}" or device_name == f"leaf2-{dc_code}" or device_name == f"leaf3-{dc_code}" or device_name == f"leaf4-{dc_code}":
                                   LOCAL_CONTEXT["bgp"]["spine_asn"] = bgp
                                   LOCAL_CONTEXT["bgp"]["spine_peers"].append(ip2)
 
@@ -765,6 +765,8 @@ class CreateAristaPod(Job):
                                   self.log_success(device, f"Added local context on {device_name}")
 
                                 if device_name == f"borderleaf1-{dc_code}" or device_name == f"borderleaf2-{dc_code}":
+                                  LOCAL_CONTEXT["bgp"]["spine_asn"] = bgp
+                                  LOCAL_CONTEXT["bgp"]["spine_peers"].append(ip2)
                                   if  b_dev_name == f"dci1-{dc_code}":
                                     LOCAL_CONTEXT["bgp"]["dci_asn"] = 65000
                                     LOCAL_CONTEXT["bgp"]["dci_peer"] = ip2
