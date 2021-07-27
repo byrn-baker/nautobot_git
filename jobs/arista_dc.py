@@ -16,12 +16,12 @@ borderleaf1:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: boderleaf2
+      b_device: borderleaf2
       b_int: Ethernet1
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: boderleaf2
+      b_device: borderleaf2
       b_int: Ethernet2
     - name: Ethernet3
       type: "1000base-t"
@@ -94,7 +94,7 @@ spine1:
       b_int: Ethernet3
     - name: Ethernet7 
       type: "1000base-t"
-      b_device: boderleaf2
+      b_device: borderleaf2
       b_int: Ethernet3
 spine2:
   interfaces:
@@ -120,7 +120,7 @@ spine2:
       b_int: Ethernet4
     - name: Ethernet7 
       type: "1000base-t"
-      b_device: boderleaf2
+      b_device: borderleaf2
       b_int: Ethernet4
 spine3:
   interfaces:
@@ -146,7 +146,7 @@ spine3:
       b_int: Ethernet5
     - name: Ethernet7 
       type: "1000base-t"
-      b_device: boderleaf2
+      b_device: borderleaf2
       b_int: Ethernet5
 leaf1:
   mlag: 
