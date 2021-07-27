@@ -542,7 +542,7 @@ class CreateAristaPod(Job):
                 # Building local context for various requirements per device
                 global LOCAL_CONTEXT
                 LOCAL_CONTEXT = {
-                  "prefix_list":[overlay_loopback],
+                  "prefix_list":[str(overlay_loopback)],
                   "bgp": {"spine_peers": [], "leaf_peers": [] },
                 }
 
