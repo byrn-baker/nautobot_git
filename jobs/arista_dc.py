@@ -435,6 +435,7 @@ class CreateAristaPod(Job):
             status=container_status,
         )
         self.log_success(obj=overlay_loopback, message="Created new overlay prefix")
+        
 
         vtep_role, _ = Role.objects.get_or_create(name=f"{dc_code}_vtep_loopback", slug=f"{dc_code}_vtep_loopback")
         Prefix.objects.get_or_create(
@@ -535,6 +536,11 @@ class CreateAristaPod(Job):
                 device.save()
                 self.devices[device_name] = device
                 self.log_success(device, f"Device {device_name} successfully created")
+
+                # Add local context for various requirements per device
+                prefix_list_loopback = [overlay_loopback]
+
+                device.local_context = prefix_list_loopback
 
                 # Add the Devices specific BGP assignments
                 if device_name == f"spine1-{dc_code}" or device_name == f"spine2-{dc_code}" or device_name == f"spine3-{dc_code}":
