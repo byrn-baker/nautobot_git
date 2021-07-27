@@ -758,14 +758,19 @@ class CreateAristaPod(Job):
                                 self.log_success(message=f"Created a IP Address between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
 
                                 # Updating local context with Prefix list and Leaf to Spine BGP neighbors
-                                if bside_device == f"leaf1-{dc_code}" or bside_device == f"leaf2-{dc_code}" or bside_device == f"leaf3-{dc_code}" or bside_device == f"leaf4-{dc_code}":
-                                  LOCAL_CONTEXT["bgp"]["spine_asn"] = bgp
-                                  LOCAL_CONTEXT["bgp"]["spine_peers"].append(ip1)
+                                if device_name == f"spine1-{dc_code}" or device_name == f"spine3-{dc_code}" or device_name == f"spine3-{dc_code}":
+                                  spine_context_json = json.dumps(LOCAL_CONTEXT, indent = 4)
+                                  device.local_context = spine_context_json
+                                  device.validated_save()
+                                  self.log_success(device, f"Added local context on {device_name}")
+                                  if b_dev_name == f"leaf1-{dc_code}" or b_dev_name == f"leaf2-{dc_code}" or b_dev_name == f"leaf3-{dc_code}" or b_dev_name == f"leaf4-{dc_code}":
+                                    LOCAL_CONTEXT["bgp"]["spine_asn"] = bgp
+                                    LOCAL_CONTEXT["bgp"]["spine_peers"].append(ip1)
 
-                                  leaf_context_json = json.dumps(LOCAL_CONTEXT, indent = 4)
-                                  bside_device.local_context = leaf_context_json
-                                  bside_device.validated_save()
-                                  self.log_success(bside_device, f"Added local context on {b_dev_name}")
+                                    leaf_context_json = json.dumps(LOCAL_CONTEXT, indent = 4)
+                                    bside_device.local_context = leaf_context_json
+                                    bside_device.validated_save()
+                                    self.log_success(bside_device, f"Added local context on {b_dev_name}")
 
                                 if device_name == f"borderleaf1-{dc_code}" or device_name == f"borderleaf2-{dc_code}":
                                   LOCAL_CONTEXT["bgp"]["spine_asn"] = bgp
