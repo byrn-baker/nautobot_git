@@ -541,6 +541,7 @@ class CreateAristaPod(Job):
                 prefix_list_loopback = [overlay_loopback]
 
                 device.local_context = prefix_list_loopback
+                device.validated_save()
 
                 # Add the Devices specific BGP assignments
                 if device_name == f"spine1-{dc_code}" or device_name == f"spine2-{dc_code}" or device_name == f"spine3-{dc_code}":
