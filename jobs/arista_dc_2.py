@@ -593,7 +593,7 @@ class CreateAristaDC(Job):
                 #     self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
                 if device_name == f"spine1-{dc_code}" or device_name == f"spine2-{dc_code}" or device_name == f"spine3-{dc_code}":
                   intf_number =  ROLES["leaf"]["nbr"] + ROLES["borderleaf"]["nbr"]
-                  for i in range(intf_number + 1):
+                  for i in range(1, intf_number + 1):
                     int_name = Interface.objects.create(
                       name=f"Ethernet{i}",
                       type="1000base-t",
@@ -603,7 +603,7 @@ class CreateAristaDC(Job):
                     self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
                 elif device_name == f"leaf1-{dc_code}" or device_name == f"leaf2-{dc_code}" or device_name == f"leaf3-{dc_code}" or device_name == f"leaf4-{dc_code}":
                    intf_number =  ROLES["spine"]["nbr"] + 2
-                   for i in range(intf_number + 1):
+                   for i in range(1, intf_number + 1):
                     int_name = Interface.objects.create(
                       name=f"Ethernet{i}",
                       type="1000base-t",
@@ -614,7 +614,7 @@ class CreateAristaDC(Job):
 
                 elif device_name == f"borderleaf1-{dc_code}" or device_name == f"borderleaf2-{dc_code}":
                   intf_number =  ROLES["spine"]["nbr"] + device_name == f"dci1-{dc_code}" + 2
-                  for i in range(intf_number + 1):
+                  for i in range(1, intf_number + 1):
                     int_name = Interface.objects.create(
                       name=f"Ethernet{i}",
                       type="1000base-t",
@@ -763,7 +763,7 @@ class CreateAristaDC(Job):
 
                 for iface in SWITCHES[dev_name]['interfaces']:
                     interface = Interface.objects.get(name=iface['name'], device=device)
-                    if interface != None:
+                    if not interface:
                       if interface.cable is None:
                           if "b_device" in iface.keys():
                               b_device = iface['b_device']
