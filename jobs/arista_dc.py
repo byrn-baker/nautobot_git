@@ -799,6 +799,7 @@ class CreateAristaDC(Job):
                             # Find Next available Network
                             if "mode" not in iface.keys():
                                 P2P_PREFIX_SIZE = 31
+                                ip_status = Status.objects.get_for_model(Device).get(slug="active")
                                 prefix = Prefix.objects.filter(site=self.site, role__name=f"{dc_code}_underlay_p2p").first()
                                 first_avail = prefix.get_first_available_prefix()
                                 subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
@@ -806,8 +807,8 @@ class CreateAristaDC(Job):
                                 Prefix.objects.create(prefix=str(subnet))
 
                                 # Create IP Addresses on both sides
-                                ip1 = IPAddress.objects.create(address=str(subnet[0]), assigned_object=intf1)
-                                ip2 = IPAddress.objects.create(address=str(subnet[1]), assigned_object=intf2)
-                                self.log_success(message=f"Created a IP Address between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
+                                ip1 = IPAddress.objects.create(address=f"{str(subnet[0])}/{P2P_PREFIX_SIZE}", assigned_object=intf1, status=ip_status)
+                                ip2 = IPAddress.objects.create(address=f"{str(subnet[1])}/{P2P_PREFIX_SIZE}", assigned_object=intf2, status=ip_status)
+                                self.log_success(message=f"Created a IP {ip1} on {intf1.device.name}::{intf1} and {ip2} on {intf2.device.name}::{intf2}")
                   except Exception:
                     pass
