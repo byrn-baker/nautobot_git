@@ -593,7 +593,7 @@ class CreateAristaDC(Job):
                 #     )
                 #     self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
                 if device_name == f"spine1-{dc_code}" or device_name == f"spine2-{dc_code}" or device_name == f"spine3-{dc_code}":
-                  intf_number =  ROLES["leaf"]["nbr"] + ROLES["borderleaf"]["nbr"]
+                  intf_number =  ROLES["leaf"]["nbr"] + ROLES["borderleaf"]["nbr"] + 1
                   for i in range(1, intf_number + 1):
                     int_name = Interface.objects.create(
                       name=f"Ethernet{i}",
