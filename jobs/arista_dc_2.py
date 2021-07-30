@@ -614,7 +614,7 @@ class CreateAristaDC(Job):
                     self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
 
                 elif device_name == f"borderleaf1-{dc_code}" or device_name == f"borderleaf2-{dc_code}":
-                  intf_number =  ROLES["spine"]["nbr"] + device_name == f"dci1-{dc_code}" + 2
+                  intf_number =  ROLES["spine"]["nbr"] + ROLES["dci"]["nbr"] + 2
                   for i in range(1, intf_number + 1):
                     int_name = Interface.objects.create(
                       name=f"Ethernet{i}",
@@ -624,10 +624,24 @@ class CreateAristaDC(Job):
                     )
                     self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
 
-                      # if "mode" in iface.keys():
-                      #   intf_name.mode = iface["mode"]
-                      #   self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
+                  if ROLES["dci"]["nbr"] != 0:
+                    eth12 = Interface.objects.create(
+                      name = "Ethernet12",
+                      type= "1000base-t",
+                      device = device,
+                    )
+                    self.log_success(obj=eth12, message=f"{eth12} successfully created on {device_name}")
 
+                elif device_name == f"dci1-{dc_code}":
+                  intf_number =  ROLES["borderleaf"]["nbr"]
+                  for i in range(1, intf_number + 1):
+                    int_name = Interface.objects.create(
+                      name=f"Ethernet{i}",
+                      type="1000base-t",
+                      device=device,
+
+                    )
+                    self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
 
                 # LEAF MLAG Port Channel
                 if device.device_role.slug == "leaf":
