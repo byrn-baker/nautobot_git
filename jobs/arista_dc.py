@@ -253,6 +253,7 @@ leaf4:
       b_device: spine3
       b_int: Ethernet4
 """
+from types import TracebackType
 from django.utils.text import slugify
 import yaml
 import json
@@ -288,11 +289,11 @@ def create_custom_fields():
 
 # Most of this stuff is pretty much pulled from an NTC Job on the demo site. I filled in some of the blanks
 IPv4Network = ipaddress.ip_network
-class CreateAristaPod(Job):
+class CreateAristaDC(Job):
     """Job to create a new site and datacenter pod."""
 
     class Meta:
-        """Meta class for CreateAristaPod."""
+        """Meta class for CreateAristaDC."""
 
         name = "Create a new Arista DataCenter"
         description = """
@@ -325,7 +326,7 @@ class CreateAristaPod(Job):
     dci = BooleanVar(description="Does this DataCenter require an interconnect?", label="DCI required")
     
     def run(self, data=None, commit=None):
-        """Main function for CreatePop."""
+        """Main function for CreateDC."""
         self.devices = {}
 
         # ----------------------------------------------------------------------------
@@ -475,21 +476,21 @@ class CreateAristaPod(Job):
         rack = Rack.objects.get_or_create(
             name=rack_name_spine, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
         )
-        self.log_success(obj=rack, message=f"Created Relay Rack {rack_name_spine}")
+        self.log_success(obj=rack_name_spine, message=f"Created Relay Rack {rack_name_spine}")
 
         if data["borderleaf"] == True: 
             rack_name_edge = f"{dc_code}-edge-rr-1"
             rack = Rack.objects.get_or_create(
                 name=rack_name_edge, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
             )
-            self.log_success(obj=rack, message=f"Created Relay Rack {rack_name_edge}")
+            self.log_success(obj=rack_name_edge, message=f"Created Relay Rack {rack_name_edge}")
 
         for i in range(1, ROLES["leaf"]["nbr"] + 1):
             rack_name = f"{dc_code}-leaf-rr-{i}"
             rack = Rack.objects.get_or_create(
                 name=rack_name, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
             )
-            self.log_success(obj=rack, message=f"Created Relay Rack {rack_name}")
+            self.log_success(obj=rack_name, message=f"Created Relay Rack {rack_name}")
 
         # ----------------------------------------------------------------------------
         # Create Devices
@@ -584,17 +585,63 @@ class CreateAristaPod(Job):
                 # Create physical interfaces
                 SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
                 dev_name = device_name.replace(f"-{dc_code}","")
-                for iface in SWITCHES[dev_name]['interfaces']:
-                    intf_name = Interface.objects.create(
-                            name=iface['name'],
-                            type="1000base-t",
-                            device=device, 
-                    )
-                    self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
-                    if "mode" in iface.keys():
-                        intf_name.mode = iface["mode"]
-                        self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
+                # for iface in SWITCHES[dev_name]['interfaces']:
+                #     intf_name = Interface.objects.create(
+                #             name=iface['name'],
+                #             type="1000base-t",
+                #             device=device, 
+                #     )
+                #     self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
+                if device_name == f"spine1-{dc_code}" or device_name == f"spine2-{dc_code}" or device_name == f"spine3-{dc_code}":
+                  intf_number =  ROLES["leaf"]["nbr"] + ROLES["borderleaf"]["nbr"] + 1
+                  for i in range(1, intf_number + 1):
+                    int_name = Interface.objects.create(
+                      name=f"Ethernet{i}",
+                      type="1000base-t",
+                      device=device,
 
+                    )
+                    self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
+                elif device_name == f"leaf1-{dc_code}" or device_name == f"leaf2-{dc_code}" or device_name == f"leaf3-{dc_code}" or device_name == f"leaf4-{dc_code}":
+                   intf_number =  ROLES["spine"]["nbr"] + 2
+                   for i in range(1, intf_number + 1):
+                    int_name = Interface.objects.create(
+                      name=f"Ethernet{i}",
+                      type="1000base-t",
+                      device=device,
+
+                    )
+                    self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
+
+                elif device_name == f"borderleaf1-{dc_code}" or device_name == f"borderleaf2-{dc_code}":
+                  intf_number =  ROLES["spine"]["nbr"] + ROLES["dci"]["nbr"] + 2
+                  for i in range(1, intf_number + 1):
+                    int_name = Interface.objects.create(
+                      name=f"Ethernet{i}",
+                      type="1000base-t",
+                      device=device,
+
+                    )
+                    self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
+
+                  if ROLES["dci"]["nbr"] != 0:
+                    eth12 = Interface.objects.create(
+                      name = "Ethernet12",
+                      type= "1000base-t",
+                      device = device,
+                    )
+                    self.log_success(obj=eth12, message=f"{eth12} successfully created on {device_name}")
+
+                elif device_name == f"dci1-{dc_code}":
+                  intf_number =  ROLES["borderleaf"]["nbr"]
+                  for i in range(1, intf_number + 1):
+                    int_name = Interface.objects.create(
+                      name=f"Ethernet{i}",
+                      type="1000base-t",
+                      device=device,
+
+                    )
+                    self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
 
                 # LEAF MLAG Port Channel
                 if device.device_role.slug == "leaf":
@@ -608,9 +655,11 @@ class CreateAristaPod(Job):
                     eth2 = device.interfaces.get(name="Ethernet2")
                     po10 = device.interfaces.get(name="Port-Channel10")
                     eth1.lag = po10
+                    eth1.mode = "tagged-all"
                     eth1.validated_save()
                     self.log_success(message=f"Moved {eth1} succesfully to {po10}")
                     eth2.lag = po10
+                    eth2.mode = "tagged-all"
                     eth2.validated_save()
                     self.log_success(message=f"Moved {eth2} succesfully to {po10}")
 
@@ -728,6 +777,7 @@ class CreateAristaPod(Job):
                 dev_name = device_name.replace(f"-{dc_code}","")
 
                 for iface in SWITCHES[dev_name]['interfaces']:
+                  try:
                     interface = Interface.objects.get(name=iface['name'], device=device)
                     if interface.cable is None:
                         if "b_device" in iface.keys():
@@ -759,30 +809,5 @@ class CreateAristaPod(Job):
                                 ip1 = IPAddress.objects.create(address=str(subnet[0]), assigned_object=intf1)
                                 ip2 = IPAddress.objects.create(address=str(subnet[1]), assigned_object=intf2)
                                 self.log_success(message=f"Created a IP Address between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
-
-                                # Updating local context with Prefix list and Leaf to Spine BGP neighbors
-                                # if device_name == f"spine1-{dc_code}" or device_name == f"spine3-{dc_code}" or device_name == f"spine3-{dc_code}":
-                                #   spine_context_json = json.dumps(LOCAL_CONTEXT, indent = 4)
-                                #   device.local_context = spine_context_json
-                                #   device.validated_save()
-                                #   self.log_success(device, f"Added local context on {device_name}")
-                                #   if b_dev_name == f"leaf1-{dc_code}" or b_dev_name == f"leaf2-{dc_code}" or b_dev_name == f"leaf3-{dc_code}" or b_dev_name == f"leaf4-{dc_code}":
-                                #     LOCAL_CONTEXT["bgp"]["spine_asn"] = bgp
-                                #     LOCAL_CONTEXT["bgp"]["spine_peers"].append(ip1)
-
-                                #     leaf_context_json = json.dumps(LOCAL_CONTEXT, indent = 4)
-                                #     bside_device.local_context = leaf_context_json
-                                #     bside_device.validated_save()
-                                #     self.log_success(bside_device, f"Added local context on {b_dev_name}")
-
-                                # if device_name == f"borderleaf1-{dc_code}" or device_name == f"borderleaf2-{dc_code}":
-                                #   LOCAL_CONTEXT["bgp"]["spine_asn"] = bgp
-                                #   LOCAL_CONTEXT["bgp"]["spine_peers"].append(ip2)
-                                #   if  b_dev_name == f"dci1-{dc_code}":
-                                #     LOCAL_CONTEXT["bgp"]["dci_asn"] = 65000
-                                #     LOCAL_CONTEXT["bgp"]["dci_peer"] = ip2
-                                    
-                                #     border_context_json = json.dumps(LOCAL_CONTEXT, indent = 4)
-                                #     device.local_context = border_context_json
-                                #     device.validated_save()
-                                #     self.log_success(device, f"Added local context on {device_name}")
+                  except Exception:
+                    pass
