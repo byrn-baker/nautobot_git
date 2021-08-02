@@ -109,7 +109,7 @@ class VxLan_Tenant_Turnup(Job):
             vxlan_role.validated_save()
         else:
             vxlan_role = Role.objects.get(name="VXLAN")
-            
+
         # Create VLAN
         vlan_name = data['tenant_name']
         vlan = VLAN.objects.get_or_create(
@@ -125,6 +125,6 @@ class VxLan_Tenant_Turnup(Job):
             vlan.validated_save()
             self.log_success(obj=vlan, message=f"Created new vlan {vlan_name.upper}_VLAN_{data['vlan_vid']}")
         else:
-            vlan = VLAN.objects.get(vid=data['vlan_vid'])
+            vlan = VLAN.objects.get(name=f"{vlan_name.upper}_VLAN_{data['vlan_vid']}")
 
 
