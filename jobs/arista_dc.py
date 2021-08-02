@@ -253,12 +253,12 @@ leaf4:
       b_device: spine3
       b_int: Ethernet4
 """
-from types import TracebackType
+
 from django.utils.text import slugify
 import yaml
 import json
 from nautobot.dcim.models import Site, Device, Rack, Region, Cable, DeviceRole, DeviceType, Interface
-from nautobot.ipam.models import Role, Prefix, IPAddress, VLAN
+from nautobot.ipam.models import Role, Prefix, IPAddress, VLAN, VRF
 from nautobot.extras.models import CustomField, Job, Status
 from nautobot.extras.models.customfields import ContentType
 from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar, BooleanVar
@@ -269,7 +269,13 @@ import ipaddress
 CUSTOM_FIELDS = {
     "role": {"models": [Interface], "label": "Role"},
     "site_type": {"models": [Site], "label": "Type of Site"},
-    "device_bgp": {"models": [Device], "label": "Device BGP ASN"}
+    "device_bgp": {"models": [Device], "type": "Integer", "label": "Device BGP ASN"},
+    "virtual_router_mac": {"models": [Device], "label": "Virtual Router Mac Address"},
+    "virtual_router_ipv4": {"models": [Interface], "label": "Virtual Router IPv4 Address"},
+    "vrf_vni": {"models": [VRF], "label": "VxLan VRF VNI"},
+    "vxlan_vlan_rt": {"models": [VLAN], "label": "VxLan vLAN Route Target"},
+    "vxlan_vlan_vni": {"models": [Interface], "label": "VxLAN SVI VNI"}
+
 }
 def create_custom_fields():
     """Create all relationships defined in CUSTOM_FIELDS."""
