@@ -105,8 +105,11 @@ class VxLan_Tenant_Turnup(Job):
             name="VXLAN",
             slug=slugify("VXLAN"),
         )
-        vxlan_role.validated_save()
-
+        if not vxlan_role:
+            vxlan_role.validated_save()
+        else:
+            vxlan_role = Role.objects.get(name="VXLAN")
+            
         # Create VLAN
         vlan_name = data['tenant_name']
         vlan = VLAN.objects.get_or_create(
