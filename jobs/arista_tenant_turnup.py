@@ -5,7 +5,6 @@ from nautobot.ipam.models import Role, Prefix, IPAddress, VLAN
 from nautobot.extras.models import CustomField, Job, Status
 from nautobot.extras.models.customfields import ContentType
 from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar, BooleanVar, MultiObjectVar
-from nautobot.circuits.models import Provider, CircuitType, Circuit, CircuitTermination
 
 class VxLan_Tenant_Turnup(Job):
 
@@ -94,25 +93,25 @@ class VxLan_Tenant_Turnup(Job):
         # self.log_success(obj=vrf, message=f"Created new VRF {data['tenant_name']}")
 
         # Create VLAN Role
-        vxlan_role = Role.objects.get_or_create(
-            name="VXLAN",
-            slug=slugify("VXLAN"),
-        )
-        vxlan_role.validated_save()
+        # vxlan_role = Role.objects.get_or_create(
+        #     name="VXLAN",
+        #     slug=slugify("VXLAN"),
+        # )
+        # vxlan_role.validated_save()
 
-        # Create VLAN
-        vlan_name = data['tenant_name']
-        vlan = VLAN.objects.get_or_create(
-            name=f"{vlan_name.upper}_VLAN_{data['vlan_vid']}",
-            vid=data['vlan_vid'],
-            role=vxlan_role,
-            _custom_field_data={"vxlan_vlan_rt": data['vlan_rt']},
-            # tenant=tenant,
-            status=STATUS_ACTIVE,
-            site=site,
-        )
-        vlan.validated_save()
-        self.log_success(obj=vlan, message=f"Created new vlan {vlan_name.upper}_VLAN_{data['vlan_vid']}")
+        # # Create VLAN
+        # vlan_name = data['tenant_name']
+        # vlan = VLAN.objects.get_or_create(
+        #     name=f"{vlan_name.upper}_VLAN_{data['vlan_vid']}",
+        #     vid=data['vlan_vid'],
+        #     role=vxlan_role,
+        #     _custom_field_data={"vxlan_vlan_rt": data['vlan_rt']},
+        #     # tenant=tenant,
+        #     status=STATUS_ACTIVE,
+        #     site=site,
+        # )
+        # vlan.validated_save()
+        # self.log_success(obj=vlan, message=f"Created new vlan {vlan_name.upper}_VLAN_{data['vlan_vid']}")
 
 
 
