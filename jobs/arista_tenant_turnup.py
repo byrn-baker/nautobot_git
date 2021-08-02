@@ -70,8 +70,9 @@ class VxLan_Tenant_Turnup(Job):
             name=data['tenant_name'],
             slug=slugify(data['tenant_name'])
         )
-        tenant.validated_save()
-        self.log_success(obj=tenant, message=f"Created {data['tenant_name']} as new tenant")
+        if not in tenant:
+            tenant.validated_save()
+            self.log_success(obj=tenant, message=f"Created {data['tenant_name']} as new tenant")
 
         # Create Route Target for VRF
         route_target = RouteTarget.object.get_or_create(
