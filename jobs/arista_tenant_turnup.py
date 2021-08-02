@@ -135,6 +135,7 @@ class VxLan_Tenant_Turnup(Job):
                 name=f"Vlan{data['vlan_vid']}",
                 type="virtual",
                 enabled=True,
+                label="Layer3",
                 description=data['svi_description'],
                 _custom_field_data={"role": "vxlan", "vxlan_vlan_vni": data['vlan_rt']},
                 device=device,
