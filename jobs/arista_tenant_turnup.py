@@ -1,6 +1,6 @@
 from django.utils.text import slugify
 
-from nautobot.dcim.models import Site, Device, Rack, Region, Cable, DeviceRole, DeviceType, Interface, Devices
+from nautobot.dcim.models import Site, Device, Interface
 from nautobot.ipam.models import Role, Prefix, IPAddress, VLAN
 from nautobot.extras.models import CustomField, Job, Status
 from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar, BooleanVar, MultiObjectVar
