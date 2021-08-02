@@ -106,7 +106,7 @@ class VxLan_Tenant_Turnup(Job):
             vid=data['vlan_vid'],
             role=vxlan_role,
             _custom_field_data={"vxlan_vlan_rt": data['vlan_rt']},
-            tenant=tenant,
+            # tenant=tenant,
             status=STATUS_ACTIVE,
             site=site,
         )
