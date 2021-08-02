@@ -1,7 +1,7 @@
 from django.utils.text import slugify
 from nautobot.tenancy.models import Tenant
 from nautobot.dcim.models import Site, Device, Rack, Region, Cable, DeviceRole, DeviceType, Interface, Devices
-from nautobot.ipam.models import Role, Prefix, IPAddress, VLAN, VRF,RouteTargets
+from nautobot.ipam.models import Role, Prefix, IPAddress, VLAN, VRF, RouteTargets
 from nautobot.extras.models import CustomField, Job, Status
 from nautobot.extras.models.customfields import ContentType
 from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar, BooleanVar, MultiObjectVar
