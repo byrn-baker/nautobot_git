@@ -3,7 +3,6 @@ from django.utils.text import slugify
 from nautobot.dcim.models import Site, Device, Rack, Region, Cable, DeviceRole, DeviceType, Interface, Devices
 from nautobot.ipam.models import Role, Prefix, IPAddress, VLAN
 from nautobot.extras.models import CustomField, Job, Status
-from nautobot.extras.models.customfields import ContentType
 from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar, BooleanVar, MultiObjectVar
 
 class VxLan_Tenant_Turnup(Job):
@@ -11,7 +10,7 @@ class VxLan_Tenant_Turnup(Job):
     class Meta:
         name = "Provision new VxLan Tenant"
         description = "Creates New Tenant with VRFs, RDs, RTs, and vLans"
-        field_order = ['site_name", "leaf_switches', 'tenant_name', 'vrf_rd', 'vrf_rt', 'vlan_vid', 'vlan_rt', 'svi_description', 'virtual_ip']
+        # field_order = ['site_name", "leaf_switches', 'tenant_name', 'vrf_rd', 'vrf_rt', 'vlan_vid', 'vlan_rt', 'svi_description', 'virtual_ip']
 
 
     site_name = ObjectVar(
@@ -30,33 +29,33 @@ class VxLan_Tenant_Turnup(Job):
         }
     )
 
-    tenant_name = StringVar(
-        description = "New Tenant name"
-    )
+    # tenant_name = StringVar(
+    #     description = "New Tenant name"
+    # )
 
-    vrf_rd = IntegerVar(
-        description = "VRF Route Distinguisher"
-    )
+    # vrf_rd = IntegerVar(
+    #     description = "VRF Route Distinguisher"
+    # )
 
-    vrf_rt = StringVar(
-        description = "Route target value (formatted in accordance with RFC 4360)"
-    )
+    # vrf_rt = StringVar(
+    #     description = "Route target value (formatted in accordance with RFC 4360)"
+    # )
 
-    vlan_vid = IntegerVar(
-        description = "vLan number for new Tenant"
-    )
+    # vlan_vid = IntegerVar(
+    #     description = "vLan number for new Tenant"
+    # )
 
-    vlan_rt = IntegerVar(
-        description = "Route Target to be assigned to this vLan"
-    )
+    # vlan_rt = IntegerVar(
+    #     description = "Route Target to be assigned to this vLan"
+    # )
 
-    svi_description = StringVar(
-        description = "SVI interface description"
-    )
+    # svi_description = StringVar(
+    #     description = "SVI interface description"
+    # )
 
-    virtual_ip = StringVar(
-        description = "SVI Virtual IP address"
-    )
+    # virtual_ip = StringVar(
+    #     description = "SVI Virtual IP address"
+    # )
 
 
 
