@@ -75,7 +75,7 @@ class VxLan_Tenant_Turnup(Job):
             self.log_success(obj=tenant, message=f"Created {data['tenant_name']} as new tenant")
 
         # Create Route Target for VRF
-        route_target = RouteTarget.object.get_or_create(
+        route_target = RouteTarget.objects.get_or_create(
             name=data['vrf_rt'],
             tenant=tenant,
         )
