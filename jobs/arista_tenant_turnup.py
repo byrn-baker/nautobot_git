@@ -1,5 +1,5 @@
 from django.utils.text import slugify
-
+from nautobot.tenancy import Tenant
 from nautobot.dcim.models import Site, Device, Interface
 from nautobot.ipam.models import Role, Prefix, IPAddress, VLAN
 from nautobot.extras.models import CustomField, Job, Status
@@ -10,7 +10,7 @@ class VxLan_Tenant_Turnup(Job):
     class Meta:
         name = "Provision new VxLan Tenant"
         description = "Creates New Tenant with VRFs, RDs, RTs, and vLans"
-        # field_order = ['site_name", "leaf_switches', 'tenant_name', 'vrf_rd', 'vrf_rt', 'vlan_vid', 'vlan_rt', 'svi_description', 'virtual_ip']
+        field_order = ['site_name", "leaf_switches', 'tenant_name', 'vrf_rd', 'vrf_rt', 'vlan_vid', 'vlan_rt', 'svi_description', 'virtual_ip']
 
 
     site_name = ObjectVar(
@@ -29,33 +29,33 @@ class VxLan_Tenant_Turnup(Job):
         }
     )
 
-    # tenant_name = StringVar(
-    #     description = "New Tenant name"
-    # )
+    tenant_name = StringVar(
+        description = "New Tenant name"
+    )
 
-    # vrf_rd = IntegerVar(
-    #     description = "VRF Route Distinguisher"
-    # )
+    vrf_rd = IntegerVar(
+        description = "VRF Route Distinguisher"
+    )
 
-    # vrf_rt = StringVar(
-    #     description = "Route target value (formatted in accordance with RFC 4360)"
-    # )
+    vrf_rt = StringVar(
+        description = "Route target value (formatted in accordance with RFC 4360)"
+    )
 
-    # vlan_vid = IntegerVar(
-    #     description = "vLan number for new Tenant"
-    # )
+    vlan_vid = IntegerVar(
+        description = "vLan number for new Tenant"
+    )
 
-    # vlan_rt = IntegerVar(
-    #     description = "Route Target to be assigned to this vLan"
-    # )
+    vlan_rt = IntegerVar(
+        description = "Route Target to be assigned to this vLan"
+    )
 
-    # svi_description = StringVar(
-    #     description = "SVI interface description"
-    # )
+    svi_description = StringVar(
+        description = "SVI interface description"
+    )
 
-    # virtual_ip = StringVar(
-    #     description = "SVI Virtual IP address"
-    # )
+    virtual_ip = StringVar(
+        description = "SVI Virtual IP address"
+    )
 
 
 
@@ -66,12 +66,12 @@ class VxLan_Tenant_Turnup(Job):
 
         site = Site.objects.get(name=data['site_name'])
         # Create the New tenant
-        # tenant = Tenant.objects.get_or_create(
-        #     name=data['tenant_name'],
-        #     slug=slugify(data['tenant_name'])
-        # )
-        # tenant.validated_save()
-        # self.log_success(obj=tenant, message=f"Created {data['tenant_name']} as new tenant")
+        tenant = Tenant.objects.get_or_create(
+            name=data['tenant_name'],
+            slug=slugify(data['tenant_name'])
+        )
+        tenant.validated_save()
+        self.log_success(obj=tenant, message=f"Created {data['tenant_name']} as new tenant")
 
         # Create Route Target for VRF
         # route_target = RouteTargets.object.get_or_create(
