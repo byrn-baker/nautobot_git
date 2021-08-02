@@ -111,9 +111,9 @@ class VxLan_Tenant_Turnup(Job):
             vxlan_role = Role.objects.get(name="VXLAN")
 
         # Create VLAN
-        vlan_name = data['tenant_name']
+        vlan_name = data['tenant_name'].upper()
         vlan = VLAN.objects.get_or_create(
-            name=f"{vlan_name.upper}_VLAN_{data['vlan_vid']}",
+            name=f"{vlan_name}_VLAN_{data['vlan_vid']}",
             vid=data['vlan_vid'],
             role=vxlan_role,
             _custom_field_data={"vxlan_vlan_rt": data['vlan_rt']},
@@ -123,9 +123,9 @@ class VxLan_Tenant_Turnup(Job):
         )
         if not vlan:
             vlan.validated_save()
-            self.log_success(obj=vlan, message=f"Created new vlan {vlan_name.upper}_VLAN_{data['vlan_vid']}")
+            self.log_success(obj=vlan, message=f"Created new vlan {vlan_name}_VLAN_{data['vlan_vid']}")
         else:
-            vlan = VLAN.objects.get(name=f"{vlan_name.upper}_VLAN_{data['vlan_vid']}")
+            vlan = VLAN.objects.get(name=f"{vlan_name}_VLAN_{data['vlan_vid']}")
 
         # Create SVI on Devices
         for dev in data['leaf_switches']:
