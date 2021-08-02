@@ -1,5 +1,5 @@
 from django.utils.text import slugify
-from nautobot.tenancy import Tenant
+from nautobot.tenancy.models import Tenant
 from nautobot.dcim.models import Site, Device, Interface
 from nautobot.ipam.models import Role, Prefix, IPAddress, VLAN
 from nautobot.extras.models import CustomField, Job, Status
