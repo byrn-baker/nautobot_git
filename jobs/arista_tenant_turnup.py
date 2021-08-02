@@ -139,7 +139,6 @@ class VxLan_Tenant_Turnup(Job):
                 _custom_field_data={"role": "vxlan", "vxlan_vlan_vni": data['vlan_rt']},
                 device=device,
             )
-            svi.validated_save()
             self.log_success(obj=svi, message=f"Created new SVI Interface Vlan{data['vlan_vid']}")
         
             # Create Virtual IP address and assign it to the SVI
