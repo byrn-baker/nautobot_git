@@ -94,8 +94,11 @@ class VxLan_Tenant_Turnup(Job):
             import_targets=route_target,
             export_targets=route_target,
         )
-        vrf.validated_save()
-        self.log_success(obj=vrf, message=f"Created new VRF {data['tenant_name']}")
+        if not vrf:
+            vrf.validated_save()
+            self.log_success(obj=vrf, message=f"Created new VRF {data['tenant_name']}")
+        else:
+            vrf = VRF.objects.get(name=data['tenant_name'])
 
         # Create VLAN Role
         vxlan_role = Role.objects.get_or_create(
@@ -111,12 +114,14 @@ class VxLan_Tenant_Turnup(Job):
             vid=data['vlan_vid'],
             role=vxlan_role,
             _custom_field_data={"vxlan_vlan_rt": data['vlan_rt']},
-            # tenant=tenant,
+            tenant=tenant,
             status=STATUS_ACTIVE,
             site=site,
         )
-        vlan.validated_save()
-        self.log_success(obj=vlan, message=f"Created new vlan {vlan_name.upper}_VLAN_{data['vlan_vid']}")
-
+        if not vlan:
+            vlan.validated_save()
+            self.log_success(obj=vlan, message=f"Created new vlan {vlan_name.upper}_VLAN_{data['vlan_vid']}")
+        else:
+            vlan = VLAN.objects.get(vid=data['vlan_vid'])
 
 
