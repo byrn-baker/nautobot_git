@@ -70,7 +70,7 @@ class VxLan_Tenant_Turnup(Job):
             name=data['tenant_name'],
             slug=slugify(data['tenant_name'])
         )
-        if not in tenant:
+        if not tenant:
             tenant.validated_save()
             self.log_success(obj=tenant, message=f"Created {data['tenant_name']} as new tenant")
 
