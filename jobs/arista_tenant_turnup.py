@@ -1,5 +1,5 @@
 from django.utils.text import slugify
-from nautobot.tenancy.models import Tenant
+
 from nautobot.dcim.models import Site, Device, Rack, Region, Cable, DeviceRole, DeviceType, Interface, Devices
 from nautobot.ipam.models import Role, Prefix, IPAddress, VLAN, VRF
 from nautobot.extras.models import CustomField, Job, Status
@@ -68,12 +68,12 @@ class VxLan_Tenant_Turnup(Job):
 
         site = Site.objects.get(name=data['site_name'])
         # Create the New tenant
-        tenant = Tenant.objects.get_or_create(
-            name=data['tenant_name'],
-            slug=slugify(data['tenant_name'])
-        )
-        tenant.validated_save()
-        self.log_success(obj=tenant, message=f"Created {data['tenant_name']} as new tenant")
+        # tenant = Tenant.objects.get_or_create(
+        #     name=data['tenant_name'],
+        #     slug=slugify(data['tenant_name'])
+        # )
+        # tenant.validated_save()
+        # self.log_success(obj=tenant, message=f"Created {data['tenant_name']} as new tenant")
 
         # Create Route Target for VRF
         # route_target = RouteTargets.object.get_or_create(
