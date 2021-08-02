@@ -12,7 +12,7 @@ class VxLan_Tenant_Turnup(Job):
     class Meta:
         name = "Provision new VxLan Tenant"
         description = "Creates New Tenant with VRFs, RDs, RTs, and vLans"
-        field_order = ['site_name", "leaf_switches', 'tenant_name', 'vrf_id', 'vrf_rt', 'vlan_vid', 'vlan_rt', 'svi_description', 'virtual_ip']
+        field_order = ['site_name", "leaf_switches', 'tenant_name', 'vrf_rd', 'vrf_rt', 'vlan_vid', 'vlan_rt', 'svi_description', 'virtual_ip']
 
 
     site_name = ObjectVar(
