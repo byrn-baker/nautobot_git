@@ -151,7 +151,6 @@ class VxLan_Tenant_Turnup(Job):
                 role="anycast",
                 status=STATUS_ACTIVE
             )
-            virtual_ip.validated_save()
             self.log_success(obj=virtual_ip, message=f"Assigned IP::{data['virtual_ip']} to {interface}")
 
 
