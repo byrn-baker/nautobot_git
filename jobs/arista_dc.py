@@ -1,3 +1,259 @@
+config = """
+dci1:
+  interfaces:
+    - name: Ethernet1
+      type: "1000base-t"
+      b_device: borderleaf1
+      b_int: Ethernet12
+    - name: Ethernet2
+      type: "1000base-t"
+      b_device: borderleaf2
+      b_int: Ethernet12
+borderleaf1: 
+  mlag: 
+    - odd
+  interfaces:
+    - name: Ethernet1
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: borderleaf2
+      b_int: Ethernet1
+    - name: Ethernet2
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: borderleaf2
+      b_int: Ethernet2
+    - name: Ethernet3
+      type: "1000base-t"
+      b_device: spine1
+      b_int: Ethernet6
+    - name: Ethernet4
+      type: "1000base-t"
+      b_device: spine2
+      b_int: Ethernet6
+    - name: Ethernet5
+      type: "1000base-t"
+      b_device: spine3
+      b_int: Ethernet6
+    - name: Ethernet12
+      type: "1000base-t"
+      b_device: dci1
+      b_int: Ethernet1
+borderleaf2: 
+  mlag: 
+    - even
+  interfaces:
+    - name: Ethernet1
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: borderleaf1
+      b_int: Ethernet1
+    - name: Ethernet2
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: borderleaf1
+      b_int: Ethernet2
+    - name: Ethernet3
+      type: "1000base-t"
+      b_device: spine1
+      b_int: Ethernet7
+    - name: Ethernet4
+      type: "1000base-t"
+      b_device: spine2
+      b_int: Ethernet7
+    - name: Ethernet5
+      type: "1000base-t"
+      b_device: spine3
+      b_int: Ethernet7
+    - name: Ethernet12
+      type: "1000base-t"
+      b_device: dci1
+      b_int: Ethernet2
+spine1:
+  device_type: "spine_veos"
+  interfaces:
+    - name: Ethernet2
+      type: "1000base-t"
+      b_device: leaf1
+      b_int: Ethernet3
+    - name: Ethernet3
+      type: "1000base-t"
+      b_device: leaf2
+      b_int: Ethernet3
+    - name: Ethernet4
+      type: "1000base-t"
+      b_device: leaf3
+      b_int: Ethernet3
+    - name: Ethernet5
+      type: "1000base-t"
+      b_device: leaf4
+      b_int: Ethernet3
+    - name: Ethernet6
+      type: "1000base-t"
+      b_device: borderleaf1
+      b_int: Ethernet3
+    - name: Ethernet7 
+      type: "1000base-t"
+      b_device: borderleaf2
+      b_int: Ethernet3
+spine2:
+  interfaces:
+    - name: Ethernet2
+      type: "1000base-t"
+      b_device: leaf1
+      b_int: Ethernet4
+    - name: Ethernet3
+      type: "1000base-t"
+      b_device: leaf2
+      b_int: Ethernet4
+    - name: Ethernet4
+      type: "1000base-t"
+      b_device: leaf3
+      b_int: Ethernet4
+    - name: Ethernet5
+      type: "1000base-t"
+      b_device: leaf4
+      b_int: Ethernet4
+    - name: Ethernet6
+      type: "1000base-t"
+      b_device: borderleaf1
+      b_int: Ethernet4
+    - name: Ethernet7 
+      type: "1000base-t"
+      b_device: borderleaf2
+      b_int: Ethernet4
+spine3:
+  interfaces:
+    - name: Ethernet2
+      type: "1000base-t"
+      b_device: leaf1
+      b_int: Ethernet5
+    - name: Ethernet3
+      type: "1000base-t"
+      b_device: leaf2
+      b_int: Ethernet5
+    - name: Ethernet4
+      type: "1000base-t"
+      b_device: leaf3
+      b_int: Ethernet5
+    - name: Ethernet5
+      type: "1000base-t"
+      b_device: leaf4
+      b_int: Ethernet5
+    - name: Ethernet6
+      type: "1000base-t"
+      b_device: borderleaf1
+      b_int: Ethernet5
+    - name: Ethernet7 
+      type: "1000base-t"
+      b_device: borderleaf2
+      b_int: Ethernet5
+leaf1:
+  mlag: 
+    - odd
+  interfaces:
+    - name: Ethernet1
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf2
+      b_int: Ethernet1
+    - name: Ethernet2
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf2
+      b_int: Ethernet2
+    - name: Ethernet3
+      type: "1000base-t"
+      b_device: spine1
+      b_int: Ethernet2
+    - name: Ethernet4
+      type: "1000base-t"
+      b_device: spine2
+      b_int: Ethernet3
+    - name: Ethernet5
+      type: "1000base-t"
+      b_device: spine3
+      b_int: Ethernet4
+leaf2:
+  mlag:
+    - even
+  interfaces:
+    - name: Ethernet1
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf1
+      b_int: Ethernet1
+    - name: Ethernet2
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf1
+      b_int: Ethernet2
+    - name: Ethernet3
+      type: "1000base-t"
+      b_device: spine1
+      b_int: Ethernet2
+    - name: Ethernet4
+      type: "1000base-t"
+      b_device: spine2
+      b_int: Ethernet3
+    - name: Ethernet5
+      type: "1000base-t"
+      b_device: spine3
+      b_int: Ethernet4
+leaf3:
+  mlag: 
+    - odd
+  interfaces:
+    - name: Ethernet1
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf4
+      b_int: Ethernet1
+    - name: Ethernet2
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf4
+      b_int: Ethernet2
+    - name: Ethernet3
+      type: "1000base-t"
+      b_device: spine1
+      b_int: Ethernet2
+    - name: Ethernet4
+      type: "1000base-t"
+      b_device: spine2
+      b_int: Ethernet3
+    - name: Ethernet5
+      type: "1000base-t"
+      b_device: spine3
+      b_int: Ethernet4
+leaf4:
+  mlag: 
+    - even
+  interfaces:
+    - name: Ethernet1
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf3
+      b_int: Ethernet1
+    - name: Ethernet2
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf3
+      b_int: Ethernet2
+    - name: Ethernet3
+      type: "1000base-t"
+      b_device: spine1
+      b_int: Ethernet2
+    - name: Ethernet4
+      type: "1000base-t"
+      b_device: spine2
+      b_int: Ethernet3
+    - name: Ethernet5
+      type: "1000base-t"
+      b_device: spine3
+      b_int: Ethernet4
+"""
+
 from django.utils.text import slugify
 import yaml
 import json
@@ -5,7 +261,7 @@ from nautobot.dcim.models import Site, Device, Rack, Region, Cable, DeviceRole, 
 from nautobot.ipam.models import Role, Prefix, IPAddress, VLAN, VRF
 from nautobot.extras.models import CustomField, Job, Status
 from nautobot.extras.models.customfields import ContentType
-from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar, BooleanVar, load_yaml
+from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar, BooleanVar
 from nautobot.circuits.models import Provider, CircuitType, Circuit, CircuitTermination
 import ipaddress
 ##########################
@@ -333,8 +589,7 @@ class CreateAristaDC(Job):
 
 
                 # Create physical interfaces
-                SWITCHES = load_yaml('arista_dc_interfaces.yaml')
-                # SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
+                SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
                 dev_name = device_name.replace(f"-{dc_code}","")
                 # for iface in SWITCHES[dev_name]['interfaces']:
                 #     intf_name = Interface.objects.create(
