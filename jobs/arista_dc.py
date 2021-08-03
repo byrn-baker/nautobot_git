@@ -373,6 +373,7 @@ class CreateAristaDC(Job):
         
         # Reference Vars
         TOP_LEVEL_PREFIX_ROLE = "datacenter"
+        TOP_LEVEL_P2P_PREFIX_ROLE = "underlay_p2p"
         SITE_PREFIX_SIZE = 22 
         RACK_HEIGHT = 42
         RACK_TYPE = "4-post-frame"
@@ -398,7 +399,7 @@ class CreateAristaDC(Job):
         # ----------------------------------------------------------------------------
         # Allocate Prefixes for this DataCenter
         # ----------------------------------------------------------------------------
-        # Search if there is already a POP prefix associated with this side
+        # Search if there is already a datacenter or underlay p2p prefix associated with this side
         # if not search the Top Level Prefix and create a new one
         dc_role, _ = Role.objects.get_or_create(name=dc_code, slug=dc_code)
         container_status = Status.objects.get_for_model(Prefix).get(slug="container")
@@ -415,14 +416,29 @@ class CreateAristaDC(Job):
             first_avail = top_level_prefix.get_first_available_prefix()
             prefix = list(first_avail.subnet(SITE_PREFIX_SIZE))[0]
             dc_prefix = Prefix.objects.create(prefix=prefix, site=self.site, status=container_status, role=dc_role)
+        
+        
+        underlay_p2p_prefix = Prefix.objects.filter(site=self.site, status=container_status, role=dc_role).first()
+        if not underlay_p2p_prefix:
+          top_level_prefix = Prefix.objects.filter(
+                role__slug=slugify(TOP_LEVEL_P2P_PREFIX_ROLE), status=container_status
+            ).first()
+
+          if not top_level_prefix:
+            raise Exception("Unable to find the top level prefix to allocate a Network for this site")
+          
+          first_avail = top_level_prefix.get_first_available_prefix()
+          prefix = list(first_avail.subnet(SITE_PREFIX_SIZE))[0]
+          underlay_p2p_prefix = Prefix.objects.create(prefix=prefix, site=self.site, status=container_status, role=dc_role)
 
         iter_subnet = IPv4Network(str(dc_prefix.prefix)).subnets(new_prefix=24)
+        p2p_iter_subnet = IPv4Network(str(underlay_p2p_prefix.prefix)).subnets(new_prefix=24)
 
         # Allocate the subnet by block of /24
         # mlag_peer = next(iter_subnet)
         overlay_loopback = next(iter_subnet)
         vtep_loopback = next(iter_subnet)
-        underlay_p2p = next(iter_subnet)
+        underlay_p2p = next(p2p_iter_subnet)
         # dci_p2p = next(iter_subnet)
 
         dc_role, _ = Role.objects.get_or_create(name=dc_code, slug=dc_code)
