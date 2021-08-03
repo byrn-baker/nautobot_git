@@ -5,7 +5,7 @@ from nautobot.dcim.models import Site, Device, Rack, Region, Cable, DeviceRole, 
 from nautobot.ipam.models import Role, Prefix, IPAddress, VLAN, VRF
 from nautobot.extras.models import CustomField, Job, Status
 from nautobot.extras.models.customfields import ContentType
-from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar, BooleanVar
+from nautobot.extras.jobs import Job, StringVar, IntegerVar, ObjectVar, BooleanVar, load_yaml
 from nautobot.circuits.models import Provider, CircuitType, Circuit, CircuitTermination
 import ipaddress
 ##########################
@@ -333,7 +333,7 @@ class CreateAristaDC(Job):
 
 
                 # Create physical interfaces
-                SWITCHES = load_yaml(arista_dc_interfaces.yaml)
+                SWITCHES = load_yaml('arista_dc_interfaces.yaml')
                 # SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
                 dev_name = device_name.replace(f"-{dc_code}","")
                 # for iface in SWITCHES[dev_name]['interfaces']:
