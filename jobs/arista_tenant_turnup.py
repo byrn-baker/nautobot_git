@@ -64,76 +64,64 @@ class VxLan_Tenant_Turnup(Job):
         # Create the New tenant
         try:
             tenant = Tenant.objects.get(name=data['tenant_name'])
-            if not tenant:
-                tenant = Tenant.objects.get_or_create(
+        except:
+            tenant = Tenant.objects.get_or_create(
                     name=data['tenant_name'],
                     slug=slugify(data['tenant_name'])
                 )
-                tenant.validated_save()
-                self.log_success(obj=tenant, message=f"Created {data['tenant_name']} as new tenant")
-        except Exception:
-            pass
+            tenant.validated_save()
+            self.log_success(obj=tenant, message=f"Created {data['tenant_name']} as new tenant")
 
         # Create Route Target for VRF
         try:
             route_target = RouteTarget.objects.get(name=data['vrf_rt'])
-
-            if not route_target:
+        except:
                 route_target = RouteTarget.objects.get_or_create(
                     name=data['vrf_rt'],
                     tenant=tenant,
                 )
                 route_target.validated_save()
                 self.log_success(obj=route_target, message=f"Created new Route Target {data['vrf_rt']}")
-        except Exception:
-            pass
         
         # Create the VRF
         try:
             vrf = VRF.objects.get(name=data['tenant_name'])
-
-            if not vrf:
-                vrf = VRF.objects.create(
-                    name=data['tenant_name'],
-                    rd=data['vrf_rd'],
+        except:
+            vrf = VRF.objects.create(
+                name=data['tenant_name'],
+                rd=data['vrf_rd'],
                 )
-                vrf.import_targets.set([route_target])
-                vrf.export_targets.set([route_target])
-                vrf.validated_save()
-                self.log_success(obj=vrf, message=f"Created new VRF {data['tenant_name']}")
-        except Exception:
-            pass
+            vrf.import_targets.set([route_target])
+            vrf.export_targets.set([route_target])
+            vrf.validated_save()
+            self.log_success(obj=vrf, message=f"Created new VRF {data['tenant_name']}")
 
         # Create VLAN Role
         try:
             vxlan_role = Role.objects.get(name="VXLAN")
-            if not vxlan_role:
-                vxlan_role = Role.objects.get_or_create(
-                    name="VXLAN",
-                    slug=slugify("VXLAN"),
-                )
-                vxlan_role.validated_save()
-        except Exception:
-            pass
+        except:
+            vxlan_role = Role.objects.get_or_create(
+                name="VXLAN",
+                slug=slugify("VXLAN"),
+            )
+            vxlan_role.validated_save()
 
         # Create VLAN
         try:
             vlan = VLAN.objects.get(name=f"{vlan_name}_VLAN_{data['vlan_vid']}")
-            if not vlan:
-                vlan_name = data['tenant_name'].upper()
-                vlan = VLAN.objects.get_or_create(
-                    name=f"{vlan_name}_VLAN_{data['vlan_vid']}",
-                    vid=data['vlan_vid'],
-                    role=vxlan_role,
-                    _custom_field_data={"vxlan_vlan_rt": data['vlan_rt']},
-                    tenant=tenant,
-                    status=STATUS_ACTIVE,
-                    site=site,
+        except:
+            vlan_name = data['tenant_name'].upper()
+            vlan = VLAN.objects.get_or_create(
+                name=f"{vlan_name}_VLAN_{data['vlan_vid']}",
+                vid=data['vlan_vid'],
+                role=vxlan_role,
+                _custom_field_data={"vxlan_vlan_rt": data['vlan_rt']},
+                tenant=tenant,
+                status=STATUS_ACTIVE,
+                site=site,
                 )
-                vlan.validated_save()
-                self.log_success(obj=vlan, message=f"Created new vlan {vlan_name}_VLAN_{data['vlan_vid']}")
-        except Exception:
-            pass
+            vlan.validated_save()
+            self.log_success(obj=vlan, message=f"Created new vlan {vlan_name}_VLAN_{data['vlan_vid']}")
 
         # Create SVI on Devices
         for dev in data['leaf_switches']:
