@@ -394,7 +394,7 @@ class CreateAristaDC(Job):
         TOP_LEVEL_PREFIX_ROLE = "datacenter"
         TOP_LEVEL_P2P_PREFIX_ROLE = "underlay_p2p"
         SITE_PREFIX_SIZE = 22
-        P2P_SITE_PREFIX_SIZE = 24
+        P2P_SITE_PREFIX_SIZE = 23
         RACK_HEIGHT = 42
         RACK_TYPE = "4-post-frame"
         ROLES = {
@@ -452,13 +452,13 @@ class CreateAristaDC(Job):
           underlay_p2p_prefix = Prefix.objects.create(prefix=p2p_prefix, site=self.site, status=container_status, role=dc_p2p_role)
 
         iter_subnet = IPv4Network(str(dc_prefix.prefix)).subnets(new_prefix=24)
-        # p2p_iter_subnet = IPv4Network(str(underlay_p2p_prefix.prefix)).subnets(new_prefix=24)
+        p2p_iter_subnet = IPv4Network(str(underlay_p2p_prefix.prefix)).subnets(new_prefix=24)
 
         # Allocate the subnet by block of /24
         # mlag_peer = next(iter_subnet)
         overlay_loopback = next(iter_subnet)
         vtep_loopback = next(iter_subnet)
-        # underlay_p2p = next(p2p_iter_subnet)
+        underlay_p2p = next(p2p_iter_subnet)
         # dci_p2p = next(iter_subnet)
 
         dc_role, _ = Role.objects.get_or_create(name=dc_code, slug=dc_code)
@@ -491,11 +491,11 @@ class CreateAristaDC(Job):
         )
         self.log_success(obj=vtep_loopback, message="Created new vtep prefix")
 
-        # underlay_role, _ = Role.objects.get_or_create(name=f"{dc_code}_underlay_p2p", slug=f"{dc_code}_underlay_p2p")
+        underlay_role, _ = Role.objects.get_or_create(name=f"{dc_code}_underlay_p2p", slug=f"{dc_code}_underlay_p2p")
         Prefix.objects.get_or_create(
-            prefix=str(underlay_p2p_prefix), 
+            prefix=str(underlay_p2p), 
             site=self.site, 
-            role=dc_p2p_role, 
+            role=underlay_role, 
             status=container_status,
         )
         self.log_success(obj=underlay_p2p_prefix, message="Created new underlay p2p prefix")
