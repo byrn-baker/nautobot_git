@@ -381,7 +381,7 @@ class CreateAristaDC(Job):
 
 
                 # Create physical interfaces
-                SWITCHES = load_yaml.SWITCHES
+                SWITCHES = filename
                 dev_name = device_name.replace(f"-{dc_code}","")
                 # for iface in SWITCHES[dev_name]['interfaces']:
                 #     intf_name = Interface.objects.create(
