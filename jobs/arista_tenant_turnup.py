@@ -62,26 +62,31 @@ class VxLan_Tenant_Turnup(Job):
 
         site = Site.objects.get(name=data['site_name'])
         # Create the New tenant
-        tenant = Tenant.objects.get_or_create(
-            name=data['tenant_name'],
-            slug=slugify(data['tenant_name'])
-        )
-        if not tenant:
-            tenant.validated_save()
-            self.log_success(obj=tenant, message=f"Created {data['tenant_name']} as new tenant")
-        else:
+        try:
             tenant = Tenant.objects.get(name=data['tenant_name'])
+            if not tenant:
+                tenant = Tenant.objects.get_or_create(
+                    name=data['tenant_name'],
+                    slug=slugify(data['tenant_name'])
+                )
+                tenant.validated_save()
+                self.log_success(obj=tenant, message=f"Created {data['tenant_name']} as new tenant")
+        except Exception:
+            pass
 
         # Create Route Target for VRF
-        route_target = RouteTarget.objects.get_or_create(
-            name=data['vrf_rt'],
-            tenant=tenant,
-        )
-        if not route_target:
-            route_target.validated_save()
-            self.log_success(obj=route_target, message=f"Created new Route Target {data['vrf_rt']}")
-        else:
+        try:
             route_target = RouteTarget.objects.get(name=data['vrf_rt'])
+
+            if not route_target:
+                route_target = RouteTarget.objects.get_or_create(
+                    name=data['vrf_rt'],
+                    tenant=tenant,
+                )
+                route_target.validated_save()
+                self.log_success(obj=route_target, message=f"Created new Route Target {data['vrf_rt']}")
+        except Exception:
+            pass
         
         # Create the VRF
         try:
