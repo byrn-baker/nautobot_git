@@ -374,7 +374,8 @@ class CreateAristaDC(Job):
         # Reference Vars
         TOP_LEVEL_PREFIX_ROLE = "datacenter"
         TOP_LEVEL_P2P_PREFIX_ROLE = "underlay_p2p"
-        SITE_PREFIX_SIZE = 22 
+        SITE_PREFIX_SIZE = 22
+        P2P_SITE_PREFIX_SIZE = 24
         RACK_HEIGHT = 42
         RACK_TYPE = "4-post-frame"
         ROLES = {
@@ -417,8 +418,7 @@ class CreateAristaDC(Job):
             prefix = list(first_avail.subnet(SITE_PREFIX_SIZE))[0]
             dc_prefix = Prefix.objects.create(prefix=prefix, site=self.site, status=container_status, role=dc_role)
         
-        
-        underlay_p2p_prefix = Prefix.objects.filter(site=self.site, status=container_status, role=dc_role).first()
+        underlay_p2p_prefix = Prefix.objects.filter(site=self.site, status=container_status, role=slugify(TOP_LEVEL_P2P_PREFIX_ROLE)).first()
         if not underlay_p2p_prefix:
           top_level_p2p_prefix = Prefix.objects.filter(
                 role__slug=slugify(TOP_LEVEL_P2P_PREFIX_ROLE), status=container_status
@@ -428,8 +428,8 @@ class CreateAristaDC(Job):
             raise Exception("Unable to find the top level prefix to allocate a Network for this site")
           
           first_avail_p2p = top_level_p2p_prefix.get_first_available_prefix()
-          p2p_prefix = list(first_avail_p2p.subnet(SITE_PREFIX_SIZE))[0]
-          underlay_p2p_prefix = Prefix.objects.create(prefix=p2p_prefix, site=self.site, status=container_status, role=dc_role)
+          p2p_prefix = list(first_avail_p2p.subnet(P2P_SITE_PREFIX_SIZE))[0]
+          underlay_p2p_prefix = Prefix.objects.create(prefix=p2p_prefix, site=self.site, status=container_status, role=slugify(TOP_LEVEL_P2P_PREFIX_ROLE))
 
         iter_subnet = IPv4Network(str(dc_prefix.prefix)).subnets(new_prefix=24)
         p2p_iter_subnet = IPv4Network(str(underlay_p2p_prefix.prefix)).subnets(new_prefix=24)
