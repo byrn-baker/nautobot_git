@@ -65,7 +65,7 @@ class VxLan_Tenant_Turnup(Job):
         try:
             tenant = Tenant.objects.get(name=data['tenant_name'])
         except:
-            tenant = Tenant.objects.get_or_create(
+            tenant = Tenant.objects.create(
                     name=data['tenant_name'],
                     slug=slugify(data['tenant_name'])
                 )
@@ -76,7 +76,7 @@ class VxLan_Tenant_Turnup(Job):
         try:
             route_target = RouteTarget.objects.get(name=data['vrf_rt'])
         except:
-                route_target = RouteTarget.objects.get_or_create(
+                route_target = RouteTarget.objects.create(
                     name=data['vrf_rt'],
                     tenant=tenant,
                 )
@@ -100,7 +100,7 @@ class VxLan_Tenant_Turnup(Job):
         try:
             vxlan_role = Role.objects.get(name="VXLAN")
         except:
-            vxlan_role = Role.objects.get_or_create(
+            vxlan_role = Role.objects.create(
                 name="VXLAN",
                 slug=slugify("VXLAN"),
             )
@@ -111,7 +111,7 @@ class VxLan_Tenant_Turnup(Job):
             vlan = VLAN.objects.get(name=f"{vlan_name}_VLAN_{data['vlan_vid']}")
         except:
             vlan_name = data['tenant_name'].upper()
-            vlan = VLAN.objects.get_or_create(
+            vlan = VLAN.objects.create(
                 name=f"{vlan_name}_VLAN_{data['vlan_vid']}",
                 vid=data['vlan_vid'],
                 role=vxlan_role,
