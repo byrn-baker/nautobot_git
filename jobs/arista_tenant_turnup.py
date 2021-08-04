@@ -63,39 +63,36 @@ class VxLan_Tenant_Turnup(Job):
 
         site = Site.objects.get(name=data['site_name'])
         # Create the New tenant
-        tenant = Tenant.objects.get_or_create(
+        tenant = Tenant.objects.get(name=data['tenant_name'])
+        if not tenant:
+            tenant = Tenant.objects.get_or_create(
             name=data['tenant_name'],
             slug=slugify(data['tenant_name'])
-        )
-        if not tenant:
+            )
             tenant.validated_save()
             self.log_success(obj=tenant, message=f"Created {data['tenant_name']} as new tenant")
-        else:
-            tenant = Tenant.objects.get(name=data['tenant_name'])
 
         # Create Route Target for VRF
-        route_target = RouteTarget.objects.get_or_create(
+        route_target = RouteTarget.objects.get(name=data['vrf_rt'])
+        if not route_target:
+            route_target = RouteTarget.objects.get_or_create(
             name=data['vrf_rt'],
             tenant=tenant,
-        )
-        if not route_target:
+            )
             route_target.validated_save()
             self.log_success(obj=route_target, message=f"Created new Route Target {data['vrf_rt']}")
-        else:
-            route_target = RouteTarget.objects.get(name=data['vrf_rt'])
         
-        # # Create the VRF
-        # vrf = VRF.objects.get_or_create(
-        #     name=data['tenant_name'],
-        #     rd=data['vrf_rd'],
-        #     import_targets=route_target,
-        #     export_targets=route_target,
-        # )
-        # if not vrf:
-        #     vrf.validated_save()
-        #     self.log_success(obj=vrf, message=f"Created new VRF {data['tenant_name']}")
-        # else:
-        #     vrf = VRF.objects.get(name=data['tenant_name'])
+        # Create the VRF
+        vrf = VRF.objects.get(name=data['tenant_name'])
+        if not vrf:
+            vrf = VRF.objects.get_or_create(
+            name=data['tenant_name'],
+            rd=data['vrf_rd'],
+            import_targets=route_target,
+            export_targets=route_target,
+            )
+            vrf.validated_save()
+            self.log_success(obj=vrf, message=f"Created new VRF {data['tenant_name']}")
 
         # # Create VLAN Role
         # vxlan_role = Role.objects.get_or_create(
