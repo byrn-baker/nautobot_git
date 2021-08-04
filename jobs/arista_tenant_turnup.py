@@ -90,43 +90,50 @@ class VxLan_Tenant_Turnup(Job):
         
         # Create the VRF
         try:
-            vrf = VRF.objects.create(
-                name=data['tenant_name'],
-                rd=data['vrf_rd'],
-            )
-            vrf.import_targets.set([route_target])
-            vrf.export_targets.set([route_target])
-            vrf.validated_save()
-            self.log_success(obj=vrf, message=f"Created new VRF {data['tenant_name']}")
-        except Exception:
             vrf = VRF.objects.get(name=data['tenant_name'])
+
+            if not vrf:
+                vrf = VRF.objects.create(
+                    name=data['tenant_name'],
+                    rd=data['vrf_rd'],
+                )
+                vrf.import_targets.set([route_target])
+                vrf.export_targets.set([route_target])
+                vrf.validated_save()
+                self.log_success(obj=vrf, message=f"Created new VRF {data['tenant_name']}")
+        except Exception:
+            pass
 
         # Create VLAN Role
         try:
-            vxlan_role = Role.objects.get_or_create(
-                name="VXLAN",
-                slug=slugify("VXLAN"),
-            )
-            vxlan_role.validated_save()
-        except Exception:
             vxlan_role = Role.objects.get(name="VXLAN")
+            if not vxlan_role:
+                vxlan_role = Role.objects.get_or_create(
+                    name="VXLAN",
+                    slug=slugify("VXLAN"),
+                )
+                vxlan_role.validated_save()
+        except Exception:
+            pass
 
         # Create VLAN
         try:
-            vlan_name = data['tenant_name'].upper()
-            vlan = VLAN.objects.get_or_create(
-                name=f"{vlan_name}_VLAN_{data['vlan_vid']}",
-                vid=data['vlan_vid'],
-                role=vxlan_role,
-                _custom_field_data={"vxlan_vlan_rt": data['vlan_rt']},
-                tenant=tenant,
-                status=STATUS_ACTIVE,
-                site=site,
-            )
-            vlan.validated_save()
-            self.log_success(obj=vlan, message=f"Created new vlan {vlan_name}_VLAN_{data['vlan_vid']}")
-        except Exception:
             vlan = VLAN.objects.get(name=f"{vlan_name}_VLAN_{data['vlan_vid']}")
+            if not vlan:
+                vlan_name = data['tenant_name'].upper()
+                vlan = VLAN.objects.get_or_create(
+                    name=f"{vlan_name}_VLAN_{data['vlan_vid']}",
+                    vid=data['vlan_vid'],
+                    role=vxlan_role,
+                    _custom_field_data={"vxlan_vlan_rt": data['vlan_rt']},
+                    tenant=tenant,
+                    status=STATUS_ACTIVE,
+                    site=site,
+                )
+                vlan.validated_save()
+                self.log_success(obj=vlan, message=f"Created new vlan {vlan_name}_VLAN_{data['vlan_vid']}")
+        except Exception:
+            pass
 
         # Create SVI on Devices
         for dev in data['leaf_switches']:
