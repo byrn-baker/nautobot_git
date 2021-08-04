@@ -91,7 +91,7 @@ class CreateAristaDC(Job):
         # Initialize the database with all required objects
         # ----------------------------------------------------------------------------
         create_custom_fields()
-        load_yaml()
+        load_yaml(self,filename)
         # create_relationships()
         # create_prefix_roles()
 
