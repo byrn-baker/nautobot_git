@@ -139,7 +139,7 @@ class VxLan_Tenant_Turnup(Job):
         for dev in data['leaf_switches']:
             device = Device.objects.get(name=dev)
 
-            svi = Interface.objects.get_or_create(
+            svi = Interface.objects.create(
                 name=f"Vlan{data['vlan_vid']}",
                 type="virtual",
                 enabled=True,
@@ -148,7 +148,7 @@ class VxLan_Tenant_Turnup(Job):
                 _custom_field_data={"role": "vxlan", "vxlan_vlan_vni": data['vlan_rt']},
                 device=device,
             )
-            self.log_success(message=f"Created new SVI Interface Vlan{data['vlan_vid']} on {dev}")
+            self.log_success(obj=svi, message=f"Created new SVI Interface Vlan{data['vlan_vid']} on {dev}")
         
             # Create Virtual IP address and assign it to the SVI
             interface = Interface.objects.get(name=f"Vlan{data['vlan_vid']}", device=device)
