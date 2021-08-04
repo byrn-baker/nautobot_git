@@ -1,263 +1,8 @@
-config = """
-dci1:
-  interfaces:
-    - name: Ethernet1
-      type: "1000base-t"
-      b_device: borderleaf1
-      b_int: Ethernet12
-    - name: Ethernet2
-      type: "1000base-t"
-      b_device: borderleaf2
-      b_int: Ethernet12
-borderleaf1: 
-  mlag: 
-    - odd
-  interfaces:
-    - name: Ethernet1
-      type: "1000base-t"
-      mode: "tagged-all"
-      b_device: borderleaf2
-      b_int: Ethernet1
-    - name: Ethernet2
-      type: "1000base-t"
-      mode: "tagged-all"
-      b_device: borderleaf2
-      b_int: Ethernet2
-    - name: Ethernet3
-      type: "1000base-t"
-      b_device: spine1
-      b_int: Ethernet6
-    - name: Ethernet4
-      type: "1000base-t"
-      b_device: spine2
-      b_int: Ethernet6
-    - name: Ethernet5
-      type: "1000base-t"
-      b_device: spine3
-      b_int: Ethernet6
-    - name: Ethernet12
-      type: "1000base-t"
-      b_device: dci1
-      b_int: Ethernet1
-borderleaf2: 
-  mlag: 
-    - even
-  interfaces:
-    - name: Ethernet1
-      type: "1000base-t"
-      mode: "tagged-all"
-      b_device: borderleaf1
-      b_int: Ethernet1
-    - name: Ethernet2
-      type: "1000base-t"
-      mode: "tagged-all"
-      b_device: borderleaf1
-      b_int: Ethernet2
-    - name: Ethernet3
-      type: "1000base-t"
-      b_device: spine1
-      b_int: Ethernet7
-    - name: Ethernet4
-      type: "1000base-t"
-      b_device: spine2
-      b_int: Ethernet7
-    - name: Ethernet5
-      type: "1000base-t"
-      b_device: spine3
-      b_int: Ethernet7
-    - name: Ethernet12
-      type: "1000base-t"
-      b_device: dci1
-      b_int: Ethernet2
-spine1:
-  device_type: "spine_veos"
-  interfaces:
-    - name: Ethernet2
-      type: "1000base-t"
-      b_device: leaf1
-      b_int: Ethernet3
-    - name: Ethernet3
-      type: "1000base-t"
-      b_device: leaf2
-      b_int: Ethernet3
-    - name: Ethernet4
-      type: "1000base-t"
-      b_device: leaf3
-      b_int: Ethernet3
-    - name: Ethernet5
-      type: "1000base-t"
-      b_device: leaf4
-      b_int: Ethernet3
-    - name: Ethernet6
-      type: "1000base-t"
-      b_device: borderleaf1
-      b_int: Ethernet3
-    - name: Ethernet7 
-      type: "1000base-t"
-      b_device: borderleaf2
-      b_int: Ethernet3
-spine2:
-  interfaces:
-    - name: Ethernet2
-      type: "1000base-t"
-      b_device: leaf1
-      b_int: Ethernet4
-    - name: Ethernet3
-      type: "1000base-t"
-      b_device: leaf2
-      b_int: Ethernet4
-    - name: Ethernet4
-      type: "1000base-t"
-      b_device: leaf3
-      b_int: Ethernet4
-    - name: Ethernet5
-      type: "1000base-t"
-      b_device: leaf4
-      b_int: Ethernet4
-    - name: Ethernet6
-      type: "1000base-t"
-      b_device: borderleaf1
-      b_int: Ethernet4
-    - name: Ethernet7 
-      type: "1000base-t"
-      b_device: borderleaf2
-      b_int: Ethernet4
-spine3:
-  interfaces:
-    - name: Ethernet2
-      type: "1000base-t"
-      b_device: leaf1
-      b_int: Ethernet5
-    - name: Ethernet3
-      type: "1000base-t"
-      b_device: leaf2
-      b_int: Ethernet5
-    - name: Ethernet4
-      type: "1000base-t"
-      b_device: leaf3
-      b_int: Ethernet5
-    - name: Ethernet5
-      type: "1000base-t"
-      b_device: leaf4
-      b_int: Ethernet5
-    - name: Ethernet6
-      type: "1000base-t"
-      b_device: borderleaf1
-      b_int: Ethernet5
-    - name: Ethernet7 
-      type: "1000base-t"
-      b_device: borderleaf2
-      b_int: Ethernet5
-leaf1:
-  mlag: 
-    - odd
-  interfaces:
-    - name: Ethernet1
-      type: "1000base-t"
-      mode: "tagged-all"
-      b_device: leaf2
-      b_int: Ethernet1
-    - name: Ethernet2
-      type: "1000base-t"
-      mode: "tagged-all"
-      b_device: leaf2
-      b_int: Ethernet2
-    - name: Ethernet3
-      type: "1000base-t"
-      b_device: spine1
-      b_int: Ethernet2
-    - name: Ethernet4
-      type: "1000base-t"
-      b_device: spine2
-      b_int: Ethernet3
-    - name: Ethernet5
-      type: "1000base-t"
-      b_device: spine3
-      b_int: Ethernet4
-leaf2:
-  mlag:
-    - even
-  interfaces:
-    - name: Ethernet1
-      type: "1000base-t"
-      mode: "tagged-all"
-      b_device: leaf1
-      b_int: Ethernet1
-    - name: Ethernet2
-      type: "1000base-t"
-      mode: "tagged-all"
-      b_device: leaf1
-      b_int: Ethernet2
-    - name: Ethernet3
-      type: "1000base-t"
-      b_device: spine1
-      b_int: Ethernet2
-    - name: Ethernet4
-      type: "1000base-t"
-      b_device: spine2
-      b_int: Ethernet3
-    - name: Ethernet5
-      type: "1000base-t"
-      b_device: spine3
-      b_int: Ethernet4
-leaf3:
-  mlag: 
-    - odd
-  interfaces:
-    - name: Ethernet1
-      type: "1000base-t"
-      mode: "tagged-all"
-      b_device: leaf4
-      b_int: Ethernet1
-    - name: Ethernet2
-      type: "1000base-t"
-      mode: "tagged-all"
-      b_device: leaf4
-      b_int: Ethernet2
-    - name: Ethernet3
-      type: "1000base-t"
-      b_device: spine1
-      b_int: Ethernet2
-    - name: Ethernet4
-      type: "1000base-t"
-      b_device: spine2
-      b_int: Ethernet3
-    - name: Ethernet5
-      type: "1000base-t"
-      b_device: spine3
-      b_int: Ethernet4
-leaf4:
-  mlag: 
-    - even
-  interfaces:
-    - name: Ethernet1
-      type: "1000base-t"
-      mode: "tagged-all"
-      b_device: leaf3
-      b_int: Ethernet1
-    - name: Ethernet2
-      type: "1000base-t"
-      mode: "tagged-all"
-      b_device: leaf3
-      b_int: Ethernet2
-    - name: Ethernet3
-      type: "1000base-t"
-      b_device: spine1
-      b_int: Ethernet2
-    - name: Ethernet4
-      type: "1000base-t"
-      b_device: spine2
-      b_int: Ethernet3
-    - name: Ethernet5
-      type: "1000base-t"
-      b_device: spine3
-      b_int: Ethernet4
-"""
-
 from django.utils.text import slugify
 import yaml
 import json
-from nautobot.dcim.models import Site, Device, Rack, Region, Cable, DeviceRole, DeviceType, Interface
+import os
+from nautobot.dcim.models import Site, Device, Rack, Region, Cable, DeviceRole, DeviceType, Interface, Manufacturer
 from nautobot.ipam.models import Role, Prefix, IPAddress, VLAN, VRF
 from nautobot.extras.models import CustomField, Job, Status
 from nautobot.extras.models.customfields import ContentType
@@ -291,6 +36,17 @@ def create_custom_fields():
             ct = ContentType.objects.get_for_model(model)
             cf.content_types.add(ct)
             cf.validated_save()
+
+filename = 'arista_dc_interfaces.yaml'
+def load_yaml(self, filename):
+  """
+  Return data from a YAML file
+  """
+  file_path = os.path.join(os.path.dirname(self.file_path), filename)
+  with open(file_path, "r") as datafile:
+      SWITCHES = yaml.safe_load(datafile)
+
+  return SWITCHES
 ############################
 
 # Most of this stuff is pretty much pulled from an NTC Job on the demo site. I filled in some of the blanks
@@ -339,8 +95,29 @@ class CreateAristaDC(Job):
         # Initialize the database with all required objects
         # ----------------------------------------------------------------------------
         create_custom_fields()
+        load_yaml()
         # create_relationships()
         # create_prefix_roles()
+
+        # ----------------------------------------------------------------------------
+        # Create all of the Manufactuers, Models and Roles if they do not exist
+        # ----------------------------------------------------------------------------
+        arista = Manufacturer.objects.get_or_create(name="Arista", slug="arista")
+        arista.validated_save()
+        self.log_success(obj=arista)
+
+        host_veos = DeviceType.objects.get_or_create(manufacturer=arista, model="host_veos", slug="host_veos", u_height=1)
+        host_veos.validated_save()
+        self.log_success(obj=host_veos)
+
+        leaf_veos = DeviceType.objects.get_or_create(manufacturer=arista, model="leaf_veos", slug="leaf_veos", u_height=1)
+        leaf_veos.validated_save()
+        self.log_success(obj=leaf_veos)
+
+        spine_veos = DeviceType.objects.get_or_create(manufacturer=arista, model="spine_veos", slug="spine_veos", u_height=1)
+        spine_veos.validated_save()
+        self.log_success(obj=spine_veos)
+
 
         # ----------------------------------------------------------------------------
         # Find or Create Site
@@ -480,7 +257,7 @@ class CreateAristaDC(Job):
             role=dc_p2p_role, 
             status=container_status,
         )
-        self.log_success(obj=underlay_p2p, message="Created new underlay p2p prefix")
+        self.log_success(obj=underlay_p2p_prefix, message="Created new underlay p2p prefix")
 
         # dci_p2p_role, _ = Role.objects.get_or_create(name=f"{dc_code}_dci_p2p", slug=f"{dc_code}_dci_p2p")
         # Prefix.objects.get_or_create(
@@ -607,7 +384,7 @@ class CreateAristaDC(Job):
 
 
                 # Create physical interfaces
-                SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
+                SWITCHES = load_yaml.SWITCHES
                 dev_name = device_name.replace(f"-{dc_code}","")
                 # for iface in SWITCHES[dev_name]['interfaces']:
                 #     intf_name = Interface.objects.create(
