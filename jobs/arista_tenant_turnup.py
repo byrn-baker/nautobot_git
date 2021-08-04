@@ -96,57 +96,57 @@ class VxLan_Tenant_Turnup(Job):
         except Exception:
             vrf = VRF.objects.get(name=data['tenant_name'])
 
-        # # Create VLAN Role
-        # vxlan_role = Role.objects.get_or_create(
-        #     name="VXLAN",
-        #     slug=slugify("VXLAN"),
-        # )
-        # if not vxlan_role:
-        #     vxlan_role.validated_save()
-        # else:
-        #     vxlan_role = Role.objects.get(name="VXLAN")
+        # Create VLAN Role
+        try:
+            vxlan_role = Role.objects.get_or_create(
+                name="VXLAN",
+                slug=slugify("VXLAN"),
+            )
+            vxlan_role.validated_save()
+        except Exception:
+            vxlan_role = Role.objects.get(name="VXLAN")
 
-        # # Create VLAN
-        # vlan_name = data['tenant_name'].upper()
-        # vlan = VLAN.objects.get_or_create(
-        #     name=f"{vlan_name}_VLAN_{data['vlan_vid']}",
-        #     vid=data['vlan_vid'],
-        #     role=vxlan_role,
-        #     _custom_field_data={"vxlan_vlan_rt": data['vlan_rt']},
-        #     tenant=tenant,
-        #     status=STATUS_ACTIVE,
-        #     site=site,
-        # )
-        # if not vlan:
-        #     vlan.validated_save()
-        #     self.log_success(obj=vlan, message=f"Created new vlan {vlan_name}_VLAN_{data['vlan_vid']}")
-        # else:
-        #     vlan = VLAN.objects.get(name=f"{vlan_name}_VLAN_{data['vlan_vid']}")
+        # Create VLAN
+        try:
+            vlan_name = data['tenant_name'].upper()
+            vlan = VLAN.objects.get_or_create(
+                name=f"{vlan_name}_VLAN_{data['vlan_vid']}",
+                vid=data['vlan_vid'],
+                role=vxlan_role,
+                _custom_field_data={"vxlan_vlan_rt": data['vlan_rt']},
+                tenant=tenant,
+                status=STATUS_ACTIVE,
+                site=site,
+            )
+            vlan.validated_save()
+            self.log_success(obj=vlan, message=f"Created new vlan {vlan_name}_VLAN_{data['vlan_vid']}")
+        except Exception:
+            vlan = VLAN.objects.get(name=f"{vlan_name}_VLAN_{data['vlan_vid']}")
 
-        # # Create SVI on Devices
-        # for dev in data['leaf_switches']:
-        #     device = Device.objects.get(name=dev)
+        # Create SVI on Devices
+        for dev in data['leaf_switches']:
+            device = Device.objects.get(name=dev)
 
-        #     svi = Interface.objects.get_or_create(
-        #         name=f"Vlan{data['vlan_vid']}",
-        #         type="virtual",
-        #         enabled=True,
-        #         label="Layer3",
-        #         description=data['svi_description'],
-        #         _custom_field_data={"role": "vxlan", "vxlan_vlan_vni": data['vlan_rt']},
-        #         device=device,
-        #     )
-        #     self.log_success(message=f"Created new SVI Interface Vlan{data['vlan_vid']}")
+            svi = Interface.objects.get_or_create(
+                name=f"Vlan{data['vlan_vid']}",
+                type="virtual",
+                enabled=True,
+                label="Layer3",
+                description=data['svi_description'],
+                _custom_field_data={"role": "vxlan", "vxlan_vlan_vni": data['vlan_rt']},
+                device=device,
+            )
+            self.log_success(message=f"Created new SVI Interface Vlan{data['vlan_vid']}")
         
-        #     # Create Virtual IP address and assign it to the SVI
-        #     interface = Interface.objects.get(name=f"Vlan{data['vlan_vid']}", device=device)
-        #     virtual_ip = IPAddress.objects.create(
-        #         address=data['virtual_ip'],
-        #         assigned_object=interface,
-        #         vrf=vrf,
-        #         role="anycast",
-        #         status=STATUS_ACTIVE
-        #     )
-        #     self.log_success(message=f"Assigned IP::{data['virtual_ip']} to {interface}")
+            # Create Virtual IP address and assign it to the SVI
+            interface = Interface.objects.get(name=f"Vlan{data['vlan_vid']}", device=device)
+            virtual_ip = IPAddress.objects.create(
+                address=data['virtual_ip'],
+                assigned_object=interface,
+                vrf=vrf,
+                role="anycast",
+                status=STATUS_ACTIVE
+            )
+            self.log_success(message=f"Assigned IP::{data['virtual_ip']} to {interface}")
 
 
