@@ -498,7 +498,7 @@ class CreateAristaDC(Job):
             role=underlay_role, 
             status=container_status,
         )
-        self.log_success(obj=underlay_p2p_prefix, message="Created new underlay p2p prefix")
+        self.log_success(obj=underlay_p2p, message="Created new underlay p2p prefix")
 
         # dci_p2p_role, _ = Role.objects.get_or_create(name=f"{dc_code}_dci_p2p", slug=f"{dc_code}_dci_p2p")
         # Prefix.objects.get_or_create(
