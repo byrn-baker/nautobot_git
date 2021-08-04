@@ -145,8 +145,7 @@ class VxLan_Tenant_Turnup(Job):
                 assigned_object=interface,
                 vrf=vrf,
                 role="anycast",
+                description=f"{dev}::{interface}",
                 status=STATUS_ACTIVE
             )
-            self.log_success(obj=virtual_ip, message=f"Assigned IP::{data['virtual_ip']} to {interface} on {dev}")
-
-
+            self.log_success(message=f"Assigned IP::{data['virtual_ip']} to {interface} on {dev}")
