@@ -346,6 +346,7 @@ class CreateAristaDC(Job):
         # Find or Create Site
         # ----------------------------------------------------------------------------
         dc_code = data["dc_code"].lower()
+        p2p_dc_code = f"{dc_code}_underlay"
         region = data["region"]
         bgp = data["dc_bgp"]
         site_status = Status.objects.get_for_model(Site).get(slug="active")
@@ -418,7 +419,8 @@ class CreateAristaDC(Job):
             prefix = list(first_avail.subnet(SITE_PREFIX_SIZE))[0]
             dc_prefix = Prefix.objects.create(prefix=prefix, site=self.site, status=container_status, role=dc_role)
         
-        underlay_p2p_prefix = Prefix.objects.filter(site=self.site, status=container_status, role=slugify(TOP_LEVEL_P2P_PREFIX_ROLE)).first()
+        dc_p2p_role, _ = Role.objects.get_or_create(name=p2p_dc_code, slug=p2p_dc_code)
+        underlay_p2p_prefix = Prefix.objects.filter(site=self.site, status=container_status, role=dc_p2p_role).first()
         if not underlay_p2p_prefix:
           top_level_p2p_prefix = Prefix.objects.filter(
                 role__slug=slugify(TOP_LEVEL_P2P_PREFIX_ROLE), status=container_status
@@ -429,7 +431,7 @@ class CreateAristaDC(Job):
           
           first_avail_p2p = top_level_p2p_prefix.get_first_available_prefix()
           p2p_prefix = list(first_avail_p2p.subnet(P2P_SITE_PREFIX_SIZE))[0]
-          underlay_p2p_prefix = Prefix.objects.create(prefix=p2p_prefix, site=self.site, status=container_status, role=slugify(TOP_LEVEL_P2P_PREFIX_ROLE))
+          underlay_p2p_prefix = Prefix.objects.create(prefix=p2p_prefix, site=self.site, status=container_status, role=dc_p2p_role)
 
         iter_subnet = IPv4Network(str(dc_prefix.prefix)).subnets(new_prefix=24)
         p2p_iter_subnet = IPv4Network(str(underlay_p2p_prefix.prefix)).subnets(new_prefix=24)
