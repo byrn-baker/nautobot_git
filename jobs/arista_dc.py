@@ -64,7 +64,6 @@ class CreateAristaDC(Job):
         """
         label = "Arista_DataCenter"
         field_order = [
-            "region",
             "dc_code",
             "dc_bgp",
             "spine_count",
@@ -72,9 +71,6 @@ class CreateAristaDC(Job):
             "borderleaf",
             "dci",
         ]
-
-    region = ObjectVar(model=Region)
-
     dc_code = StringVar(description="Name of the new DataCenter", label="DataCenter")
     
     spine_count = IntegerVar(description="Number of Spine Switches", label="Spine switches count", min_value=1, max_value=3)
@@ -124,10 +120,10 @@ class CreateAristaDC(Job):
         # ----------------------------------------------------------------------------
         dc_code = data["dc_code"].lower()
         p2p_dc_code = f"{dc_code}_underlay"
-        region = data["region"]
+        # region = data["region"]
         bgp = data["dc_bgp"]
         site_status = Status.objects.get_for_model(Site).get(slug="active")
-        self.site, created = Site.objects.get_or_create(name=dc_code, region=region, slug=dc_code, status=site_status)
+        self.site, created = Site.objects.get_or_create(name=dc_code, slug=dc_code, status=site_status)
         self.site.custom_field_data["site_type"] = "DATACENTER"
         self.site.save()
         self.log_success(self.site, f"Site {dc_code} successfully created")
