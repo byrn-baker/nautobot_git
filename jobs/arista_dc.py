@@ -257,7 +257,6 @@ leaf4:
 from django.utils.text import slugify
 import yaml
 import json
-import os
 from nautobot.dcim.models import Site, Device, Rack, Region, Cable, DeviceRole, DeviceType, Interface, Manufacturer
 from nautobot.ipam.models import Role, Prefix, IPAddress, VLAN, VRF
 from nautobot.extras.models import CustomField, Job, Status
@@ -391,6 +390,7 @@ class CreateAristaDC(Job):
         self.log_success(obj=vlan_4096_prefix, message="Created MLAG Prefix")
         
         # Reference Vars
+        SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
         TOP_LEVEL_PREFIX_ROLE = "datacenter"
         TOP_LEVEL_P2P_PREFIX_ROLE = "underlay_p2p"
         SITE_PREFIX_SIZE = 22
@@ -625,7 +625,6 @@ class CreateAristaDC(Job):
 
 
                 # Create physical interfaces
-                SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
                 dev_name = device_name.replace(f"-{dc_code}","")
                 # for iface in SWITCHES[dev_name]['interfaces']:
                 #     intf_name = Interface.objects.create(
