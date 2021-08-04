@@ -427,8 +427,8 @@ class CreateAristaDC(Job):
           if not top_level_p2p_prefix:
             raise Exception("Unable to find the top level prefix to allocate a Network for this site")
           
-          first_avail = top_level_p2p_prefix.get_first_available_prefix()
-          p2p_prefix = list(first_avail.subnet(SITE_PREFIX_SIZE))[0]
+          first_avail_p2p = top_level_p2p_prefix.get_first_available_prefix()
+          p2p_prefix = list(first_avail_p2p.subnet(SITE_PREFIX_SIZE))[0]
           underlay_p2p_prefix = Prefix.objects.create(prefix=p2p_prefix, site=self.site, status=container_status, role=dc_role)
 
         iter_subnet = IPv4Network(str(dc_prefix.prefix)).subnets(new_prefix=24)
