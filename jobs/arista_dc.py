@@ -98,8 +98,10 @@ class CreateAristaDC(Job):
         # ----------------------------------------------------------------------------
         # Create all of the Manufactuers, Models and Roles if they do not exist
         # ----------------------------------------------------------------------------
-        arista = Manufacturer.objects.get_or_create(name="Arista", slug="arista")
-        self.log_success(obj=arista)
+        arista_man = Manufacturer.objects.get_or_create(name="Arista", slug="arista")
+        self.log_success(obj=arista_man)
+
+        arista = Manufacturer.objects.get(name="Arista")
 
         host_veos = DeviceType.objects.get_or_create(manufacturer=arista, model="host_veos", slug="host_veos", u_height=1)
         # host_veos.validated_save()
