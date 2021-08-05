@@ -667,7 +667,8 @@ class CreateAristaDC(Job):
 
                         )
                         self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
-                        int_name._custom_field_data = {"role": "spine"}
+                        int_name.int_name.cf.set("role", "spine")
+                        int_name.validated_save()
                       else:
                         int_name = Interface.objects.create(
                         name=f"Ethernet{i}",
@@ -690,7 +691,7 @@ class CreateAristaDC(Job):
 
                         )
                         self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
-                        int_name.vf.set("role", "dci")
+                        int_name.cf.set("role", "spine")
                         int_name.validated_save()
                     else:
                       int_name = Interface.objects.create(
@@ -708,7 +709,7 @@ class CreateAristaDC(Job):
                       device = device,
                     )
                     self.log_success(obj=eth12, message=f"{eth12} successfully created on {device_name}")
-                    eth12._vf.set("role", "dci")
+                    eth12._cf.set("role", "dci")
                     eth12.validated_save()
 
                 elif device_name == f"dci1-{dc_code}":
