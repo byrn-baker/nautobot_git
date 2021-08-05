@@ -636,25 +636,18 @@ class CreateAristaDC(Job):
                 if device_name == f"spine1-{dc_code}" or device_name == f"spine2-{dc_code}" or device_name == f"spine3-{dc_code}":
                   intf_number =  ROLES["leaf"]["nbr"] + ROLES["borderleaf"]["nbr"] + 1
                   for i in range(1, intf_number + 1):
-                    if i == 2 or i == 3 or i == 4:
-                      int_name = Interface.objects.create(
-                        name=f"Ethernet{i}",
-                        type="1000base-t",
-                        
-                        device=device,
+                    int_name = Interface.objects.create(
+                      name=f"Ethernet{i}",
+                      type="1000base-t",
+                      
+                      device=device,
 
-                      )
-                      self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
-                      int_name._custom_field_data = {"role": "leaf"}
-                    else:
-                      int_name = Interface.objects.create(
-                        name=f"Ethernet{i}",
-                        type="1000base-t",
-                        
-                        device=device,
+                    )
+                    self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
+                    if int_name == 'Ethernet2' or int_name == 'Ethernet3' or int_name == 'Ethernet4' or int_name == 'Ethernet5':
+                      int_name.cf['role'] = "leaf"
+                      int_name.validated_save()
 
-                      )
-                      self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
                 elif device_name == f"leaf1-{dc_code}" or device_name == f"leaf2-{dc_code}" or device_name == f"leaf3-{dc_code}" or device_name == f"leaf4-{dc_code}":
                    intf_number =  ROLES["spine"]["nbr"] + 2
                    for i in range(1, intf_number + 1):
@@ -667,7 +660,7 @@ class CreateAristaDC(Job):
                       )
                       self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
                       if int_name == 'Ethernet3' or int_name == 'Ethernet4' or int_name == 'Ethernet5':
-                        int_name.int_name.cf.set("role", "spine")
+                        int_name.cf['role'] = "spine"
                         int_name.validated_save()
 
                 elif device_name == f"borderleaf1-{dc_code}" or device_name == f"borderleaf2-{dc_code}":
@@ -682,7 +675,7 @@ class CreateAristaDC(Job):
                     )
                     self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
                     if int_name == 'Ethernet3' or int_name == 'Ethernet4' or int_name == 'Ethernet5':
-                      int_name.int_name.cf.set("role", "spine")
+                      int_name.cf['role'] = "spine"
                       int_name.validated_save()
 
                   if ROLES["dci"]["nbr"] != 0:
@@ -692,7 +685,7 @@ class CreateAristaDC(Job):
                       device = device,
                     )
                     self.log_success(obj=eth12, message=f"{eth12} successfully created on {device_name}")
-                    eth12.cf.set("role", "dci")
+                    eth12.cf['role'] = "dci"
                     eth12.validated_save()
 
                 elif device_name == f"dci1-{dc_code}":
