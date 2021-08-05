@@ -636,34 +636,69 @@ class CreateAristaDC(Job):
                 if device_name == f"spine1-{dc_code}" or device_name == f"spine2-{dc_code}" or device_name == f"spine3-{dc_code}":
                   intf_number =  ROLES["leaf"]["nbr"] + ROLES["borderleaf"]["nbr"] + 1
                   for i in range(1, intf_number + 1):
-                    int_name = Interface.objects.create(
-                      name=f"Ethernet{i}",
-                      type="1000base-t",
-                      device=device,
+                    if i == 2 or i == 3 or i == 4:
+                      int_name = Interface.objects.create(
+                        name=f"Ethernet{i}",
+                        type="1000base-t",
+                        
+                        device=device,
 
-                    )
-                    self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
+                      )
+                      self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
+                      int_name._custom_field_data = {"role": "leaf"}
+                    else:
+                      int_name = Interface.objects.create(
+                        name=f"Ethernet{i}",
+                        type="1000base-t",
+                        
+                        device=device,
+
+                      )
+                      self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
                 elif device_name == f"leaf1-{dc_code}" or device_name == f"leaf2-{dc_code}" or device_name == f"leaf3-{dc_code}" or device_name == f"leaf4-{dc_code}":
                    intf_number =  ROLES["spine"]["nbr"] + 2
                    for i in range(1, intf_number + 1):
-                    int_name = Interface.objects.create(
-                      name=f"Ethernet{i}",
-                      type="1000base-t",
-                      device=device,
+                      if i == 3 or i == 4 or i == 5:
+                        int_name = Interface.objects.create(
+                        name=f"Ethernet{i}",
+                        type="1000base-t",
+                        
+                        device=device,
 
-                    )
-                    self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
+                        )
+                        self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
+                        int_name._custom_field_data = {"role": "spine"}
+                      else:
+                        int_name = Interface.objects.create(
+                        name=f"Ethernet{i}",
+                        type="1000base-t",
+                        
+                        device=device,
+
+                        )
+                        self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
 
                 elif device_name == f"borderleaf1-{dc_code}" or device_name == f"borderleaf2-{dc_code}":
                   intf_number =  ROLES["spine"]["nbr"] + ROLES["dci"]["nbr"] + 2
                   for i in range(1, intf_number + 1):
-                    int_name = Interface.objects.create(
-                      name=f"Ethernet{i}",
-                      type="1000base-t",
-                      device=device,
+                    if i == 3 or i == 4 or i == 5:
+                        int_name = Interface.objects.create(
+                        name=f"Ethernet{i}",
+                        type="1000base-t",
+                        
+                        device=device,
 
-                    )
-                    self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
+                        )
+                        self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
+                        int_name._custom_field_data = {"role": "spine"}
+                    else:
+                      int_name = Interface.objects.create(
+                        name=f"Ethernet{i}",
+                        type="1000base-t",
+                        device=device,
+
+                      )
+                      self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
 
                   if ROLES["dci"]["nbr"] != 0:
                     eth12 = Interface.objects.create(
@@ -672,6 +707,7 @@ class CreateAristaDC(Job):
                       device = device,
                     )
                     self.log_success(obj=eth12, message=f"{eth12} successfully created on {device_name}")
+                    eth12._custom_field_data = {"role": "dci"}
 
                 elif device_name == f"dci1-{dc_code}":
                   intf_number =  ROLES["borderleaf"]["nbr"]
