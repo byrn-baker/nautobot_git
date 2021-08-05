@@ -107,10 +107,11 @@ class VxLan_Tenant_Turnup(Job):
             vxlan_role.validated_save()
 
         # Create VLAN
+        vlan_name = data['tenant_name'].upper()
         try:
             vlan = VLAN.objects.get(name=f"{vlan_name}_VLAN_{data['vlan_vid']}")
         except:
-            vlan_name = data['tenant_name'].upper()
+            # vlan_name = data['tenant_name'].upper()
             vlan = VLAN.objects.create(
                 name=f"{vlan_name}_VLAN_{data['vlan_vid']}",
                 vid=data['vlan_vid'],
