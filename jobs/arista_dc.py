@@ -692,7 +692,7 @@ class CreateAristaDC(Job):
                       device = device,
                     )
                     self.log_success(obj=eth12, message=f"{eth12} successfully created on {device_name}")
-                    eth12._cf.set("role", "dci")
+                    eth12.cf.set("role", "dci")
                     eth12.validated_save()
 
                 elif device_name == f"dci1-{dc_code}":
