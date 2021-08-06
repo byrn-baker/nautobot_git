@@ -640,7 +640,7 @@ class CreateAristaDC(Job):
                       int_name = Interface.objects.create(
                         name=f"Ethernet{i}",
                         type="1000base-t",
-                        
+                        label="Layer3",
                         device=device,
 
                       )
@@ -651,7 +651,6 @@ class CreateAristaDC(Job):
                       int_name = Interface.objects.create(
                         name=f"Ethernet{i}",
                         type="1000base-t",
-                        
                         device=device,
                       )
 
@@ -662,7 +661,7 @@ class CreateAristaDC(Job):
                       int_name = Interface.objects.create(
                       name=f"Ethernet{i}",
                       type="1000base-t",
-                      
+                      label="Layer3",
                       device=device,
 
                       )
@@ -673,7 +672,6 @@ class CreateAristaDC(Job):
                       int_name = Interface.objects.create(
                       name=f"Ethernet{i}",
                       type="1000base-t",
-                      
                       device=device,
 
                       )
@@ -685,7 +683,7 @@ class CreateAristaDC(Job):
                       int_name = Interface.objects.create(
                       name=f"Ethernet{i}",
                       type="1000base-t",
-                      
+                      label="Layer3",
                       device=device,
 
                       )
@@ -696,7 +694,6 @@ class CreateAristaDC(Job):
                       int_name = Interface.objects.create(
                       name=f"Ethernet{i}",
                       type="1000base-t",
-                      
                       device=device,
 
                       )
@@ -705,6 +702,7 @@ class CreateAristaDC(Job):
                     eth12 = Interface.objects.create(
                       name = "Ethernet12",
                       type= "1000base-t",
+                      label="Layer3",
                       device = device,
                     )
                     self.log_success(obj=eth12, message=f"{eth12} successfully created on {device_name}")
@@ -717,6 +715,7 @@ class CreateAristaDC(Job):
                     int_name = Interface.objects.create(
                       name=f"Ethernet{i}",
                       type="1000base-t",
+                      label="Layer3",
                       device=device,
 
                     )
@@ -725,7 +724,7 @@ class CreateAristaDC(Job):
                 # LEAF MLAG Port Channel
                 if device.device_role.slug == "leaf":
                     portchannel_intf = Interface.objects.create(
-                        name="Port-Channel10", type="lag", mode="tagged-all", device=device
+                        name="Port-Channel10", type="lag", mode="tagged-all", label="trunk", device=device
                     )
                     self.log_success(obj=portchannel_intf, message=f"{portchannel_intf} successfully created on {device_name}")
                     
@@ -735,10 +734,12 @@ class CreateAristaDC(Job):
                     po10 = device.interfaces.get(name="Port-Channel10")
                     eth1.lag = po10
                     eth1.mode = "tagged-all"
+                    eth1.label = "trunk"
                     eth1.validated_save()
                     self.log_success(message=f"Moved {eth1} succesfully to {po10}")
                     eth2.lag = po10
                     eth2.mode = "tagged-all"
+                    eth2.label = "trunk"
                     eth2.validated_save()
                     self.log_success(message=f"Moved {eth2} succesfully to {po10}")
 
@@ -765,7 +766,7 @@ class CreateAristaDC(Job):
                 # BORDERLEAF MLAG Port Channel
                 if device.device_role.slug == "borderleaf":
                     portchannel_intf = Interface.objects.create(
-                        name="Port-Channel10", type="lag", mode="tagged-all", device=device
+                        name="Port-Channel10", type="lag", mode="tagged-all", label="trunk", device=device
                     )
                     self.log_success(obj=portchannel_intf, message=f"{portchannel_intf} successfully created on {device_name}")
 
@@ -773,9 +774,11 @@ class CreateAristaDC(Job):
                     eth2 = device.interfaces.get(name="Ethernet2")
                     po10 = device.interfaces.get(name="Port-Channel10")
                     eth1.lag = po10
+                    eth1.label = "trunk"
                     eth1.validated_save()
                     self.log_success(message=f"Moved {eth1} succesfully to {po10}")
                     eth2.lag = po10
+                    eth2.label = "trunk"
                     eth2.validated_save()
                     self.log_success(message=f"Moved {eth2} succesfully to {po10}")
 
