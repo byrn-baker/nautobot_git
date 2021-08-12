@@ -174,6 +174,14 @@ leaf1:
       type: "1000base-t"
       b_device: spine3
       b_int: Ethernet4
+    - name: Ethernet6
+      type: "1000base-t"
+      b_device: host1
+      b_int: Ethernet1
+    - name: Ethernet7
+      type: "1000base-t"
+      b_device: host1
+      b_int: Ethernet3
 leaf2:
   mlag:
     - even
@@ -200,6 +208,14 @@ leaf2:
       type: "1000base-t"
       b_device: spine3
       b_int: Ethernet4
+    - name: Ethernet6
+      type: "1000base-t"
+      b_device: host1
+      b_int: Ethernet2
+    - name: Ethernet7
+      type: "1000base-t"
+      b_device: host1
+      b_int: Ethernet4  
 leaf3:
   mlag: 
     - odd
@@ -226,6 +242,14 @@ leaf3:
       type: "1000base-t"
       b_device: spine3
       b_int: Ethernet4
+    - name: Ethernet6
+      type: "1000base-t"
+      b_device: host2
+      b_int: Ethernet1
+    - name: Ethernet7
+      type: "1000base-t"
+      b_device: host2
+      b_int: Ethernet3  
 leaf4:
   mlag: 
     - even
@@ -252,6 +276,58 @@ leaf4:
       type: "1000base-t"
       b_device: spine3
       b_int: Ethernet4
+    - name: Ethernet6
+      type: "1000base-t"
+      b_device: host2
+      b_int: Ethernet2
+    - name: Ethernet7
+      type: "1000base-t"
+      b_device: host2
+      b_int: Ethernet4
+host1:
+  interfaces:
+    - name: Ethernet1
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf1
+      b_int: Ethernet6
+    - name: Ethernet3
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf1
+      b_int: Ethernet7
+    - name: Ethernet2
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf2
+      b_int: Ethernet6
+    - name: Ethernet4
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf2
+      b_int: Ethernet7
+host2:
+  interfaces:
+    - name: Ethernet1
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf3
+      b_int: Ethernet6
+    - name: Ethernet3
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf3
+      b_int: Ethernet7
+    - name: Ethernet2
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf4
+      b_int: Ethernet6
+    - name: Ethernet4
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf4
+      b_int: Ethernet7 
 """
 
 from django.utils.text import slugify
@@ -402,8 +478,13 @@ class CreateAristaDC(Job):
             "leaf": {"device_type": "leaf_veos"},
             "borderleaf": {"device_type": "leaf_veos"},
             "dci": {"device_type": "spine_veos"},
+            "host": {"device_type": "host_veos"},
         }
         # Number of devices to provision
+        if data["leaf_count"] == range(1,2):
+          ROLES["host"]["nbr"] = 1
+        elif data["leaf_count"] == range(3,4):
+          ROLES["host"]["nbr"] = 2
         ROLES["leaf"]["nbr"] = data["leaf_count"]
         ROLES["spine"]["nbr"] = data["spine_count"]
         if data["borderleaf"] == True:
@@ -521,18 +602,31 @@ class CreateAristaDC(Job):
         self.log_success(obj=rack_name_spine, message=f"Created Relay Rack {rack_name_spine}")
 
         if data["borderleaf"] == True: 
-            rack_name_edge = f"{dc_code}-edge-rr-1"
-            rack = Rack.objects.get_or_create(
-                name=rack_name_edge, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
-            )
-            self.log_success(obj=rack_name_edge, message=f"Created Relay Rack {rack_name_edge}")
+          rack_name_edge = f"{dc_code}-edge-rr-1"
+          rack = Rack.objects.get_or_create(
+              name=rack_name_edge, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
+          )
+          self.log_success(obj=rack_name_edge, message=f"Created Relay Rack {rack_name_edge}")
 
         for i in range(1, ROLES["leaf"]["nbr"] + 1):
-            rack_name = f"{dc_code}-leaf-rr-{i}"
-            rack = Rack.objects.get_or_create(
-                name=rack_name, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
-            )
-            self.log_success(obj=rack_name, message=f"Created Relay Rack {rack_name}")
+          rack_name = f"{dc_code}-leaf-rr-{i}"
+          rack = Rack.objects.get_or_create(
+              name=rack_name, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
+          )
+          self.log_success(obj=rack_name, message=f"Created Relay Rack {rack_name}")
+        if ROLES["host"]["nbr"] == range(1,2):
+          rack_name_host = f"{dc_code}-host-rr-1"
+          rack = Rack.objects.get_or_create(
+              name=rack_name_host, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
+          )
+          self.log_success(obj=rack_name_host, message=f"Created Relay Rack {rack_name}")
+        if ROLES["host"]["nbr"] == range(3,4):
+          rack_name_host2 = f"{dc_code}-host-rr-2"
+          rack = Rack.objects.get_or_create(
+              name=rack_name_host2, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
+          )
+          self.log_success(obj=rack_name_host2, message=f"Created Relay Rack {rack_name}")
+
 
         # ----------------------------------------------------------------------------
         # Create Devices
@@ -540,21 +634,25 @@ class CreateAristaDC(Job):
         for role, data in ROLES.items():
             for i in range(1, data.get("nbr", 2) + 1):
                 if 'spine' in role:
-                    rack_elevation = i + 1
-                    rack_name = f"{dc_code}-spine-rr-1"
-                    rack = Rack.objects.filter(name=rack_name, site=self.site).first()
+                  rack_elevation = i + 1
+                  rack_name = f"{dc_code}-spine-rr-1"
+                  rack = Rack.objects.filter(name=rack_name, site=self.site).first()
                 elif role == 'leaf':
-                    rack_elevation = i + 1
-                    rack_name = f"{dc_code}-leaf-rr-{i}"
-                    rack = Rack.objects.filter(name=rack_name, site=self.site).first()
+                  rack_elevation = i + 1
+                  rack_name = f"{dc_code}-leaf-rr-{i}"
+                  rack = Rack.objects.filter(name=rack_name, site=self.site).first()
+                elif role == 'host':
+                  rack_elevation = i + 1
+                  rack_name = f"{dc_code}-host-rr-{i}"
+                  rack = Rack.objects.filter(name=rack_name, site=self.site).first()
                 elif role == 'borderleaf':
-                    rack_elevation = i + 1
-                    rack_name = f"{dc_code}-edge-rr-1"
-                    rack = Rack.objects.filter(name=rack_name, site=self.site).first()
+                  rack_elevation = i + 1
+                  rack_name = f"{dc_code}-edge-rr-1"
+                  rack = Rack.objects.filter(name=rack_name, site=self.site).first()
                 elif 'dci' in role:
-                    rack_elevation = i + 3
-                    rack_name = f"{dc_code}-edge-rr-1"
-                    rack = Rack.objects.filter(name=rack_name, site=self.site).first()
+                  rack_elevation = i + 3
+                  rack_name = f"{dc_code}-edge-rr-1"
+                  rack = Rack.objects.filter(name=rack_name, site=self.site).first()
 
                 device_name = f"{role}{i}-{dc_code}"
 
@@ -586,7 +684,7 @@ class CreateAristaDC(Job):
                 lo0_prefix = Prefix.objects.get(role=overlay_role)
                 # global LOCAL_CONTEXT
                 LOCAL_CONTEXT = {
-                  "prefix_list":[str(lo0_prefix)],
+                  "prefix_list":[f"{str(lo0_prefix)} eq 32"],
                 }
                 LOCAL_CONTEXT_JSON = json.dumps(LOCAL_CONTEXT, indent = 4)
                 device.local_context = LOCAL_CONTEXT_JSON
@@ -653,9 +751,10 @@ class CreateAristaDC(Job):
                         type="1000base-t",
                         device=device,
                       )
+                      self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
 
                 elif device_name == f"leaf1-{dc_code}" or device_name == f"leaf2-{dc_code}" or device_name == f"leaf3-{dc_code}" or device_name == f"leaf4-{dc_code}":
-                  intf_number =  ROLES["spine"]["nbr"] + 2
+                  intf_number =  ROLES["spine"]["nbr"] + ROLES["host"]["nbr"] + 2
                   for i in range(1, intf_number + 1):
                     if i == 3 or i == 4 or i == 5:
                       int_name = Interface.objects.create(
@@ -672,9 +771,36 @@ class CreateAristaDC(Job):
                       int_name = Interface.objects.create(
                       name=f"Ethernet{i}",
                       type="1000base-t",
+                      label="trunk",
                       device=device,
-
                       )
+                      self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
+                    if int_name == "Ethernet6" or int_name == "Ethernet7":
+                      int_name.cf['role'] = "host_connection"
+                      int_name.validated_save()
+
+                elif device_name == f"host1-{dc_code}" or device_name == f"host2-{dc_code}":
+                  if ROLES["leaf"]["nbr"] == 1 or ROLES["leaf"]["nbr"] == 3:
+                    intf_number = 2
+                    for i in range(1, intf_number + 1):
+                      int_name = Interface.objects.create(
+                        name=f"Ethernet{i}",
+                        type="1000base-t",
+                        label="trunk",
+                        device=device,
+                      )
+                      self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
+                  elif ROLES["leaf"]["nbr"] == 2 or ROLES["leaf"]["nbr"] == 4:
+                    intf_number = 4
+                    for i in range(1, intf_number + 1):
+                      int_name = Interface.objects.create(
+                        name=f"Ethernet{i}",
+                        type="1000base-t",
+                        label="trunk",
+                        device=device,
+                      )
+                      self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
+
 
                 elif device_name == f"borderleaf1-{dc_code}" or device_name == f"borderleaf2-{dc_code}":
                   intf_number =  ROLES["spine"]["nbr"] + ROLES["dci"]["nbr"] + 2
@@ -694,9 +820,10 @@ class CreateAristaDC(Job):
                       int_name = Interface.objects.create(
                       name=f"Ethernet{i}",
                       type="1000base-t",
+                      label="trunk",
                       device=device,
-
                       )
+                      self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
 
                   if ROLES["dci"]["nbr"] != 0:
                     eth12 = Interface.objects.create(
@@ -720,7 +847,7 @@ class CreateAristaDC(Job):
 
                     )
                     self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
-
+                                
                 # LEAF MLAG Port Channel
                 if device.device_role.slug == "leaf":
                     portchannel_intf = Interface.objects.create(
@@ -742,6 +869,67 @@ class CreateAristaDC(Job):
                     eth2.label = "trunk"
                     eth2.validated_save()
                     self.log_success(message=f"Moved {eth2} succesfully to {po10}")
+
+                    # Leaf switch to host Port Channel
+                    po1_intf = Interface.objects.create(
+                      name="Port-Channel1", type="lag", mode="tagged-all", label="trunk", device=device
+                    )  
+                    self.log_success(obj=po1_intf, message=f"{po1_intf} successfully created on {device_name}")
+                    try:
+                      eth6 = device.interfaces.get(name="Ethernet6")
+                      eth7 = device.interfaces.get(name="Ethernet7")
+                      po1 = device.interfaces.get(name="Port-Channel1")
+                      eth6.lag = po1
+                      eth6.mode = "tagged-all"
+                      eth6.label = "trunk"
+                      eth6.validated_save()
+                      self.log_success(message=f"Moved {eth6} succesfully to {po1}")
+                      eth7.lag = po1
+                      eth7.mode = "tagged-all"
+                      eth7.label = "trunk"
+                      eth7.validated_save()
+                      self.log_success(message=f"Moved {eth7} succesfully to {po1}")
+                    except Exception:
+                      pass
+                # Host Switch to Leaf Port Channel
+                if device.device_role.slug == "host_switch":
+                  host_po1_intf = Interface.objects.create(
+                    name="Port-Channel1", type="lag", mode="tagged-all", label="trunk", device=device
+                  )
+                  self.log_success(obj=host_po1_intf, message=f"{portchannel_intf} successfully created on {device_name}")
+                  try:
+                    host_eth1 = device.interfaces.get(name="Ethernet1")
+                    host_eth2 = device.interfaces.get(name="Ethernet2")
+                    host_po1 = device.interfaces.get(name="Port-Channel1")
+                    host_eth1.lag = host_po1
+                    host_eth1.mode = "tagged-all"
+                    host_eth1.label = "trunk"
+                    host_eth1.validated_save()
+                    self.log_success(message=f"Moved {host_eth1} succesfully to {host_po1}")
+                    host_eth2.lag = host_po1
+                    host_eth2.mode = "tagged-all"
+                    host_eth2.label = "trunk"
+                    host_eth2.validated_save()
+                    self.log_success(message=f"Moved {host_eth2} succesfully to {host_po1}")
+                  except Exception:
+                    pass
+
+                  try:
+                    host_eth3 = device.interfaces.get(name="Ethernet1")
+                    host_eth4 = device.interfaces.get(name="Ethernet2")
+                    host_po1 = device.interfaces.get(name="Port-Channel1")
+                    host_eth3.lag = host_po1
+                    host_eth3.mode = "tagged-all"
+                    host_eth3.label = "trunk"
+                    host_eth3.validated_save()
+                    self.log_success(message=f"Moved {host_eth3} succesfully to {host_po1}")
+                    host_eth4.lag = host_po1
+                    host_eth4.mode = "tagged-all"
+                    host_eth4.label = "trunk"
+                    host_eth4.validated_save()
+                    self.log_success(message=f"Moved {host_eth4} succesfully to {host_po1}")
+                  except Exception:
+                    pass
 
                     # MLAG SVI
                     mlag_svi = Interface.objects.create(
@@ -804,18 +992,19 @@ class CreateAristaDC(Job):
 
 
                 # Generate Loopback0 interface and assign Loopback0 address
-                loopback0_intf = Interface.objects.create(
-                    name="Loopback0", type="virtual", device=device
-                )
-                self.log_success(obj=loopback0_intf, message=f"{loopback0_intf} successfully created on {device_name}")
+                if device.device_role.slug == 'spine' or device.device_role.slug == "leaf" or device.device_role.slug == 'borderleaf' or device.device_role.slug == 'dci':
+                  loopback0_intf = Interface.objects.create(
+                      name="Loopback0", type="virtual", device=device
+                  )
+                  self.log_success(obj=loopback0_intf, message=f"{loopback0_intf} successfully created on {device_name}")
 
-                loopback0_prefix = Prefix.objects.get(
-                    site=self.site, role__name=f"{dc_code}_overlay",
-                )
+                  loopback0_prefix = Prefix.objects.get(
+                      site=self.site, role__name=f"{dc_code}_overlay",
+                  )
 
-                available_ips = loopback0_prefix.get_available_ips()
-                lo0_address = list(available_ips)[0]
-                loopback0_ip = IPAddress.objects.create(address=str(lo0_address), description=f"{device_name}::{loopback0_intf}", assigned_object=loopback0_intf)
+                  available_ips = loopback0_prefix.get_available_ips()
+                  lo0_address = list(available_ips)[0]
+                  loopback0_ip = IPAddress.objects.create(address=str(lo0_address), description=f"{device_name}::{loopback0_intf}", assigned_object=loopback0_intf)
                 
 
                 # Generate Loopback1 interface and assign Loopback1 address
