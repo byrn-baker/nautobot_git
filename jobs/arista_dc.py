@@ -483,8 +483,9 @@ class CreateAristaDC(Job):
         # Number of devices to provision
         if data["leaf_count"] == 1 or data["leaf_count"] == 2:
           ROLES["host"]["nbr"] = 1
-        elif data["leaf_count"] == 3 or data["leaf_count"] == 4:
+        else: 
           ROLES["host"]["nbr"] = 2
+          
         ROLES["leaf"]["nbr"] = data["leaf_count"]
         ROLES["spine"]["nbr"] = data["spine_count"]
         if data["borderleaf"] == True:
