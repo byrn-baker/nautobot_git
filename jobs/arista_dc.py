@@ -641,10 +641,6 @@ class CreateAristaDC(Job):
                   rack_elevation = i + 1
                   rack_name = f"{dc_code}-leaf-rr-{i}"
                   rack = Rack.objects.filter(name=rack_name, site=self.site).first()
-                elif 'host' in role:
-                  rack_elevation = i + 1
-                  rack_name = f"{dc_code}-host-rr-{i}"
-                  rack = Rack.objects.filter(name=rack_name, site=self.site).first()
                 elif role == 'borderleaf':
                   rack_elevation = i + 1
                   rack_name = f"{dc_code}-edge-rr-1"
@@ -652,6 +648,10 @@ class CreateAristaDC(Job):
                 elif 'dci' in role:
                   rack_elevation = i + 3
                   rack_name = f"{dc_code}-edge-rr-1"
+                  rack = Rack.objects.filter(name=rack_name, site=self.site).first()
+                elif 'host' in role:
+                  rack_elevation = i + 1
+                  rack_name = f"{dc_code}-host-rr-{i}"
                   rack = Rack.objects.filter(name=rack_name, site=self.site).first()
 
                 device_name = f"{role}{i}-{dc_code}"
