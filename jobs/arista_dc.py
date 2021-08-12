@@ -481,9 +481,9 @@ class CreateAristaDC(Job):
             "host": {"device_type": "host_veos"},
         }
         # Number of devices to provision
-        if data["leaf_count"] == range(1,2):
+        if data["leaf_count"] == 1 or data["leaf_count"] == 2:
           ROLES["host"]["nbr"] = 1
-        elif data["leaf_count"] == range(3,4):
+        elif data["leaf_count"] == 3 or data["leaf_count"] == 4:
           ROLES["host"]["nbr"] = 2
         ROLES["leaf"]["nbr"] = data["leaf_count"]
         ROLES["spine"]["nbr"] = data["spine_count"]
