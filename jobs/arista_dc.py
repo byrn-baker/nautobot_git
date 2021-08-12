@@ -176,10 +176,12 @@ leaf1:
       b_int: Ethernet4
     - name: Ethernet6
       type: "1000base-t"
+      mode: "tagged-all"
       b_device: host1
       b_int: Ethernet1
     - name: Ethernet7
       type: "1000base-t"
+      mode: "tagged-all"
       b_device: host1
       b_int: Ethernet3
 leaf2:
@@ -210,10 +212,12 @@ leaf2:
       b_int: Ethernet4
     - name: Ethernet6
       type: "1000base-t"
+      mode: "tagged-all"
       b_device: host1
       b_int: Ethernet2
     - name: Ethernet7
       type: "1000base-t"
+      mode: "tagged-all"
       b_device: host1
       b_int: Ethernet4  
 leaf3:
@@ -244,10 +248,12 @@ leaf3:
       b_int: Ethernet4
     - name: Ethernet6
       type: "1000base-t"
+      mode: "tagged-all"
       b_device: host2
       b_int: Ethernet1
     - name: Ethernet7
       type: "1000base-t"
+      mode: "tagged-all"
       b_device: host2
       b_int: Ethernet3  
 leaf4:
@@ -278,10 +284,12 @@ leaf4:
       b_int: Ethernet4
     - name: Ethernet6
       type: "1000base-t"
+      mode: "tagged-all"
       b_device: host2
       b_int: Ethernet2
     - name: Ethernet7
       type: "1000base-t"
+      mode: "tagged-all"
       b_device: host2
       b_int: Ethernet4
 host1:
@@ -864,12 +872,32 @@ class CreateAristaDC(Job):
                     eth2.label = "trunk"
                     eth2.validated_save()
                     self.log_success(message=f"Moved {eth2} succesfully to {po10}")
+                    # MLAG SVI
+                    mlag_svi = Interface.objects.create(
+                        name="Vlan4094", type="virtual", description="MLAG", device=device
+                    )
+                    self.log_success(obj=mlag_svi, message=f"{mlag_svi} successfully created on {device_name}")
+
+                    #######################################
+                    # Creating IP addresses for MLAG Peer #
+                    #######################################
+                    if device_name == f"leaf1-{dc_code}" or device_name == f"leaf3-{dc_code}":
+                        interface = Interface.objects.get(name="Vlan4094", device=device)
+                        ip = IPAddress.objects.create(address='192.168.255.1/30', assigned_object=interface)
+                        self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
+
+                    elif device_name == f"leaf2-{dc_code}" or device_name == f"leaf4-{dc_code}":
+                        interface = Interface.objects.get(name="Vlan4094", device=device)
+                        ip = IPAddress.objects.create(address='192.168.255.2/30', assigned_object=interface)
+                        self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
 
                     # Leaf switch to host Port Channel
                     po1_intf = Interface.objects.create(
-                      name="Port-Channel1", type="lag", mode="tagged-all", label="trunk", device=device
+                      name="Port-Channel1", type="lag", mode="tagged-all", label="trunk",  device=device
                     )  
                     self.log_success(obj=po1_intf, message=f"{po1_intf} successfully created on {device_name}")
+                    po1.cf['role'] = "host_connection"
+                    po1.validated_save()
                     try:
                       eth6 = device.interfaces.get(name="Ethernet6")
                       eth7 = device.interfaces.get(name="Ethernet7")
@@ -877,11 +905,13 @@ class CreateAristaDC(Job):
                       eth6.lag = po1
                       eth6.mode = "tagged-all"
                       eth6.label = "trunk"
+                      eth6.cf['role'] = "host_connection"
                       eth6.validated_save()
                       self.log_success(message=f"Moved {eth6} succesfully to {po1}")
                       eth7.lag = po1
                       eth7.mode = "tagged-all"
                       eth7.label = "trunk"
+                      eth7.cf['role'] = "host_connection"
                       eth7.validated_save()
                       self.log_success(message=f"Moved {eth7} succesfully to {po1}")
                     except Exception:
@@ -926,26 +956,7 @@ class CreateAristaDC(Job):
                   except Exception:
                     pass
 
-                    # MLAG SVI
-                    mlag_svi = Interface.objects.create(
-                        name="Vlan4094", type="virtual", device=device
-                    )
-                    self.log_success(obj=mlag_svi, message=f"{mlag_svi} successfully created on {device_name}")
-
-                    #######################################
-                    # Creating IP addresses for MLAG Peer #
-                    #######################################
-                    if device_name == f"leaf1-{dc_code}" or device_name == f"leaf3-{dc_code}":
-                        interface = Interface.objects.get(name="Vlan4094", device=device)
-                        ip = IPAddress.objects.create(address='192.168.255.1/30', assigned_object=interface)
-                        self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
-
-                    elif device_name == f"leaf2-{dc_code}" or device_name == f"leaf4-{dc_code}":
-                        interface = Interface.objects.get(name="Vlan4094", device=device)
-                        ip = IPAddress.objects.create(address='192.168.255.2/30', assigned_object=interface)
-                        self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
-
-
+        
                 # BORDERLEAF MLAG Port Channel
                 if device.device_role.slug == "borderleaf":
                     portchannel_intf = Interface.objects.create(
