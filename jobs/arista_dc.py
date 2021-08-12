@@ -641,7 +641,7 @@ class CreateAristaDC(Job):
                   rack_elevation = i + 1
                   rack_name = f"{dc_code}-leaf-rr-{i}"
                   rack = Rack.objects.filter(name=rack_name, site=self.site).first()
-                elif role == 'host':
+                elif 'host' in role:
                   rack_elevation = i + 1
                   rack_name = f"{dc_code}-host-rr-{i}"
                   rack = Rack.objects.filter(name=rack_name, site=self.site).first()
