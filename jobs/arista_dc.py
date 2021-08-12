@@ -615,18 +615,12 @@ class CreateAristaDC(Job):
               name=rack_name, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
           )
           self.log_success(obj=rack_name, message=f"Created Relay Rack {rack_name}")
-        if ROLES["host"]["nbr"] == 1 or ROLES["host"]["nbr"] == 2:
+        for i in range(1, ROLES['host']['nbr'] + 1):
           rack_name_host = f"{dc_code}-host-rr-1"
           rack = Rack.objects.get_or_create(
               name=rack_name_host, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
           )
           self.log_success(obj=rack_name_host, message=f"Created Relay Rack {rack_name_host}")
-        elif ROLES["host"]["nbr"] == 3 or ROLES["host"]["nbr"] == 4:
-          rack_name_host2 = f"{dc_code}-host-rr-2"
-          rack = Rack.objects.get_or_create(
-              name=rack_name_host2, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
-          )
-          self.log_success(obj=rack_name_host2, message=f"Created Relay Rack {rack_name_host2}")
 
 
         # ----------------------------------------------------------------------------
