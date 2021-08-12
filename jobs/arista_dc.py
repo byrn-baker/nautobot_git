@@ -616,7 +616,7 @@ class CreateAristaDC(Job):
           )
           self.log_success(obj=rack_name, message=f"Created Relay Rack {rack_name}")
         for i in range(1, ROLES['host']['nbr'] + 1):
-          rack_name_host = f"{dc_code}-host-rr-1"
+          rack_name_host = f"{dc_code}-host-rr-{i}"
           rack = Rack.objects.get_or_create(
               name=rack_name_host, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
           )
