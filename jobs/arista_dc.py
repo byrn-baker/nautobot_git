@@ -636,7 +636,7 @@ class CreateAristaDC(Job):
                 if device_name == f"spine1-{dc_code}" or device_name == f"spine2-{dc_code}" or device_name == f"spine3-{dc_code}":
                   intf_number =  ROLES["leaf"]["nbr"] + ROLES["borderleaf"]["nbr"] + 1
                   for i in range(1, intf_number + 1):
-                    if i == 2 or i == 3 or i == 4 or i == 5:
+                    if i == 2 or i == 3 or i == 4 or i == 5 or i == 6 or i == 7:
                       int_name = Interface.objects.create(
                         name=f"Ethernet{i}",
                         type="1000base-t",
@@ -679,7 +679,7 @@ class CreateAristaDC(Job):
                 elif device_name == f"borderleaf1-{dc_code}" or device_name == f"borderleaf2-{dc_code}":
                   intf_number =  ROLES["spine"]["nbr"] + ROLES["dci"]["nbr"] + 2
                   for i in range(1, intf_number + 1):
-                    if i == 3 or i == 4 or i ==5:
+                    if i == 3 or i == 4 or i == 5:
                       int_name = Interface.objects.create(
                       name=f"Ethernet{i}",
                       type="1000base-t",
