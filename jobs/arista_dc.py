@@ -914,6 +914,9 @@ class CreateAristaDC(Job):
                       eth7.cf['role'] = "host_connection"
                       eth7.validated_save()
                       self.log_success(message=f"Moved {eth7} succesfully to {po1}")
+                      po1.cf['role'] = "host_connection"
+                      po1.validated_save()
+                      self.log_success(message=f"Updated {po1} succesfully")
                     except Exception:
                       pass
                 # Host Switch to Leaf Port Channel
@@ -940,8 +943,8 @@ class CreateAristaDC(Job):
                     pass
 
                   try:
-                    host_eth3 = device.interfaces.get(name="Ethernet1")
-                    host_eth4 = device.interfaces.get(name="Ethernet2")
+                    host_eth3 = device.interfaces.get(name="Ethernet3")
+                    host_eth4 = device.interfaces.get(name="Ethernet4")
                     host_po1 = device.interfaces.get(name="Port-Channel1")
                     host_eth3.lag = host_po1
                     host_eth3.mode = "tagged-all"
