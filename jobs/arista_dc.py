@@ -401,7 +401,7 @@ class CreateAristaDC(Job):
         ]
     dc_code = StringVar(description="Name of the new DataCenter", label="DataCenter")
     
-    spine_count = IntegerVar(description="Number of Spine Switches", label="Spine switches count", min_value=1, max_value=3)
+    spine_count = IntegerVar(description="Number of Spine Switches", label="Spine switches count", min_value=0, max_value=3)
 
     dc_bgp = IntegerVar(description="DataCenter BGP AS", label="DC BGP AS")
 
