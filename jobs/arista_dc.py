@@ -896,49 +896,62 @@ class CreateAristaDC(Job):
                       name="Port-Channel1", type="lag", mode="tagged-all", label="trunk",  device=device
                     )  
                     self.log_success(obj=po1_intf, message=f"{po1_intf} successfully created on {device_name}")
-                    po1.cf['role'] = "host_connection"
-                    po1.validated_save()
+                    po1_intf.cf['role'] = "host_connection"
+                    po1_intf.validated_save()
+
+                    po2_intf = Interface.objects.create(
+                      name="Port-Channel2", type="lag", mode="tagged-all", label="trunk",  device=device
+                    )  
+                    self.log_success(obj=po2_intf, message=f"{po2_intf} successfully created on {device_name}")
+                    po2_intf.cf['role'] = "host_connection"
+                    po2_intf.validated_save()
+
                     try:
                       eth6 = device.interfaces.get(name="Ethernet6")
                       eth7 = device.interfaces.get(name="Ethernet7")
                       po1 = device.interfaces.get(name="Port-Channel1")
+                      po2 = device.interfaces.get(name="Port-Channel2")
                       eth6.lag = po1
                       eth6.mode = "tagged-all"
                       eth6.label = "trunk"
                       eth6.cf['role'] = "host_connection"
                       eth6.validated_save()
                       self.log_success(message=f"Moved {eth6} succesfully to {po1}")
-                      eth7.lag = po1
+                      eth7.lag = po2
                       eth7.mode = "tagged-all"
                       eth7.label = "trunk"
                       eth7.cf['role'] = "host_connection"
                       eth7.validated_save()
-                      self.log_success(message=f"Moved {eth7} succesfully to {po1}")
-                      po1.cf['role'] = "host_connection"
-                      po1.validated_save()
-                      self.log_success(message=f"Updated {po1} succesfully")
+                      self.log_success(message=f"Moved {eth7} succesfully to {po2}")
                     except Exception:
                       pass
+
                 # Host Switch to Leaf Port Channel
                 if device.device_role.slug == "host_switch":
                   host_po1_intf = Interface.objects.create(
                     name="Port-Channel1", type="lag", mode="tagged-all", label="trunk", device=device
                   )
                   self.log_success(obj=host_po1_intf, message=f"{portchannel_intf} successfully created on {device_name}")
+
+                  host_po2_intf = Interface.objects.create(
+                    name="Port-Channel1", type="lag", mode="tagged-all", label="trunk", device=device
+                  )
+                  self.log_success(obj=host_po2_intf, message=f"{portchannel_intf} successfully created on {device_name}")
                   try:
                     host_eth1 = device.interfaces.get(name="Ethernet1")
                     host_eth2 = device.interfaces.get(name="Ethernet2")
                     host_po1 = device.interfaces.get(name="Port-Channel1")
+                    host_po2 = device.interfaces.get(name="Port-Channel2")
                     host_eth1.lag = host_po1
                     host_eth1.mode = "tagged-all"
                     host_eth1.label = "trunk"
                     host_eth1.validated_save()
                     self.log_success(message=f"Moved {host_eth1} succesfully to {host_po1}")
-                    host_eth2.lag = host_po1
+                    host_eth2.lag = host_po2
                     host_eth2.mode = "tagged-all"
                     host_eth2.label = "trunk"
                     host_eth2.validated_save()
-                    self.log_success(message=f"Moved {host_eth2} succesfully to {host_po1}")
+                    self.log_success(message=f"Moved {host_eth2} succesfully to {host_po2}")
                   except Exception:
                     pass
 
@@ -946,16 +959,17 @@ class CreateAristaDC(Job):
                     host_eth3 = device.interfaces.get(name="Ethernet3")
                     host_eth4 = device.interfaces.get(name="Ethernet4")
                     host_po1 = device.interfaces.get(name="Port-Channel1")
+                    host_po2 = device.interfaces.get(name="Port-Channel2")
                     host_eth3.lag = host_po1
                     host_eth3.mode = "tagged-all"
                     host_eth3.label = "trunk"
                     host_eth3.validated_save()
                     self.log_success(message=f"Moved {host_eth3} succesfully to {host_po1}")
-                    host_eth4.lag = host_po1
+                    host_eth4.lag = host_po2
                     host_eth4.mode = "tagged-all"
                     host_eth4.label = "trunk"
                     host_eth4.validated_save()
-                    self.log_success(message=f"Moved {host_eth4} succesfully to {host_po1}")
+                    self.log_success(message=f"Moved {host_eth4} succesfully to {host_po2}")
                   except Exception:
                     pass
 
