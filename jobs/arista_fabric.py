@@ -549,7 +549,7 @@ class CreateAristaDC(Job):
         else: 
           ROLES["l2leaf"]["nbr"] = 2
 
-        ROLES["l3leaf"]["nbr"] = data["l3leaf_count"]
+        ROLES["l3leaf"]["nbr"] = data["leaf_count"]
         ROLES["spine"]["nbr"] = data["spine_count"]
         if data["borderleaf"] == True:
             ROLES["borderleaf"]["nbr"] = 2
