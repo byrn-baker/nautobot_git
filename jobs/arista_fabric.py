@@ -549,7 +549,7 @@ class CreateAristaDC(Job):
         else: 
           ROLES["l2leaf"]["nbr"] = 2
 
-        ROLES["leaf"]["nbr"] = data["leaf_count"]
+        ROLES["l3leaf"]["nbr"] = data["l3leaf_count"]
         ROLES["spine"]["nbr"] = data["spine_count"]
         if data["borderleaf"] == True:
             ROLES["borderleaf"]["nbr"] = 2
@@ -718,8 +718,8 @@ class CreateAristaDC(Job):
           )
           self.log_success(obj=rack_name_edge, message=f"Created Relay Rack {rack_name_edge}")
 
-        for i in range(1, ROLES["leaf"]["nbr"] + 1):
-          rack_name = f"{dc_code}-leaf-rr-{i}"
+        for i in range(1, ROLES["l3leaf"]["nbr"] + 1):
+          rack_name = f"{dc_code}-l3leaf-rr-{i}"
           rack = Rack.objects.get_or_create(
               name=rack_name, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
           )
@@ -741,9 +741,9 @@ class CreateAristaDC(Job):
                   rack_elevation = i + 1
                   rack_name = f"{dc_code}-spine-rr-1"
                   rack = Rack.objects.filter(name=rack_name, site=self.site).first()
-                elif role == 'leaf':
+                elif role == 'l3leaf':
                   rack_elevation = i + 1
-                  rack_name = f"{dc_code}-leaf-rr-{i}"
+                  rack_name = f"{dc_code}-l3leaf-rr-{i}"
                   rack = Rack.objects.filter(name=rack_name, site=self.site).first()
                 elif role == 'borderleaf':
                   rack_elevation = i + 1
@@ -836,7 +836,7 @@ class CreateAristaDC(Job):
                 #     )
                 #     self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
                 if device_name == f"{dc_code}-spine1" or device_name == f"{dc_code}-spine2" or device_name == f"{dc_code}-spine3":
-                  intf_number =  ROLES["leaf"]["nbr"] + ROLES["borderleaf"]["nbr"] + 1
+                  intf_number =  ROLES["l3leaf"]["nbr"] + ROLES["borderleaf"]["nbr"] + 1
                   for i in range(1, intf_number + 1):
                     if i == 2 or i == 3 or i == 4 or i == 5 or i == 6 or i == 7:
                       int_name = Interface.objects.create(
@@ -884,7 +884,7 @@ class CreateAristaDC(Job):
                       int_name.validated_save()
 
                 elif device_name == f"{dc_code}-l2leaf1" or device_name == f"{dc_code}-l2leaf2":
-                  if ROLES["leaf"]["nbr"] == 1 or ROLES["leaf"]["nbr"] == 3:
+                  if ROLES["l3leaf"]["nbr"] == 1 or ROLES["l3leaf"]["nbr"] == 3:
                     intf_number = 2
                     for i in range(1, intf_number + 1):
                       int_name = Interface.objects.create(
@@ -894,7 +894,7 @@ class CreateAristaDC(Job):
                         device=device,
                       )
                       self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
-                  elif ROLES["leaf"]["nbr"] == 2 or ROLES["leaf"]["nbr"] == 4:
+                  elif ROLES["l3leaf"]["nbr"] == 2 or ROLES["l3leaf"]["nbr"] == 4:
                     intf_number = 4
                     for i in range(1, intf_number + 1):
                       int_name = Interface.objects.create(
@@ -953,7 +953,7 @@ class CreateAristaDC(Job):
                     self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
                                 
                 # LEAF MLAG Port Channel
-                if device.device_role.slug == "leaf":
+                if device.device_role.slug == "l3leaf":
                     portchannel_intf = Interface.objects.create(
                         name="Port-Channel10", type="lag", mode="tagged-all", label="trunk", device=device
                     )
