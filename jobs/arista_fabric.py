@@ -578,7 +578,7 @@ class CreateAristaDC(Job):
             ).first()
 
             if not top_level_prefix:
-                raise Exception("Unable to find the top level prefix to allocate a Network for this site")
+                raise Exception("Unable to find the top level Loopback prefix to allocate a Network for this site")
 
             first_avail = top_level_prefix.get_first_available_prefix()
             prefix = list(first_avail.subnet(SITE_PREFIX_SIZE))[0]
@@ -593,7 +593,7 @@ class CreateAristaDC(Job):
             ).first()
 
           if not top_level_p2p_prefix:
-            raise Exception("Unable to find the top level prefix to allocate a Network for this site")
+            raise Exception("Unable to find the top level Underlay prefix to allocate a Network for this site")
           
           first_avail_p2p = top_level_p2p_prefix.get_first_available_prefix()
           p2p_prefix = list(first_avail_p2p.subnet(P2P_SITE_PREFIX_SIZE))[0]
@@ -608,7 +608,7 @@ class CreateAristaDC(Job):
             ).first()
 
           if not top_level_mlag_prefix:
-            raise Exception("Unable to find the top level prefix to allocate a Network for this site")
+            raise Exception("Unable to find the top level MLAG prefix to allocate a Network for this site")
 
           first_avail_mlag = top_level_mlag_prefix.get_first_available_prefix()
           mlag_prefix = list(first_avail_mlag.subnet(MLAG_PEER_PREFIX_SIZE))[0]
@@ -623,7 +623,7 @@ class CreateAristaDC(Job):
           ).first()
 
           if not top_level_leaf_peer_prefix:
-            raise Exception("Unable to find the top level prefix to allocate a Network for this site")
+            raise Exception("Unable to find the top level Leaf Peer prefix to allocate a Network for this site")
 
           first_avail_leaf_peer = top_level_leaf_peer_prefix.get_first_available_prefix()
           leaf_peer_prefix = list(first_avail_leaf_peer.subnet(LEAF_PEER_PREFIX_SIZE))[0]
