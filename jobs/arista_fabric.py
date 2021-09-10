@@ -768,10 +768,9 @@ class CreateAristaDC(Job):
                 lo0_prefix = Prefix.objects.get(role=dc_role)
                 # global LOCAL_CONTEXT
                 LOCAL_CONTEXT = {
-                  "prefix_list":f"{str(lo0_prefix)} eq 32",
+                  "prefix_list":[f"{str(lo0_prefix)} eq 32",]
                 }
-                LOCAL_CONTEXT_JSON = json.dumps(LOCAL_CONTEXT, indent = 4)
-                device.local_context = LOCAL_CONTEXT_JSON
+                device.local_context = LOCAL_CONTEXT
                 device.validated_save()
                 self.log_success(device, f"Added local context on {device_name}")
 
