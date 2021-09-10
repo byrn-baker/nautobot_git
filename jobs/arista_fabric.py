@@ -1272,7 +1272,7 @@ class CreateAristaDC(Job):
                 #####################################
                 # Creating /31 assignments for MLAG #
                 #####################################
-                if "vlans" in SWITCHES[dev_name].keys():
+                if "vlans" in SWITCHES.keys():
                   for iface in SWITCHES[dev_name]['vlans']:
                     try:
                       interface = Interface.objects.get(name=iface['name'], device=device)
