@@ -158,7 +158,7 @@ spine3:
       type: "1000base-t"
       b_device: borderleaf2
       b_int: Ethernet5
-leaf1:
+l3leaf1:
   vlans: 
     - name: vlan4093
       b_device: leaf2
@@ -199,7 +199,7 @@ leaf1:
       mode: "tagged-all"
       b_device: l2leaf1
       b_int: Ethernet3
-leaf2:
+l3leaf2:
   vlans: 
     - name: vlan4093
       b_device: leaf1
@@ -240,7 +240,7 @@ leaf2:
       mode: "tagged-all"
       b_device: l2leaf1
       b_int: Ethernet4  
-leaf3:
+l3leaf3:
   vlans: 
     - name: vlan4093
       b_device: leaf4
@@ -281,7 +281,7 @@ leaf3:
       mode: "tagged-all"
       b_device: l2leaf2
       b_int: Ethernet3  
-leaf4:
+l3leaf4:
   vlans: 
     - name: vlan4093
       b_device: leaf3
