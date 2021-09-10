@@ -415,9 +415,9 @@ class CreateAristaDC(Job):
     class Meta:
         """Meta class for CreateAristaDC."""
 
-        name = "Create a new Arista DataCenter"
+        name = "Create Arista DataCenter Fabric"
         description = """
-        Create a new Site  with N Spine, leaf switches, borderleaf switchs, and or a DCI switch.
+        Create a new Fabric with N Spine (3 max), N Leaf switches (4 max), N Borderleaf switches (2 max), and a DCI switch if necessary.
         A new /23 will automatically be allocated from the 'Loopback Pool' and split into 2 /24s for the overlay loopback and the vtep loopback.
         A new /24 will automatically be allocated from the 'underlay Pool' and split into /31s to be assigned to each p2p interface in the underlay network.
         A new /26 will automatically be allocated from the 'mlag_peer Pool' and 'leaf_peer Pool' and split into /31s to be assigned to each MLAG SVI and LEAF_PEER SVI.  
