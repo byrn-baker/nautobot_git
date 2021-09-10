@@ -542,7 +542,7 @@ class CreateAristaDC(Job):
             "l3leaf": {"device_type": "l3leaf"},
             "borderleaf": {"device_type": "l3leaf"},
             "dci": {"device_type": "spine"},
-            "l2leaf": {"device_type": "l2leaf_veos"},
+            "l2leaf": {"device_type": "l2leaf"},
         }
         # Number of devices to provision
         if data["leaf_count"] == 1 or data["leaf_count"] == 2:
