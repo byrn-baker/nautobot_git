@@ -84,19 +84,19 @@ spine1:
   interfaces:
     - name: Ethernet2
       type: "1000base-t"
-      b_device: leaf1
+      b_device: l3leaf1
       b_int: Ethernet3
     - name: Ethernet3
       type: "1000base-t"
-      b_device: leaf2
+      b_device: l3leaf2
       b_int: Ethernet3
     - name: Ethernet4
       type: "1000base-t"
-      b_device: leaf3
+      b_device: l3leaf3
       b_int: Ethernet3
     - name: Ethernet5
       type: "1000base-t"
-      b_device: leaf4
+      b_device: l3leaf4
       b_int: Ethernet3
     - name: Ethernet6
       type: "1000base-t"
@@ -110,19 +110,19 @@ spine2:
   interfaces:
     - name: Ethernet2
       type: "1000base-t"
-      b_device: leaf1
+      b_device: l3leaf1
       b_int: Ethernet4
     - name: Ethernet3
       type: "1000base-t"
-      b_device: leaf2
+      b_device: l3leaf2
       b_int: Ethernet4
     - name: Ethernet4
       type: "1000base-t"
-      b_device: leaf3
+      b_device: l3leaf3
       b_int: Ethernet4
     - name: Ethernet5
       type: "1000base-t"
-      b_device: leaf4
+      b_device: l3leaf4
       b_int: Ethernet4
     - name: Ethernet6
       type: "1000base-t"
@@ -136,19 +136,19 @@ spine3:
   interfaces:
     - name: Ethernet2
       type: "1000base-t"
-      b_device: leaf1
+      b_device: l3leaf1
       b_int: Ethernet5
     - name: Ethernet3
       type: "1000base-t"
-      b_device: leaf2
+      b_device: l3leaf2
       b_int: Ethernet5
     - name: Ethernet4
       type: "1000base-t"
-      b_device: leaf3
+      b_device: l3leaf3
       b_int: Ethernet5
     - name: Ethernet5
       type: "1000base-t"
-      b_device: leaf4
+      b_device: l3leaf4
       b_int: Ethernet5
     - name: Ethernet6
       type: "1000base-t"
@@ -161,21 +161,21 @@ spine3:
 l3leaf1:
   vlans: 
     - name: vlan4093
-      b_device: leaf2
+      b_device: l3leaf2
       b_int: vlan4093
     - name: vlan4094
-      b_device: leaf2
+      b_device: l3leaf2
       b_int: vlan4094
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf2
+      b_device: l3leaf2
       b_int: Ethernet1
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf2
+      b_device: l3leaf2
       b_int: Ethernet2
     - name: Ethernet3
       type: "1000base-t"
@@ -202,21 +202,21 @@ l3leaf1:
 l3leaf2:
   vlans: 
     - name: vlan4093
-      b_device: leaf1
+      b_device: l3leaf1
       b_int: vlan4093
     - name: vlan4094
-      b_device: leaf1
+      b_device: l3leaf1
       b_int: vlan4094
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf1
+      b_device: l3leaf1
       b_int: Ethernet1
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf1
+      b_device: l3leaf1
       b_int: Ethernet2
     - name: Ethernet3
       type: "1000base-t"
@@ -243,21 +243,21 @@ l3leaf2:
 l3leaf3:
   vlans: 
     - name: vlan4093
-      b_device: leaf4
+      b_device: l3leaf4
       b_int: vlan4093
     - name: vlan4094
-      b_device: leaf4
+      b_device: l3leaf4
       b_int: vlan4094
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf4
+      b_device: l3leaf4
       b_int: Ethernet1
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf4
+      b_device: l3leaf4
       b_int: Ethernet2
     - name: Ethernet3
       type: "1000base-t"
@@ -284,21 +284,21 @@ l3leaf3:
 l3leaf4:
   vlans: 
     - name: vlan4093
-      b_device: leaf3
+      b_device: l3leaf3
       b_int: vlan4093
     - name: vlan4094
-      b_device: leaf3
+      b_device: l3leaf3
       b_int: vlan4094
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf3
+      b_device: l3leaf3
       b_int: Ethernet1
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf3
+      b_device: l3leaf3
       b_int: Ethernet2
     - name: Ethernet3
       type: "1000base-t"
@@ -327,44 +327,44 @@ l2leaf1:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf1
+      b_device: l3leaf1
       b_int: Ethernet6
     - name: Ethernet3
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf1
+      b_device: l3leaf1
       b_int: Ethernet7
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf2
+      b_device: l3leaf2
       b_int: Ethernet6
     - name: Ethernet4
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf2
+      b_device: l3leaf2
       b_int: Ethernet7
 l2leaf2:
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf3
+      b_device: l3leaf3
       b_int: Ethernet6
     - name: Ethernet3
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf3
+      b_device: l3leaf3
       b_int: Ethernet7
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf4
+      b_device: l3leaf4
       b_int: Ethernet6
     - name: Ethernet4
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: leaf4
+      b_device: l3leaf4
       b_int: Ethernet7 
 """
 
