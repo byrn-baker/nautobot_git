@@ -421,6 +421,7 @@ class CreateAristaDC(Job):
         A new /23 will automatically be allocated from the 'Loopback Pool' and split into 2 /24s for the overlay loopback and the vtep loopback.
         A new /24 will automatically be allocated from the 'underlay Pool' and split into /31s to be assigned to each p2p interface in the underlay network.
         A new /26 will automatically be allocated from the 'mlag_peer Pool' and 'leaf_peer Pool' and split into /31s to be assigned to each MLAG SVI and LEAF_PEER SVI.  
+        Top level prefixes need to be created and assigned the following roles - loopbacks, underlay_p2p, mlag_peer, and leaf_peer_l3.
         """
         label = "Arista_DataCenter"
         field_order = [
@@ -615,7 +616,7 @@ class CreateAristaDC(Job):
           mlag_p2p_prefix = Prefix.objects.create(prefix=mlag_prefix, site=self.site, status=container_status, role=dc_mlag_role)
 
         # LEAF PEER range
-        dc_leaf_peer_role, _ = Role.objects.get_or_create(name=mlag_dc_code, slug=leaf_peer_dc_code)
+        dc_leaf_peer_role, _ = Role.objects.get_or_create(name=leaf_peer_dc_code, slug=leaf_peer_dc_code)
         leaf_peer_p2p_prefix  = Prefix.objects.filter(site=self.site, status=container_status, role=dc_leaf_peer_role).first()
         if not leaf_peer_p2p_prefix:
           top_level_leaf_peer_prefix = Prefix.objects.filter(
