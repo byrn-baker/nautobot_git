@@ -1266,7 +1266,7 @@ class CreateAristaDC(Job):
                                 # Create IP Addresses on both sides
                                 ip1 = IPAddress.objects.create(address=f"{str(subnet[0])}/31", assigned_object=intf1, status=ip_status)
                                 ip2 = IPAddress.objects.create(address=f"{str(subnet[1])}/31", assigned_object=intf2, status=ip_status)
-                                self.log_success(message=f"Created a IP Address between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
+                                self.log_success(message=f"Created a IP Addresses {ip1} & {ip2} between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
                   except Exception:
                     pass
                 #####################################
@@ -1292,7 +1292,7 @@ class CreateAristaDC(Job):
                         # Create IP Addresses on both sides
                         ip1 = IPAddress.objects.create(address=f"{str(subnet[0])}/31", assigned_object=intf1, status=ip_status)
                         ip2 = IPAddress.objects.create(address=f"{str(subnet[1])}/31", assigned_object=intf2, status=ip_status)
-                        self.log_success(message=f"Created a IP Address between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
+                        self.log_success(message=f"Created a IP Addresses {ip1} & {ip2} between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
                     except Exception:
                       pass
                 
@@ -1318,7 +1318,7 @@ class CreateAristaDC(Job):
                         # Create IP Addresses on both sides
                         ip1 = IPAddress.objects.create(address=f"{str(subnet[0])}/31", assigned_object=intf1, status=ip_status)
                         ip2 = IPAddress.objects.create(address=f"{str(subnet[1])}/31", assigned_object=intf2, status=ip_status)
-                        self.log_success(message=f"Created a IP Address between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
+                        self.log_success(message=f"Created a IP Addresses {ip1} & {ip2} between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
                     except Exception:
                       pass
 
