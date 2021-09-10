@@ -770,7 +770,7 @@ class CreateAristaDC(Job):
                 LOCAL_CONTEXT = {
                   "prefix_list":[f"{str(lo0_prefix)} eq 32",]
                 }
-                device.local_context = LOCAL_CONTEXT
+                device.local_context_data = LOCAL_CONTEXT
                 device.validated_save()
                 self.log_success(device, f"Added local context on {device_name}")
 
