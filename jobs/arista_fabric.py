@@ -1272,9 +1272,9 @@ class CreateAristaDC(Job):
                 #####################################
                 # Creating /31 assignments for MLAG #
                 #####################################
-                if "vlans" in SWITCHES[dev_name].keys():
-                  for iface in SWITCHES[dev_name]['vlans']:
-                    try:
+                for iface in SWITCHES[dev_name]['vlans']:
+                  if "vlans" in SWITCHES[dev_name].keys():
+                    # try:
                       interface = Interface.objects.get(name=iface['name'], device=device)
                       if "b_device" in iface.keys():
                         b_device = iface['b_device']
@@ -1293,12 +1293,12 @@ class CreateAristaDC(Job):
                         ip1 = IPAddress.objects.create(address=f"{str(subnet[0])}/31", assigned_object=intf1, status=ip_status)
                         ip2 = IPAddress.objects.create(address=f"{str(subnet[1])}/31", assigned_object=intf2, status=ip_status)
                         self.log_success(message=f"Created a IP Addresses {ip1} & {ip2} between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
-                    except Exception:
-                      pass
+                    # except Exception:
+                    #   pass
                 
-                #####################################
-                # Creating /31 assignments for MLAG #
-                #####################################
+                ##########################################
+                # Creating /31 assignments for LEAF PEER #
+                ##########################################
                   for iface in SWITCHES[dev_name]['vlans']:
                     try:
                       interface = Interface.objects.get(name=iface['name'], device=device)
