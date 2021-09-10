@@ -45,13 +45,6 @@ borderleaf1:
       b_device: dci1
       b_int: Ethernet1
 borderleaf2: 
-  vlans: 
-    - name: Vlan4093
-      b_device: borderleaf1
-      b_int: Vlan4093
-    - name: Vlan4094
-      b_device: borderleaf1
-      b_int: Vlan4094
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
@@ -200,13 +193,6 @@ l3leaf1:
       b_device: l2leaf1
       b_int: Ethernet3
 l3leaf2:
-  vlans: 
-    - name: Vlan4093
-      b_device: l3leaf1
-      b_int: Vlan4093
-    - name: Vlan4094
-      b_device: l3leaf1
-      b_int: Vlan4094
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
@@ -282,13 +268,6 @@ l3leaf3:
       b_device: l2leaf2
       b_int: Ethernet3  
 l3leaf4:
-  vlans: 
-    - name: Vlan4093
-      b_device: l3leaf3
-      b_int: Vlan4093
-    - name: Vlan4094
-      b_device: l3leaf3
-      b_int: Vlan4094
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
