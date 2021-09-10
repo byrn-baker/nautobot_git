@@ -802,13 +802,13 @@ class CreateAristaDC(Job):
                     device.validated_save()
                     self.log_success(device, f"Added AS::{bgp} to Device {device_name}")
 
-                elif device_name == f"{dc_code}-leaf1" or device_name == f"{dc_code}-leaf2":
+                elif device_name == f"{dc_code}-l3leaf1" or device_name == f"{dc_code}-l3leaf2":
                     leaf_bgp = bgp + 1
                     device._custom_field_data = {"device_bgp": leaf_bgp}
                     device.validated_save()
                     self.log_success(device, f"Added AS::{leaf_bgp} to Device {device_name}")
 
-                elif device_name == f"{dc_code}-leaf3" or device_name == f"{dc_code}-leaf4":
+                elif device_name == f"{dc_code}-l3leaf3" or device_name == f"{dc_code}-l3leaf4":
                     leaf_bgp = bgp + 2
                     device._custom_field_data = {"device_bgp": leaf_bgp}
                     device.validated_save()
@@ -858,7 +858,7 @@ class CreateAristaDC(Job):
                       )
                       self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
 
-                elif device_name == f"{dc_code}-leaf1" or device_name == f"{dc_code}-leaf2" or device_name == f"{dc_code}-leaf3" or device_name == f"{dc_code}-leaf4":
+                elif device_name == f"{dc_code}-l3leaf1" or device_name == f"{dc_code}-l3leaf2" or device_name == f"{dc_code}-l3leaf3" or device_name == f"{dc_code}-l3leaf4":
                   intf_number =  ROLES["spine"]["nbr"] + ROLES["l2leaf"]["nbr"] + 2
                   for i in range(1, intf_number + 1):
                     if i == 3 or i == 4 or i == 5:
@@ -1017,7 +1017,7 @@ class CreateAristaDC(Job):
                     #     self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
 
                     # Leaf switch to l2leaf Port Channel
-                    if device_name == f"{dc_code}-leaf1" or device_name == f"{dc_code}-leaf3":
+                    if device_name == f"{dc_code}-l3leaf1" or device_name == f"{dc_code}-l3leaf3":
                       po1_intf = Interface.objects.create(
                         name="Port-Channel1", type="lag", mode="tagged-all", label="trunk",  device=device
                       )  
@@ -1043,7 +1043,7 @@ class CreateAristaDC(Job):
                       except Exception:
                         pass
 
-                    elif device_name == f"{dc_code}-leaf2" or device_name == f"{dc_code}-leaf4":
+                    elif device_name == f"{dc_code}-l3leaf2" or device_name == f"{dc_code}-l3leaf4":
                       po2_intf = Interface.objects.create(
                         name="Port-Channel2", type="lag", mode="tagged-all", label="trunk",  device=device
                       )  
