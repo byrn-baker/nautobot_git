@@ -486,8 +486,8 @@ class CreateAristaDC(Job):
         # region = data["region"]
         bgp = data["dc_bgp"]
         site_status = Status.objects.get_for_model(Site).get(slug="active")
-        self.site, created = Site.objects.get_or_create(name=dc_code, slug=dc_code, status=site_status)
-        self.site.custom_field_data["site_type"] = "DATACENTER"
+        self.site, created = Site.objects.get_or_create(name=dc_code.upper(), slug=dc_code, status=site_status)
+        self.site.custom_field_data["site_type"] = "FABRIC"
         self.site.save()
         self.log_success(self.site, f"Site {dc_code} successfully created")
 
@@ -1308,7 +1308,7 @@ class CreateAristaDC(Job):
                       intf2 = bside_interface
                       P2P_PREFIX_SIZE = 31
                       ip_status = Status.objects.get_for_model(Device).get(slug="active")
-                      prefix = Prefix.objects.filter(site=self.site, role__name=f"{dc_code}_mlag_peer_p2p").first()
+                      prefix = Prefix.objects.filter(site=self.site, role__name=f"{dc_code}_leaf_peer_p2p").first()
                       first_avail = prefix.get_first_available_prefix()
                       subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
                       Prefix.objects.create(prefix=str(subnet))
