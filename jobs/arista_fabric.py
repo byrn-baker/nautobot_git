@@ -546,202 +546,202 @@ class CreateAristaDC(Job):
         # self.log_success(obj=vlan_4093_prefix, message="Created MLAG Prefix")
         
         # Reference Vars
-        SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
-        TOP_LEVEL_PREFIX_ROLE = "loopbacks"
-        TOP_LEVEL_P2P_PREFIX_ROLE = "underlay_p2p"
-        TOP_LEVEL_MLAG_PEER_ROLE = "mlag_peer"
-        TOP_LEVEL_LEAF_PEER_ROLE = "leaf_peer_l3"
-        SITE_PREFIX_SIZE = 23
-        P2P_SITE_PREFIX_SIZE = 24
-        MLAG_PEER_PREFIX_SIZE = 26
-        LEAF_PEER_PREFIX_SIZE = 26
-        RACK_HEIGHT = 42
-        RACK_TYPE = "4-post-frame"
-        ROLES = {
-            "spine": {"device_type": "spine"},
-            "l3leaf": {"device_type": "l3leaf"},
-            "superspine": {"device_type": "superspine"},
-            "l2leaf": {"device_type": "l2leaf"},
-        }
-        # Number of devices to provision
-        ROLES["l2leaf"]["nbr"] = data["l2leaf_count"]
-        ROLES["l3leaf"]["nbr"] = data["l3leaf_count"]
-        ROLES["spine"]["nbr"] = data["spine_count"]
-        if data["dci"] == True:
-            ROLES["superspine"]["nbr"] = 2
-        else:
-            ROLES["superspine"]["nbr"] = 0
+        # SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
+        # TOP_LEVEL_PREFIX_ROLE = "loopbacks"
+        # TOP_LEVEL_P2P_PREFIX_ROLE = "underlay_p2p"
+        # TOP_LEVEL_MLAG_PEER_ROLE = "mlag_peer"
+        # TOP_LEVEL_LEAF_PEER_ROLE = "leaf_peer_l3"
+        # SITE_PREFIX_SIZE = 23
+        # P2P_SITE_PREFIX_SIZE = 24
+        # MLAG_PEER_PREFIX_SIZE = 26
+        # LEAF_PEER_PREFIX_SIZE = 26
+        # RACK_HEIGHT = 42
+        # RACK_TYPE = "4-post-frame"
+        # ROLES = {
+        #     "spine": {"device_type": "spine"},
+        #     "l3leaf": {"device_type": "l3leaf"},
+        #     "superspine": {"device_type": "superspine"},
+        #     "l2leaf": {"device_type": "l2leaf"},
+        # }
+        # # Number of devices to provision
+        # ROLES["l2leaf"]["nbr"] = data["l2leaf_count"]
+        # ROLES["l3leaf"]["nbr"] = data["l3leaf_count"]
+        # ROLES["spine"]["nbr"] = data["spine_count"]
+        # if data["dci"] == True:
+        #     ROLES["superspine"]["nbr"] = 2
+        # else:
+        #     ROLES["superspine"]["nbr"] = 0
 
         
-        # ----------------------------------------------------------------------------
-        # Allocate Prefixes for this DataCenter
-        # ----------------------------------------------------------------------------
-        # Search if there is already a datacenter or underlay p2p prefix associated with this side
-        # if not search the Top Level Prefix and create a new one
+        # # ----------------------------------------------------------------------------
+        # # Allocate Prefixes for this DataCenter
+        # # ----------------------------------------------------------------------------
+        # # Search if there is already a datacenter or underlay p2p prefix associated with this side
+        # # if not search the Top Level Prefix and create a new one
 
-        # Loopback range
-        dc_role, _ = Role.objects.get_or_create(name=dc_code, slug=dc_code)
-        container_status = Status.objects.get_for_model(Prefix).get(slug="container")
-        dc_prefix = Prefix.objects.filter(site=self.site, status=container_status, role=dc_role).first()
+        # # Loopback range
+        # dc_role, _ = Role.objects.get_or_create(name=dc_code, slug=dc_code)
+        # container_status = Status.objects.get_for_model(Prefix).get(slug="container")
+        # dc_prefix = Prefix.objects.filter(site=self.site, status=container_status, role=dc_role).first()
 
-        if not dc_prefix:
-            top_level_prefix = Prefix.objects.filter(
-                role__slug=slugify(TOP_LEVEL_PREFIX_ROLE), status=container_status
-            ).first()
+        # if not dc_prefix:
+        #     top_level_prefix = Prefix.objects.filter(
+        #         role__slug=slugify(TOP_LEVEL_PREFIX_ROLE), status=container_status
+        #     ).first()
 
-            if not top_level_prefix:
-                raise Exception("Unable to find the top level Loopback prefix to allocate a Network for this site")
+        #     if not top_level_prefix:
+        #         raise Exception("Unable to find the top level Loopback prefix to allocate a Network for this site")
 
-            first_avail = top_level_prefix.get_first_available_prefix()
-            prefix = list(first_avail.subnet(SITE_PREFIX_SIZE))[0]
-            dc_prefix = Prefix.objects.create(prefix=prefix, site=self.site, status=container_status, role=dc_role)
+        #     first_avail = top_level_prefix.get_first_available_prefix()
+        #     prefix = list(first_avail.subnet(SITE_PREFIX_SIZE))[0]
+        #     dc_prefix = Prefix.objects.create(prefix=prefix, site=self.site, status=container_status, role=dc_role)
         
-        # Interface P2P range
-        dc_p2p_role, _ = Role.objects.get_or_create(name=p2p_dc_code, slug=p2p_dc_code)
-        underlay_p2p_prefix = Prefix.objects.filter(site=self.site, status=container_status, role=dc_p2p_role).first()
-        if not underlay_p2p_prefix:
-          top_level_p2p_prefix = Prefix.objects.filter(
-                role__slug=slugify(TOP_LEVEL_P2P_PREFIX_ROLE), status=container_status
-            ).first()
+        # # Interface P2P range
+        # dc_p2p_role, _ = Role.objects.get_or_create(name=p2p_dc_code, slug=p2p_dc_code)
+        # underlay_p2p_prefix = Prefix.objects.filter(site=self.site, status=container_status, role=dc_p2p_role).first()
+        # if not underlay_p2p_prefix:
+        #   top_level_p2p_prefix = Prefix.objects.filter(
+        #         role__slug=slugify(TOP_LEVEL_P2P_PREFIX_ROLE), status=container_status
+        #     ).first()
 
-          if not top_level_p2p_prefix:
-            raise Exception("Unable to find the top level Underlay prefix to allocate a Network for this site")
+        #   if not top_level_p2p_prefix:
+        #     raise Exception("Unable to find the top level Underlay prefix to allocate a Network for this site")
           
-          first_avail_p2p = top_level_p2p_prefix.get_first_available_prefix()
-          p2p_prefix = list(first_avail_p2p.subnet(P2P_SITE_PREFIX_SIZE))[0]
-          underlay_p2p_prefix = Prefix.objects.create(prefix=p2p_prefix, site=self.site, status=container_status, role=dc_p2p_role)
+        #   first_avail_p2p = top_level_p2p_prefix.get_first_available_prefix()
+        #   p2p_prefix = list(first_avail_p2p.subnet(P2P_SITE_PREFIX_SIZE))[0]
+        #   underlay_p2p_prefix = Prefix.objects.create(prefix=p2p_prefix, site=self.site, status=container_status, role=dc_p2p_role)
         
-        # MLAG range
-        dc_mlag_role, _ = Role.objects.get_or_create(name=mlag_dc_code, slug=mlag_dc_code)
-        mlag_p2p_prefix = Prefix.objects.filter(site=self.site, status=container_status, role=dc_mlag_role).first()
-        if not mlag_p2p_prefix:
-          top_level_mlag_prefix =  Prefix.objects.filter(
-                role__slug=slugify(TOP_LEVEL_MLAG_PEER_ROLE), status=container_status
-            ).first()
+        # # MLAG range
+        # dc_mlag_role, _ = Role.objects.get_or_create(name=mlag_dc_code, slug=mlag_dc_code)
+        # mlag_p2p_prefix = Prefix.objects.filter(site=self.site, status=container_status, role=dc_mlag_role).first()
+        # if not mlag_p2p_prefix:
+        #   top_level_mlag_prefix =  Prefix.objects.filter(
+        #         role__slug=slugify(TOP_LEVEL_MLAG_PEER_ROLE), status=container_status
+        #     ).first()
 
-          if not top_level_mlag_prefix:
-            raise Exception("Unable to find the top level MLAG prefix to allocate a Network for this site")
+        #   if not top_level_mlag_prefix:
+        #     raise Exception("Unable to find the top level MLAG prefix to allocate a Network for this site")
 
-          first_avail_mlag = top_level_mlag_prefix.get_first_available_prefix()
-          mlag_prefix = list(first_avail_mlag.subnet(MLAG_PEER_PREFIX_SIZE))[0]
-          mlag_p2p_prefix = Prefix.objects.create(prefix=mlag_prefix, site=self.site, status=container_status, role=dc_mlag_role)
+        #   first_avail_mlag = top_level_mlag_prefix.get_first_available_prefix()
+        #   mlag_prefix = list(first_avail_mlag.subnet(MLAG_PEER_PREFIX_SIZE))[0]
+        #   mlag_p2p_prefix = Prefix.objects.create(prefix=mlag_prefix, site=self.site, status=container_status, role=dc_mlag_role)
 
-        # LEAF PEER range
-        dc_leaf_peer_role, _ = Role.objects.get_or_create(name=leaf_peer_dc_code, slug=leaf_peer_dc_code)
-        leaf_peer_p2p_prefix  = Prefix.objects.filter(site=self.site, status=container_status, role=dc_leaf_peer_role).first()
-        if not leaf_peer_p2p_prefix:
-          top_level_leaf_peer_prefix = Prefix.objects.filter(
-            role__slug=slugify(TOP_LEVEL_LEAF_PEER_ROLE), status=container_status
-          ).first()
+        # # LEAF PEER range
+        # dc_leaf_peer_role, _ = Role.objects.get_or_create(name=leaf_peer_dc_code, slug=leaf_peer_dc_code)
+        # leaf_peer_p2p_prefix  = Prefix.objects.filter(site=self.site, status=container_status, role=dc_leaf_peer_role).first()
+        # if not leaf_peer_p2p_prefix:
+        #   top_level_leaf_peer_prefix = Prefix.objects.filter(
+        #     role__slug=slugify(TOP_LEVEL_LEAF_PEER_ROLE), status=container_status
+        #   ).first()
 
-          if not top_level_leaf_peer_prefix:
-            raise Exception("Unable to find the top level Leaf Peer prefix to allocate a Network for this site")
+        #   if not top_level_leaf_peer_prefix:
+        #     raise Exception("Unable to find the top level Leaf Peer prefix to allocate a Network for this site")
 
-          first_avail_leaf_peer = top_level_leaf_peer_prefix.get_first_available_prefix()
-          leaf_peer_prefix = list(first_avail_leaf_peer.subnet(LEAF_PEER_PREFIX_SIZE))[0]
-          leaf_peer_p2p_prefix = Prefix.objects.create(prefix=leaf_peer_prefix, site=self.site, status=container_status, role=dc_leaf_peer_role)
+        #   first_avail_leaf_peer = top_level_leaf_peer_prefix.get_first_available_prefix()
+        #   leaf_peer_prefix = list(first_avail_leaf_peer.subnet(LEAF_PEER_PREFIX_SIZE))[0]
+        #   leaf_peer_p2p_prefix = Prefix.objects.create(prefix=leaf_peer_prefix, site=self.site, status=container_status, role=dc_leaf_peer_role)
 
 
-        iter_subnet = IPv4Network(str(dc_prefix.prefix)).subnets(new_prefix=24)
-        p2p_iter_subnet = IPv4Network(str(underlay_p2p_prefix.prefix)).subnets(new_prefix=24)
-        mlag_iter_subnet = IPv4Network(str(mlag_p2p_prefix.prefix)).subnets(new_prefix=27)
-        leaf_peer_iter_subnet = IPv4Network(str(leaf_peer_p2p_prefix.prefix)).subnets(new_prefix=27)
+        # iter_subnet = IPv4Network(str(dc_prefix.prefix)).subnets(new_prefix=24)
+        # p2p_iter_subnet = IPv4Network(str(underlay_p2p_prefix.prefix)).subnets(new_prefix=24)
+        # mlag_iter_subnet = IPv4Network(str(mlag_p2p_prefix.prefix)).subnets(new_prefix=27)
+        # leaf_peer_iter_subnet = IPv4Network(str(leaf_peer_p2p_prefix.prefix)).subnets(new_prefix=27)
 
-        # Allocate the subnet by block of /24
-        mlag_peer = next(mlag_iter_subnet)
-        leaf_peer_l3 = next(leaf_peer_iter_subnet)
-        overlay_loopback = next(iter_subnet)
-        vtep_loopback = next(iter_subnet)
-        underlay_p2p = next(p2p_iter_subnet)
-        # dci_p2p = next(iter_subnet)
+        # # Allocate the subnet by block of /24
+        # mlag_peer = next(mlag_iter_subnet)
+        # leaf_peer_l3 = next(leaf_peer_iter_subnet)
+        # overlay_loopback = next(iter_subnet)
+        # vtep_loopback = next(iter_subnet)
+        # underlay_p2p = next(p2p_iter_subnet)
+        # # dci_p2p = next(iter_subnet)
 
-        dc_role, _ = Role.objects.get_or_create(name=dc_code, slug=dc_code)
+        # dc_role, _ = Role.objects.get_or_create(name=dc_code, slug=dc_code)
 
-        mlag_role, _ = Role.objects.get_or_create(name=f"{dc_code}_mlag_peer_p2p", slug=f"{dc_code}_mlag_peer_p2p")
-        Prefix.objects.get_or_create(
-            prefix=str(mlag_peer),
-            site=self.site,
-            role=mlag_role,
-            status=container_status,
-        )
-        self.log_success(obj=mlag_peer, message="Created new mlag peer prefix")
-
-        leaf_peer_role, _ = Role.objects.get_or_create(name=f"{dc_code}_leaf_peer_p2p", slug=f"{dc_code}_leaf_peer_p2p")
-        Prefix.objects.get_or_create(
-            prefix=str(leaf_peer_l3),
-            site=self.site,
-            role=leaf_peer_role,
-            status=container_status,
-        )
-        self.log_success(obj=leaf_peer_l3, message="Created new leaf peer prefix")
-
-        overlay_role, _ = Role.objects.get_or_create(name=f"{dc_code}_overlay", slug=f"{dc_code}_overlay")
-        Prefix.objects.get_or_create(
-            prefix=str(overlay_loopback),
-            site=self.site,
-            role=overlay_role,
-            status=container_status,
-        )
-        self.log_success(obj=overlay_loopback, message="Created new overlay prefix")
-        
-
-        vtep_role, _ = Role.objects.get_or_create(name=f"{dc_code}_vtep_loopback", slug=f"{dc_code}_vtep_loopback")
-        Prefix.objects.get_or_create(
-            prefix=str(vtep_loopback),
-            site=self.site,
-            role=vtep_role,
-            status=container_status,
-        )
-        self.log_success(obj=vtep_loopback, message="Created new vtep prefix")
-
-        underlay_role, _ = Role.objects.get_or_create(name=f"{dc_code}_underlay_p2p", slug=f"{dc_code}_underlay_p2p")
-        Prefix.objects.get_or_create(
-            prefix=str(underlay_p2p), 
-            site=self.site, 
-            role=underlay_role, 
-            status=container_status,
-        )
-        self.log_success(obj=underlay_p2p, message="Created new underlay p2p prefix")
-
-        # dci_p2p_role, _ = Role.objects.get_or_create(name=f"{dc_code}_dci_p2p", slug=f"{dc_code}_dci_p2p")
+        # mlag_role, _ = Role.objects.get_or_create(name=f"{dc_code}_mlag_peer_p2p", slug=f"{dc_code}_mlag_peer_p2p")
         # Prefix.objects.get_or_create(
-        #     prefix=str(dci_p2p),
+        #     prefix=str(mlag_peer),
         #     site=self.site,
-        #     role=dci_p2p_role,
+        #     role=mlag_role,
         #     status=container_status,
         # )
-        # self.log_success(obj=dci_p2p, message="Created new dci p2p prefix")
+        # self.log_success(obj=mlag_peer, message="Created new mlag peer prefix")
 
-        # ----------------------------------------------------------------------------
-        # Create Racks
-        # ----------------------------------------------------------------------------
-        rack_status = Status.objects.get_for_model(Rack).get(slug="active")
+        # leaf_peer_role, _ = Role.objects.get_or_create(name=f"{dc_code}_leaf_peer_p2p", slug=f"{dc_code}_leaf_peer_p2p")
+        # Prefix.objects.get_or_create(
+        #     prefix=str(leaf_peer_l3),
+        #     site=self.site,
+        #     role=leaf_peer_role,
+        #     status=container_status,
+        # )
+        # self.log_success(obj=leaf_peer_l3, message="Created new leaf peer prefix")
 
-        rack_name_spine = f"{dc_code}-spine-rr-1"
-        rack = Rack.objects.get_or_create(
-            name=rack_name_spine, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
-        )
-        self.log_success(obj=rack_name_spine, message=f"Created Relay Rack {rack_name_spine}")
+        # overlay_role, _ = Role.objects.get_or_create(name=f"{dc_code}_overlay", slug=f"{dc_code}_overlay")
+        # Prefix.objects.get_or_create(
+        #     prefix=str(overlay_loopback),
+        #     site=self.site,
+        #     role=overlay_role,
+        #     status=container_status,
+        # )
+        # self.log_success(obj=overlay_loopback, message="Created new overlay prefix")
+        
 
-        if data["dci"] == True: 
-          rack_name_edge = f"{dc_code}-edge-rr-1"
-          rack = Rack.objects.get_or_create(
-              name=rack_name_edge, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
-          )
-          self.log_success(obj=rack_name_edge, message=f"Created Relay Rack {rack_name_edge}")
+        # vtep_role, _ = Role.objects.get_or_create(name=f"{dc_code}_vtep_loopback", slug=f"{dc_code}_vtep_loopback")
+        # Prefix.objects.get_or_create(
+        #     prefix=str(vtep_loopback),
+        #     site=self.site,
+        #     role=vtep_role,
+        #     status=container_status,
+        # )
+        # self.log_success(obj=vtep_loopback, message="Created new vtep prefix")
 
-        for i in range(1, ROLES["l3leaf"]["nbr"] + 1):
-          rack_name = f"{dc_code}-leaf-rr-{i}"
-          rack = Rack.objects.get_or_create(
-              name=rack_name, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
-          )
-          self.log_success(obj=rack_name, message=f"Created Relay Rack {rack_name}")
-        for i in range(1, ROLES['l2leaf']['nbr'] + 1):
-          rack_name_l2leaf = f"{dc_code}-hosts-rr-{i}"
-          rack = Rack.objects.get_or_create(
-              name=rack_name_l2leaf, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
-          )
-          self.log_success(obj=rack_name_l2leaf, message=f"Created Relay Rack {rack_name_l2leaf}")
+        # underlay_role, _ = Role.objects.get_or_create(name=f"{dc_code}_underlay_p2p", slug=f"{dc_code}_underlay_p2p")
+        # Prefix.objects.get_or_create(
+        #     prefix=str(underlay_p2p), 
+        #     site=self.site, 
+        #     role=underlay_role, 
+        #     status=container_status,
+        # )
+        # self.log_success(obj=underlay_p2p, message="Created new underlay p2p prefix")
+
+        # # dci_p2p_role, _ = Role.objects.get_or_create(name=f"{dc_code}_dci_p2p", slug=f"{dc_code}_dci_p2p")
+        # # Prefix.objects.get_or_create(
+        # #     prefix=str(dci_p2p),
+        # #     site=self.site,
+        # #     role=dci_p2p_role,
+        # #     status=container_status,
+        # # )
+        # # self.log_success(obj=dci_p2p, message="Created new dci p2p prefix")
+
+        # # ----------------------------------------------------------------------------
+        # # Create Racks
+        # # ----------------------------------------------------------------------------
+        # rack_status = Status.objects.get_for_model(Rack).get(slug="active")
+
+        # rack_name_spine = f"{dc_code}-spine-rr-1"
+        # rack = Rack.objects.get_or_create(
+        #     name=rack_name_spine, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
+        # )
+        # self.log_success(obj=rack_name_spine, message=f"Created Relay Rack {rack_name_spine}")
+
+        # if data["dci"] == True: 
+        #   rack_name_edge = f"{dc_code}-edge-rr-1"
+        #   rack = Rack.objects.get_or_create(
+        #       name=rack_name_edge, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
+        #   )
+        #   self.log_success(obj=rack_name_edge, message=f"Created Relay Rack {rack_name_edge}")
+
+        # for i in range(1, ROLES["l3leaf"]["nbr"] + 1):
+        #   rack_name = f"{dc_code}-leaf-rr-{i}"
+        #   rack = Rack.objects.get_or_create(
+        #       name=rack_name, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
+        #   )
+        #   self.log_success(obj=rack_name, message=f"Created Relay Rack {rack_name}")
+        # for i in range(1, ROLES['l2leaf']['nbr'] + 1):
+        #   rack_name_l2leaf = f"{dc_code}-hosts-rr-{i}"
+        #   rack = Rack.objects.get_or_create(
+        #       name=rack_name_l2leaf, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
+        #   )
+        #   self.log_success(obj=rack_name_l2leaf, message=f"Created Relay Rack {rack_name_l2leaf}")
 
 
         # # ----------------------------------------------------------------------------
