@@ -438,7 +438,8 @@ class CreateAristaDC(Job):
             "fabric_name",
             "dc_bgp",
             "spine_count",
-            "leaf_count",
+            "l3leaf_count",
+            "l2leaf_count",
             "superspine",
         ]
     dc_code = StringVar(description="Name of the new DataCenter", label="DataCenter")
