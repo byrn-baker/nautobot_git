@@ -744,56 +744,56 @@ class CreateAristaDC(Job):
           self.log_success(obj=rack_name_l2leaf, message=f"Created Relay Rack {rack_name_l2leaf}")
 
 
-        # ----------------------------------------------------------------------------
-        # Create Devices
-        # ----------------------------------------------------------------------------
-        for role, data in ROLES.items():
-            for i in range(1, data.get("nbr", 2) + 1):
-                if 'spine' in role:
-                  rack_elevation = i + 1
-                  rack_name = f"{dc_code}-spine-rr-1"
-                  rack = Rack.objects.filter(name=rack_name, site=self.site).first()
-                elif role == 'l3leaf':
-                  rack_elevation = i + 1
-                  rack_name = f"{dc_code}-leaf-rr-{i}"
-                  rack = Rack.objects.filter(name=rack_name, site=self.site).first()
-                elif 'superspine' in role:
-                  rack_elevation = i + 3
-                  rack_name = f"{dc_code}-edge-rr-1"
-                  rack = Rack.objects.filter(name=rack_name, site=self.site).first()
-                elif 'l2leaf' in role:
-                  rack_elevation = i + 1
-                  rack_name = f"{dc_code}-host-rr-{i}"
-                  rack = Rack.objects.filter(name=rack_name, site=self.site).first()
+        # # ----------------------------------------------------------------------------
+        # # Create Devices
+        # # ----------------------------------------------------------------------------
+        # for role, data in ROLES.items():
+        #     for i in range(1, data.get("nbr", 2) + 1):
+        #         if 'spine' in role:
+        #           rack_elevation = i + 1
+        #           rack_name = f"{dc_code}-spine-rr-1"
+        #           rack = Rack.objects.filter(name=rack_name, site=self.site).first()
+        #         elif role == 'l3leaf':
+        #           rack_elevation = i + 1
+        #           rack_name = f"{dc_code}-leaf-rr-{i}"
+        #           rack = Rack.objects.filter(name=rack_name, site=self.site).first()
+        #         elif 'superspine' in role:
+        #           rack_elevation = i + 3
+        #           rack_name = f"{dc_code}-edge-rr-1"
+        #           rack = Rack.objects.filter(name=rack_name, site=self.site).first()
+        #         elif 'l2leaf' in role:
+        #           rack_elevation = i + 1
+        #           rack_name = f"{dc_code}-host-rr-{i}"
+        #           rack = Rack.objects.filter(name=rack_name, site=self.site).first()
 
-                if role == 'l3leaf':
-                  device_name = f"{dc_code}-leaf{i}"
-                else:
-                  device_name = f"{dc_code}-{role}{i}"
+        #         if role == 'l3leaf':
+        #           device_name = f"{dc_code}-leaf{i}"
+        #         else:
+        #           device_name = f"{dc_code}-{role}{i}"
 
-                device = Device.objects.filter(name=device_name).first()
-                if device:
-                    self.devices[device_name] = device
-                    self.log_success(obj=device, message=f"Device {device_name} already exists")
-                    continue
+        #         device = Device.objects.filter(name=device_name).first()
+        #         if device:
+        #             self.devices[device_name] = device
+        #             self.log_success(obj=device, message=f"Device {device_name} already exists")
+        #             continue
                 
-                device_status = Status.objects.get_for_model(Device).get(slug="active")
-                device_role, _ = DeviceRole.objects.get_or_create(name=role, slug=slugify(role))
-                device = Device.objects.create(
-                    device_type=DeviceType.objects.get(slug=data.get("device_type")),
-                    name=device_name,
-                    site=self.site,
-                    status=device_status,
-                    device_role=device_role,
-                    rack=rack,
-                    position=rack_elevation,
-                    face="front",
-                )
+        #         device_status = Status.objects.get_for_model(Device).get(slug="active")
+        #         device_role, _ = DeviceRole.objects.get_or_create(name=role, slug=slugify(role))
+        #         device = Device.objects.create(
+        #             device_type=DeviceType.objects.get(slug=data.get("device_type")),
+        #             name=device_name,
+        #             site=self.site,
+        #             status=device_status,
+        #             device_role=device_role,
+        #             rack=rack,
+        #             position=rack_elevation,
+        #             face="front",
+        #         )
 
-                device.clean()
-                device.save()
-                self.devices[device_name] = device
-                self.log_success(device, f"Device {device_name} successfully created")
+        #         device.clean()
+        #         device.save()
+        #         self.devices[device_name] = device
+        #         self.log_success(device, f"Device {device_name} successfully created")
 
                 # # Building local context for various requirements per device
                 # lo0_prefix = Prefix.objects.get(role=dc_role)
