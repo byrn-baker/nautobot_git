@@ -776,6 +776,11 @@ class CreateAristaDC(Job):
                   "prefix_list":[f"{str(lo0_prefix)} eq 32",]
                 }
                 device.local_context_data = LOCAL_CONTEXT
+
+                # Assigns the device to the Pod described in the Pod_Name survey
+                if device_name == f"{dc_code}-spine1" or device_name == f"{dc_code}-spine2" or device_name == f"{dc_code}-spine3" or device_name == f"{dc_code}-spine4" or device_name == f"{dc_code}-leaf1" or device_name == f"{dc_code}-leaf2" or device_name == f"{dc_code}-leaf3" or device_name == f"{dc_code}-leaf4" or device_name == f"{dc_code}-leaf5":
+                  device.custom_field_data["pod_name"]=pod_name
+                  
                 device.validated_save()
                 self.log_success(device, f"Added local context on {device_name}")
 
