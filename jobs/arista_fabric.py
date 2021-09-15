@@ -9,6 +9,14 @@ superspine1:
       type: "1000base-t"
       b_device: spine2
       b_int: Ethernet7
+    - name: Ethernet3
+      type: "1000base-t"
+      b_device: spine3
+      b_int: Ethernet7
+    - name: Ethernet4
+      type: "1000base-t"
+      b_device: spine4
+      b_int: Ethernet7
 superspine2: 
   interfaces:
     - name: Ethernet1
@@ -18,6 +26,14 @@ superspine2:
     - name: Ethernet2
       type: "1000base-t"
       b_device: spine2
+      b_int: Ethernet8
+    - name: Ethernet3
+      type: "1000base-t"
+      b_device: spine3
+      b_int: Ethernet8
+    - name: Ethernet4
+      type: "1000base-t"
+      b_device: spine4
       b_int: Ethernet8
 spine1:
   device_type: "spine"
@@ -75,11 +91,11 @@ spine2:
     - name: Ethernet7 
       type: "1000base-t"
       b_device: superspine1
-      b_int: Ethernet1
+      b_int: Ethernet2
     - name: Ethernet8
       type: "1000base-t"
       b_device: superspine2
-      b_int: Ethernet1
+      b_int: Ethernet2
 spine3:
   interfaces:
     - name: Ethernet2
@@ -105,11 +121,11 @@ spine3:
     - name: Ethernet7 
       type: "1000base-t"
       b_device: superspine1
-      b_int: Ethernet1
+      b_int: Ethernet3
     - name: Ethernet8
       type: "1000base-t"
       b_device: superspine2
-      b_int: Ethernet1
+      b_int: Ethernet3
 spine4:
   interfaces:
     - name: Ethernet2
@@ -135,11 +151,11 @@ spine4:
     - name: Ethernet7 
       type: "1000base-t"
       b_device: superspine1
-      b_int: Ethernet1
+      b_int: Ethernet4
     - name: Ethernet8
       type: "1000base-t"
       b_device: superspine2
-      b_int: Ethernet1
+      b_int: Ethernet4
 leaf1:
   vlans: 
     - name: Vlan4093
