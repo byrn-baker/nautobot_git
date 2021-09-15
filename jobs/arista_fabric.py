@@ -749,7 +749,7 @@ class CreateAristaDC(Job):
         # ----------------------------------------------------------------------------
         for role, data in ROLES.items():
             for i in range(1, data.get("nbr", 2) + 1):
-                if 'spine' in role:
+                if role == 'spine':
                   rack_elevation = i + 1
                   rack_name = f"{dc_code}-spine-rr-1"
                   rack = Rack.objects.filter(name=rack_name, site=self.site).first()
@@ -758,10 +758,10 @@ class CreateAristaDC(Job):
                   rack_name = f"{dc_code}-leaf-rr-{i}"
                   rack = Rack.objects.filter(name=rack_name, site=self.site).first()
                 elif role == 'superspine':
-                  rack_elevation = 1
+                  rack_elevation = i + 1
                   rack_name = f"{dc_code}-edge-rr-1"
                   rack = Rack.objects.filter(name=rack_name, site=self.site).first()
-                elif 'l2leaf' in role:
+                elif role == 'l2leaf':
                   rack_elevation = i + 1
                   rack_name = f"{dc_code}-hosts-rr-{i}"
                   rack = Rack.objects.filter(name=rack_name, site=self.site).first()
@@ -786,7 +786,7 @@ class CreateAristaDC(Job):
                     status=device_status,
                     device_role=device_role,
                     rack=rack,
-                    position=rack_elevation + 1,
+                    position=rack_elevation,
                     face="front",
                 )
 
