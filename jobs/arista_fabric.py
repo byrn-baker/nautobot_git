@@ -852,7 +852,7 @@ class CreateAristaDC(Job):
                 #     )
                 #     self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
                 if device_name == f"{dc_code}-spine1" or device_name == f"{dc_code}-spine2" or device_name == f"{dc_code}-spine3" or device_name == f"{dc_code}-spine4":
-                  intf_number =  ROLES["leaf"]["nbr"] + ROLES['superspine']['nbr']
+                  intf_number =  ROLES["l3leaf"]["nbr"] + ROLES['superspine']['nbr']
                   for i in range(1, intf_number + 1):
                     if i == 2 or i == 3 or i == 4 or i == 5 or i == 6 or i == 7 or i == 8:
                       int_name = Interface.objects.create(
