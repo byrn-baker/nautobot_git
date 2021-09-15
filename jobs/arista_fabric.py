@@ -812,7 +812,7 @@ class CreateAristaDC(Job):
                 self.log_success(device, f"Device {device_name} successfully created")
 
                 # Building local context for various requirements per device
-                if device_name == f"{dc_code}-spine1" or device_name == f"{dc_code}-spine2" or device_name == f"{dc_code}-spine3" or device_name == f"{dc_code}-spine4" or device_name == f"{dc_code}-leaf1" or device_name == f"{dc_code}-leaf2" or device_name == f"{dc_code}-leaf3" or device_name == f"{dc_code}-leaf4" or device_name == f"{dc_code}-leaf5":
+                if device_name == f"{dc_code}-spine1" or device_name == f"{dc_code}-spine2" or device_name == f"{dc_code}-spine3" or device_name == f"{dc_code}-spine4" or device_name == f"{dc_code}-leaf1" or device_name == f"{dc_code}-leaf2" or device_name == f"{dc_code}-leaf3" or device_name == f"{dc_code}-leaf4" or device_name == f"{dc_code}-leaf5" or 'superspine' in device_name:
                   lo0_prefix = Prefix.objects.get(role=dc_role)
                   # global LOCAL_CONTEXT
                   LOCAL_CONTEXT = {
@@ -823,7 +823,7 @@ class CreateAristaDC(Job):
                   self.log_success(device, f"Added local context on {device_name}")
 
                 # Assigns the device to the Pod described in the Pod_Name survey
-                if device_name == f"{dc_code}-spine1" or device_name == f"{dc_code}-spine2" or device_name == f"{dc_code}-spine3" or device_name == f"{dc_code}-spine4" or device_name == f"{dc_code}-leaf1" or device_name == f"{dc_code}-leaf2" or device_name == f"{dc_code}-leaf3" or device_name == f"{dc_code}-leaf4" or device_name == f"{dc_code}-leaf5":
+                if device_name == f"{dc_code}-spine1" or device_name == f"{dc_code}-spine2" or device_name == f"{dc_code}-spine3" or device_name == f"{dc_code}-spine4" or device_name == f"{dc_code}-leaf1" or device_name == f"{dc_code}-leaf2" or device_name == f"{dc_code}-leaf3" or device_name == f"{dc_code}-leaf4" or device_name == f"{dc_code}-leaf5" or 'l2leaf' in device_name or 'superspine' in device_name:
                   device.custom_field_data["pod_name"]=pod_name
                   device.validated_save()
                   self.log_success(device, f"Added {device_name} to Pod {pod_name}")
