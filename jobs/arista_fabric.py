@@ -538,21 +538,13 @@ class CreateAristaDC(Job):
             "l2leaf": {"device_type": "l2leaf"},
         }
         # Number of devices to provision
-        if data["leaf_count"] == 1 or data["leaf_count"] == 2:
-          ROLES["l2leaf"]["nbr"] = 1
-        else: 
-          ROLES["l2leaf"]["nbr"] = 2
-
-        ROLES["l3leaf"]["nbr"] = data["leaf_count"]
+        ROLES["l2leaf"]["nbr"] = data["l2leaf_count"]
+        ROLES["l3leaf"]["nbr"] = data["l3leaf_count"]
         ROLES["spine"]["nbr"] = data["spine_count"]
-        if data["borderleaf"] == True:
-            ROLES["borderleaf"]["nbr"] = 2
-        else:
-            ROLES["borderleaf"]["nbr"] = 0
         if data["dci"] == True:
-            ROLES["dci"]["nbr"] = 1
+            ROLES["superspine"]["nbr"] = 2
         else:
-            ROLES["dci"]["nbr"] = 0
+            ROLES["superspine"]["nbr"] = 0
 
         
         # ----------------------------------------------------------------------------
