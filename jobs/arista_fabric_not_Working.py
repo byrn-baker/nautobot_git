@@ -1,174 +1,163 @@
 config = """
-dci1:
+superspine1:
   interfaces:
     - name: Ethernet1
-      type: "1000base-t"
-      b_device: borderleaf1
-      b_int: Ethernet12
-    - name: Ethernet2
-      type: "1000base-t"
-      b_device: borderleaf2
-      b_int: Ethernet12
-borderleaf1: 
-  vlans: 
-    - name: Vlan4093
-      b_device: borderleaf2
-      b_int: Vlan4093
-    - name: Vlan4094
-      b_device: borderleaf2
-      b_int: Vlan4094
-  interfaces:
-    - name: Ethernet1
-      type: "1000base-t"
-      mode: "tagged-all"
-      b_device: borderleaf2
-      b_int: Ethernet1
-    - name: Ethernet2
-      type: "1000base-t"
-      mode: "tagged-all"
-      b_device: borderleaf2
-      b_int: Ethernet2
-    - name: Ethernet3
-      type: "1000base-t"
-      b_device: spine1
-      b_int: Ethernet6
-    - name: Ethernet4
-      type: "1000base-t"
-      b_device: spine2
-      b_int: Ethernet6
-    - name: Ethernet5
-      type: "1000base-t"
-      b_device: spine3
-      b_int: Ethernet6
-    - name: Ethernet12
-      type: "1000base-t"
-      b_device: dci1
-      b_int: Ethernet1
-borderleaf2: 
-  interfaces:
-    - name: Ethernet1
-      type: "1000base-t"
-      mode: "tagged-all"
-      b_device: borderleaf1
-      b_int: Ethernet1
-    - name: Ethernet2
-      type: "1000base-t"
-      mode: "tagged-all"
-      b_device: borderleaf1
-      b_int: Ethernet2
-    - name: Ethernet3
       type: "1000base-t"
       b_device: spine1
       b_int: Ethernet7
-    - name: Ethernet4
+    - name: Ethernet2
       type: "1000base-t"
       b_device: spine2
       b_int: Ethernet7
-    - name: Ethernet5
+superspine2: 
+  interfaces:
+    - name: Ethernet1
       type: "1000base-t"
-      b_device: spine3
-      b_int: Ethernet7
-    - name: Ethernet12
+      b_device: spine1
+      b_int: Ethernet8
+    - name: Ethernet2
       type: "1000base-t"
-      b_device: dci1
-      b_int: Ethernet2
+      b_device: spine2
+      b_int: Ethernet8
 spine1:
   device_type: "spine"
   interfaces:
     - name: Ethernet2
       type: "1000base-t"
-      b_device: l3leaf1
+      b_device: leaf1
       b_int: Ethernet3
     - name: Ethernet3
       type: "1000base-t"
-      b_device: l3leaf2
+      b_device: leaf2
       b_int: Ethernet3
     - name: Ethernet4
       type: "1000base-t"
-      b_device: l3leaf3
+      b_device: leaf3
       b_int: Ethernet3
     - name: Ethernet5
       type: "1000base-t"
-      b_device: l3leaf4
+      b_device: leaf4
       b_int: Ethernet3
     - name: Ethernet6
       type: "1000base-t"
-      b_device: borderleaf1
+      b_device: leaf5
       b_int: Ethernet3
     - name: Ethernet7 
       type: "1000base-t"
-      b_device: borderleaf2
-      b_int: Ethernet3
+      b_device: superspine1
+      b_int: Ethernet1
+    - name: Ethernet8
+      type: "1000base-t"
+      b_device: superspine2
+      b_int: Ethernet1
 spine2:
   interfaces:
     - name: Ethernet2
       type: "1000base-t"
-      b_device: l3leaf1
+      b_device: leaf1
       b_int: Ethernet4
     - name: Ethernet3
       type: "1000base-t"
-      b_device: l3leaf2
+      b_device: leaf2
       b_int: Ethernet4
     - name: Ethernet4
       type: "1000base-t"
-      b_device: l3leaf3
+      b_device: leaf3
       b_int: Ethernet4
     - name: Ethernet5
       type: "1000base-t"
-      b_device: l3leaf4
+      b_device: leaf4
       b_int: Ethernet4
     - name: Ethernet6
       type: "1000base-t"
-      b_device: borderleaf1
-      b_int: Ethernet4
+      b_device: leaf5
+      b_int: Ethernet3
     - name: Ethernet7 
       type: "1000base-t"
-      b_device: borderleaf2
-      b_int: Ethernet4
+      b_device: superspine1
+      b_int: Ethernet1
+    - name: Ethernet8
+      type: "1000base-t"
+      b_device: superspine2
+      b_int: Ethernet1
 spine3:
   interfaces:
     - name: Ethernet2
       type: "1000base-t"
-      b_device: l3leaf1
+      b_device: leaf1
       b_int: Ethernet5
     - name: Ethernet3
       type: "1000base-t"
-      b_device: l3leaf2
+      b_device: leaf2
       b_int: Ethernet5
     - name: Ethernet4
       type: "1000base-t"
-      b_device: l3leaf3
+      b_device: leaf3
       b_int: Ethernet5
     - name: Ethernet5
       type: "1000base-t"
-      b_device: l3leaf4
+      b_device: leaf4
       b_int: Ethernet5
     - name: Ethernet6
       type: "1000base-t"
-      b_device: borderleaf1
-      b_int: Ethernet5
+      b_device: leaf5
+      b_int: Ethernet3
     - name: Ethernet7 
       type: "1000base-t"
-      b_device: borderleaf2
+      b_device: superspine1
+      b_int: Ethernet1
+    - name: Ethernet8
+      type: "1000base-t"
+      b_device: superspine2
+      b_int: Ethernet1
+spine4:
+  interfaces:
+    - name: Ethernet2
+      type: "1000base-t"
+      b_device: leaf1
       b_int: Ethernet5
-l3leaf1:
+    - name: Ethernet3
+      type: "1000base-t"
+      b_device: leaf2
+      b_int: Ethernet5
+    - name: Ethernet4
+      type: "1000base-t"
+      b_device: leaf3
+      b_int: Ethernet5
+    - name: Ethernet5
+      type: "1000base-t"
+      b_device: leaf4
+      b_int: Ethernet5
+    - name: Ethernet6
+      type: "1000base-t"
+      b_device: leaf5
+      b_int: Ethernet3
+    - name: Ethernet7 
+      type: "1000base-t"
+      b_device: superspine1
+      b_int: Ethernet1
+    - name: Ethernet8
+      type: "1000base-t"
+      b_device: superspine2
+      b_int: Ethernet1
+leaf1:
   vlans: 
     - name: Vlan4093
-      b_device: l3leaf2
+      b_device: leaf2
       b_int: Vlan4093
     - name: Vlan4094
-      b_device: l3leaf2
+      b_device: leaf2
       b_int: Vlan4094
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: l3leaf2
+      b_device: leaf2
       b_int: Ethernet1
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: l3leaf2
+      b_device: leaf2
       b_int: Ethernet2
     - name: Ethernet3
       type: "1000base-t"
@@ -184,25 +173,29 @@ l3leaf1:
       b_int: Ethernet4
     - name: Ethernet6
       type: "1000base-t"
-      mode: "tagged-all"
-      b_device: l2leaf1
-      b_int: Ethernet1
+      b_device: spine4
+      b_int: Ethernet5
     - name: Ethernet7
       type: "1000base-t"
       mode: "tagged-all"
       b_device: l2leaf1
       b_int: Ethernet3
-l3leaf2:
+    - name: Ethernet8
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: l2leaf2
+      b_int: Ethernet3
+leaf2:
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: l3leaf1
+      b_device: leaf1
       b_int: Ethernet1
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: l3leaf1
+      b_device: leaf1
       b_int: Ethernet2
     - name: Ethernet3
       type: "1000base-t"
@@ -218,32 +211,36 @@ l3leaf2:
       b_int: Ethernet4
     - name: Ethernet6
       type: "1000base-t"
-      mode: "tagged-all"
-      b_device: l2leaf1
-      b_int: Ethernet2
+      b_device: spine4
+      b_int: Ethernet5
     - name: Ethernet7
       type: "1000base-t"
       mode: "tagged-all"
       b_device: l2leaf1
-      b_int: Ethernet4  
-l3leaf3:
+      b_int: Ethernet4
+    - name: Ethernet8
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: l2leaf2
+      b_int: Ethernet4
+leaf3:
   vlans: 
     - name: Vlan4093
-      b_device: l3leaf4
+      b_device: leaf4
       b_int: Vlan4093
     - name: Vlan4094
-      b_device: l3leaf4
+      b_device: leaf4
       b_int: Vlan4094
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: l3leaf4
+      b_device: leaf4
       b_int: Ethernet1
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: l3leaf4
+      b_device: leaf4
       b_int: Ethernet2
     - name: Ethernet3
       type: "1000base-t"
@@ -259,25 +256,29 @@ l3leaf3:
       b_int: Ethernet4
     - name: Ethernet6
       type: "1000base-t"
-      mode: "tagged-all"
-      b_device: l2leaf2
-      b_int: Ethernet1
+      b_device: spine4
+      b_int: Ethernet5
     - name: Ethernet7
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: l2leaf2
-      b_int: Ethernet3  
-l3leaf4:
+      b_device: l2leaf3
+      b_int: Ethernet3
+    - name: Ethernet8
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: l2leaf4
+      b_int: Ethernet3
+leaf4:
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: l3leaf3
+      b_device: leaf3
       b_int: Ethernet1
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: l3leaf3
+      b_device: leaf3
       b_int: Ethernet2
     - name: Ethernet3
       type: "1000base-t"
@@ -293,58 +294,84 @@ l3leaf4:
       b_int: Ethernet4
     - name: Ethernet6
       type: "1000base-t"
-      mode: "tagged-all"
-      b_device: l2leaf2
-      b_int: Ethernet2
+      b_device: spine4
+      b_int: Ethernet5
     - name: Ethernet7
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: l2leaf2
+      b_device: l2leaf3
       b_int: Ethernet4
+    - name: Ethernet8
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: l2leaf4
+      b_int: Ethernet4
+leaf5:
+  interfaces:
+    - name: Ethernet3
+      type: "1000base-t"
+      b_device: spine1
+      b_int: Ethernet2
+    - name: Ethernet4
+      type: "1000base-t"
+      b_device: spine2
+      b_int: Ethernet3
+    - name: Ethernet5
+      type: "1000base-t"
+      b_device: spine3
+      b_int: Ethernet4
+    - name: Ethernet6
+      type: "1000base-t"
+      b_device: spine4
+      b_int: Ethernet5
 l2leaf1:
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: l3leaf1
-      b_int: Ethernet6
-    - name: Ethernet3
-      type: "1000base-t"
-      mode: "tagged-all"
-      b_device: l3leaf1
+      b_device: leaf1
       b_int: Ethernet7
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: l3leaf2
-      b_int: Ethernet6
-    - name: Ethernet4
-      type: "1000base-t"
-      mode: "tagged-all"
-      b_device: l3leaf2
+      b_device: leaf2
       b_int: Ethernet7
 l2leaf2:
   interfaces:
     - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: l3leaf3
-      b_int: Ethernet6
-    - name: Ethernet3
+      b_device: leaf1
+      b_int: Ethernet8
+    - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: l3leaf3
+      b_device: leaf2
+      b_int: Ethernet8
+l2leaf3:
+  interfaces:
+    - name: Ethernet1
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf3
       b_int: Ethernet7
     - name: Ethernet2
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: l3leaf4
-      b_int: Ethernet6
-    - name: Ethernet4
+      b_device: leaf4
+      b_int: Ethernet7
+l2leaf4:
+  interfaces:
+    - name: Ethernet1
       type: "1000base-t"
       mode: "tagged-all"
-      b_device: l3leaf4
-      b_int: Ethernet7 
+      b_device: leaf4
+      b_int: Ethernet8
+    - name: Ethernet2
+      type: "1000base-t"
+      mode: "tagged-all"
+      b_device: leaf4
+      b_int: Ethernet8
 """
 
 from django.utils.text import slugify
@@ -362,6 +389,8 @@ import ipaddress
 CUSTOM_FIELDS = {
     "role": {"models": [Interface], "label": "Role"},
     "site_type": {"models": [Site], "label": "Type of Site"},
+    "fabric_name": {"models": [Site], "label": "Fabric Name"},
+    "pod_name": {"models": [Device], "label": "The Pod this device is assigned to"},
     "device_bgp": {"models": [Device], "type": "Integer", "label": "Device BGP ASN"},
     "virtual_router_mac": {"models": [Device], "label": "Virtual Router Mac Address"},
     "virtual_router_ipv4": {"models": [Interface], "label": "Virtual Router IPv4 Address"},
@@ -396,7 +425,7 @@ class CreateAristaDC(Job):
 
         name = "Create Arista DataCenter Fabric"
         description = """
-        Create a new Fabric with N Spine (3 max), N Leaf switches (4 max), N Borderleaf switches (2 max), and a DCI switch if necessary.
+        Create a new Fabric with N Spine (3 max), N Leaf switches (4 max), N Borderleaf switches (2 max), and Super Spine switches if necessary.
         A new /23 will automatically be allocated from the 'Loopback Pool' and split into 2 /24s for the overlay loopback and the vtep loopback.
         A new /24 will automatically be allocated from the 'underlay Pool' and split into /31s to be assigned to each p2p interface in the underlay network.
         A new /26 will automatically be allocated from the 'mlag_peer Pool' and 'leaf_peer Pool' and split into /31s to be assigned to each MLAG SVI and LEAF_PEER SVI.  
@@ -405,23 +434,29 @@ class CreateAristaDC(Job):
         label = "Arista_DataCenter"
         field_order = [
             "dc_code",
+            "pod_name",
+            "fabric_name",
             "dc_bgp",
             "spine_count",
-            "leaf_count",
-            "borderleaf",
-            "dci",
+            "l3leaf_count",
+            "l2leaf_count",
+            "superspine",
         ]
     dc_code = StringVar(description="Name of the new DataCenter", label="DataCenter")
+
+    pod_name = StringVar(description="Name of the new Pod", label="Pod Name")
+
+    fabric_name = StringVar(description="Name of the Fabric to assign new pod to", label="Fabirc Name")
     
-    spine_count = IntegerVar(description="Number of Spine Switches", label="Spine switches count", min_value=0, max_value=3)
+    spine_count = IntegerVar(description="Number of Spine Switches", label="Spine switches count", min_value=2, max_value=4)
 
     dc_bgp = IntegerVar(description="DataCenter BGP AS", label="DC BGP AS")
 
-    leaf_count = IntegerVar(description="Number of Leaf Switches", label="Leaf switches count", min_value=1, max_value=4)
+    l3leaf_count = IntegerVar(description="Number of L3 Leaf Switches in this Pod", label="L3 Leaf switch count", min_value=2, max_value=5)
 
-    borderleaf = BooleanVar(description="Does this DataCenter require Border Leaf switches?", label="borderleaf required")
+    l2leaf_count = IntegerVar(description="Number of L2 Leaf Switches in this Pod", label="L2 Leaf switch count", min_value=1, max_value=2)
     
-    dci = BooleanVar(description="Does this DataCenter require an interconnect?", label="DCI required")
+    dci = BooleanVar(description="Does this DataCenter require a DataCenter Interconnect?", dci="DCI required")
     
     def run(self, data=None, commit=None):
         """Main function for CreateDC."""
@@ -454,11 +489,16 @@ class CreateAristaDC(Job):
         # spine.validated_save()
         self.log_success(obj=spine,message="Created new device Type")
 
+        superspine = DeviceType.objects.get_or_create(manufacturer=arista, model="superspine", slug="superspine", u_height=1)
+        self.log_success(obj=superspine,message="Created new device Type")
+
 
         # ----------------------------------------------------------------------------
         # Find or Create Site
         # ----------------------------------------------------------------------------
         dc_code = data["dc_code"].lower()
+        pod_name = slugify(data["pod_name"])
+        fabric_name = slugify(data["fabric_name"])
         p2p_dc_code = f"{dc_code}_underlay"
         mlag_dc_code = f"{dc_code}_mlag_peer"
         leaf_peer_dc_code = f"{dc_code}_leaf_peer"
@@ -466,7 +506,8 @@ class CreateAristaDC(Job):
         bgp = data["dc_bgp"]
         site_status = Status.objects.get_for_model(Site).get(slug="active")
         self.site, created = Site.objects.get_or_create(name=dc_code.upper(), slug=dc_code, status=site_status)
-        self.site.custom_field_data["site_type"] = "FABRIC"
+        self.site.custom_field_data["site_type"] = "fabric"
+        self.site.custom_field_data["fabric_name"] = fabric_name
         self.site.save()
         self.log_success(self.site, f"Site {dc_code} successfully created")
 
@@ -519,26 +560,17 @@ class CreateAristaDC(Job):
         ROLES = {
             "spine": {"device_type": "spine"},
             "l3leaf": {"device_type": "l3leaf"},
-            "borderleaf": {"device_type": "l3leaf"},
-            "dci": {"device_type": "spine"},
+            "superspine": {"device_type": "superspine"},
             "l2leaf": {"device_type": "l2leaf"},
         }
         # Number of devices to provision
-        if data["leaf_count"] == 1 or data["leaf_count"] == 2:
-          ROLES["l2leaf"]["nbr"] = 1
-        else: 
-          ROLES["l2leaf"]["nbr"] = 2
-
-        ROLES["l3leaf"]["nbr"] = data["leaf_count"]
+        ROLES["l2leaf"]["nbr"] = data["l2leaf_count"]
+        ROLES["l3leaf"]["nbr"] = data["l3leaf_count"]
         ROLES["spine"]["nbr"] = data["spine_count"]
-        if data["borderleaf"] == True:
-            ROLES["borderleaf"]["nbr"] = 2
-        else:
-            ROLES["borderleaf"]["nbr"] = 0
         if data["dci"] == True:
-            ROLES["dci"]["nbr"] = 1
+            ROLES["superspine"]["nbr"] = 2
         else:
-            ROLES["dci"]["nbr"] = 0
+            ROLES["superspine"]["nbr"] = 0
 
         
         # ----------------------------------------------------------------------------
@@ -691,7 +723,7 @@ class CreateAristaDC(Job):
         )
         self.log_success(obj=rack_name_spine, message=f"Created Relay Rack {rack_name_spine}")
 
-        if data["borderleaf"] == True: 
+        if data["dci"] == True: 
           rack_name_edge = f"{dc_code}-edge-rr-1"
           rack = Rack.objects.get_or_create(
               name=rack_name_edge, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
@@ -699,13 +731,13 @@ class CreateAristaDC(Job):
           self.log_success(obj=rack_name_edge, message=f"Created Relay Rack {rack_name_edge}")
 
         for i in range(1, ROLES["l3leaf"]["nbr"] + 1):
-          rack_name = f"{dc_code}-l3leaf-rr-{i}"
+          rack_name = f"{dc_code}-leaf-rr-{i}"
           rack = Rack.objects.get_or_create(
               name=rack_name, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
           )
           self.log_success(obj=rack_name, message=f"Created Relay Rack {rack_name}")
         for i in range(1, ROLES['l2leaf']['nbr'] + 1):
-          rack_name_l2leaf = f"{dc_code}-l2leaf-rr-{i}"
+          rack_name_l2leaf = f"{dc_code}-hosts-rr-{i}"
           rack = Rack.objects.get_or_create(
               name=rack_name_l2leaf, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
           )
@@ -723,27 +755,26 @@ class CreateAristaDC(Job):
                   rack = Rack.objects.filter(name=rack_name, site=self.site).first()
                 elif role == 'l3leaf':
                   rack_elevation = i + 1
-                  rack_name = f"{dc_code}-l3leaf-rr-{i}"
+                  rack_name = f"{dc_code}-leaf-rr-{i}"
                   rack = Rack.objects.filter(name=rack_name, site=self.site).first()
-                elif role == 'borderleaf':
-                  rack_elevation = i + 1
-                  rack_name = f"{dc_code}-edge-rr-1"
-                  rack = Rack.objects.filter(name=rack_name, site=self.site).first()
-                elif 'dci' in role:
+                elif 'superspine' in role:
                   rack_elevation = i + 3
                   rack_name = f"{dc_code}-edge-rr-1"
                   rack = Rack.objects.filter(name=rack_name, site=self.site).first()
                 elif 'l2leaf' in role:
                   rack_elevation = i + 1
-                  rack_name = f"{dc_code}-l2leaf-rr-{i}"
+                  rack_name = f"{dc_code}-host-rr-{i}"
                   rack = Rack.objects.filter(name=rack_name, site=self.site).first()
 
-                device_name = f"{dc_code}-{role}{i}"
+                if role == 'l3leaf':
+                  device_name = f"{dc_code}-leaf{i}"
+                else:
+                  device_name = f"{dc_code}-{role}{i}"
 
                 device = Device.objects.filter(name=device_name).first()
                 if device:
                     self.devices[device_name] = device
-                    self.log_success(obj=device, message=f"Device {device_name} already present")
+                    self.log_success(obj=device, message=f"Device {device_name} already exists")
                     continue
                 
                 device_status = Status.objects.get_for_model(Device).get(slug="active")
@@ -771,38 +802,43 @@ class CreateAristaDC(Job):
                   "prefix_list":[f"{str(lo0_prefix)} eq 32",]
                 }
                 device.local_context_data = LOCAL_CONTEXT
+                
+                # Assigns the device to the Pod described in the Pod_Name survey
+                if device_name == f"{dc_code}-spine1" or device_name == f"{dc_code}-spine2" or device_name == f"{dc_code}-spine3" or device_name == f"{dc_code}-spine4" or device_name == f"{dc_code}-leaf1" or device_name == f"{dc_code}-leaf2" or device_name == f"{dc_code}-leaf3" or device_name == f"{dc_code}-leaf4" or device_name == f"{dc_code}-leaf5":
+                  device.custom_field_data["pod_name"]=pod_name
+
                 device.validated_save()
                 self.log_success(device, f"Added local context on {device_name}")
 
                 # Add the Devices specific BGP assignments
-                if device_name == f"{dc_code}-spine1" or device_name == f"{dc_code}-spine2" or device_name == f"{dc_code}-spine3":
+                if device_name == f"{dc_code}-spine1" or device_name == f"{dc_code}-spine2" or device_name == f"{dc_code}-spine3" or device_name == f"{dc_code}-spine4":
                     device._custom_field_data = {"device_bgp": bgp}
                     device.validated_save()
                     self.log_success(device, f"Added AS::{bgp} to Device {device_name}")
 
-                elif device_name == f"{dc_code}-l3leaf1" or device_name == f"{dc_code}-l3leaf2":
+                elif device_name == f"{dc_code}-leaf1" or device_name == f"{dc_code}-leaf2":
                     leaf_bgp = bgp + 1
                     device._custom_field_data = {"device_bgp": leaf_bgp}
                     device.validated_save()
                     self.log_success(device, f"Added AS::{leaf_bgp} to Device {device_name}")
 
-                elif device_name == f"{dc_code}-l3leaf3" or device_name == f"{dc_code}-l3leaf4":
+                elif device_name == f"{dc_code}-leaf3" or device_name == f"{dc_code}-leaf4":
                     leaf_bgp = bgp + 2
                     device._custom_field_data = {"device_bgp": leaf_bgp}
                     device.validated_save()
                     self.log_success(device, f"Added AS::{leaf_bgp} to Device {device_name}")
 
-                elif device_name == f"{dc_code}-borderleaf1" or device_name == f"{dc_code}-borderleaf2":
+                elif device_name == f"{dc_code}-leaf5":
                     borderleaf_bgp = bgp + 3
                     device._custom_field_data = {"device_bgp": borderleaf_bgp}
                     device.validated_save()
                     self.log_success(device, f"Added AS::{borderleaf_bgp} to Device {device_name}")
 
-                elif device_name == f"{dc_code}-dci1":
-                    dci_bgp = 65000
-                    device._custom_field_data = {"device_bgp": dci_bgp}
+                elif device_name == f"{dc_code}-superspine1" or device_name == f"{dc_code}-superspine2":
+                    superspine_bgp = 65000
+                    device._custom_field_data = {"device_bgp":  superspine_bgp}
                     device.validated_save()
-                    self.log_success(device, f"Added AS::{dci_bgp} to Device {device_name}")
+                    self.log_success(device, f"Added AS::{superspine_bgp} to Device {device_name}")
 
 
                 # Create physical interfaces
@@ -814,10 +850,10 @@ class CreateAristaDC(Job):
                 #             device=device, 
                 #     )
                 #     self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
-                if device_name == f"{dc_code}-spine1" or device_name == f"{dc_code}-spine2" or device_name == f"{dc_code}-spine3":
-                  intf_number =  ROLES["l3leaf"]["nbr"] + ROLES["borderleaf"]["nbr"] + 1
+                if device_name == f"{dc_code}-spine1" or device_name == f"{dc_code}-spine2" or device_name == f"{dc_code}-spine3" or device_name == f"{dc_code}-spine4":
+                  intf_number =  ROLES["leaf"]["nbr"] + ROLES['superspine']['nbr']
                   for i in range(1, intf_number + 1):
-                    if i == 2 or i == 3 or i == 4 or i == 5 or i == 6 or i == 7:
+                    if i == 2 or i == 3 or i == 4 or i == 5 or i == 6 or i == 7 or i == 8:
                       int_name = Interface.objects.create(
                         name=f"Ethernet{i}",
                         type="1000base-t",
@@ -836,10 +872,10 @@ class CreateAristaDC(Job):
                       )
                       self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
 
-                elif device_name == f"{dc_code}-l3leaf1" or device_name == f"{dc_code}-l3leaf2" or device_name == f"{dc_code}-l3leaf3" or device_name == f"{dc_code}-l3leaf4":
-                  intf_number =  ROLES["spine"]["nbr"] + ROLES["l2leaf"]["nbr"] + 2
+                elif device_name == f"{dc_code}-leaf1" or device_name == f"{dc_code}-leaf2":
+                  intf_number =  ROLES["spine"]["nbr"] + 2
                   for i in range(1, intf_number + 1):
-                    if i == 3 or i == 4 or i == 5:
+                    if i == 3 or i == 4 or i == 5 or i == 6:
                       int_name = Interface.objects.create(
                       name=f"Ethernet{i}",
                       type="1000base-t",
@@ -858,100 +894,109 @@ class CreateAristaDC(Job):
                       device=device,
                       )
                       self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
-                    if int_name == "Ethernet6" or int_name == "Ethernet7":
-                      int_name.cf['role'] = "l2leaf_connection"
+                    
+                    if ROLES["l2leaf"]["nbr"] == 1:
+                      eth7 = Interface.objects.create(
+                        name = "Ethernet7",
+                        type = "1000base-t",
+                        label = "trunk",
+                        device = device,
+                      ) 
+                      self.log_success(obj=eth7, message=f"{eth7} successfully created on {device_name}")
+                      eth7.cf['role'] = "l2leaf_connection"
+                      eth7.validated_save()
+
+                    elif ROLES["l2leaf"]["nbr"] == 2:
+                      eth7 = Interface.objects.create(
+                        name = "Ethernet7",
+                        type = "1000base-t",
+                        label = "trunk",
+                        device = device,
+                      ) 
+                      self.log_success(obj=eth7, message=f"{eth7} successfully created on {device_name}")
+                      eth7.cf['role'] = "l2leaf_connection"
+                      eth7.validated_save()
+
+                      eth8 = Interface.objects.create(
+                        name = "Ethernet8",
+                        type = "1000base-t",
+                        label = "trunk",
+                        device = device,
+                      ) 
+                      self.log_success(obj=eth8, message=f"{eth8} successfully created on {device_name}")
+                      eth8.cf['role'] = "l2leaf_connection"
+                      eth8.validated_save()
+
+                elif device_name == f"{dc_code}-leaf3" or device_name == f"{dc_code}-leaf4" or device_name == f"{dc_code}-leaf5":
+                  intf_number =  ROLES["spine"]["nbr"] + 2
+                  for i in range(1, intf_number + 1):
+                    if i == 3 or i == 4 or i == 5 or i == 6:
+                      int_name = Interface.objects.create(
+                      name=f"Ethernet{i}",
+                      type="1000base-t",
+                      label="Layer3",
+                      device=device,
+
+                      )
+                      self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
+                      int_name.cf['role'] = "spine"
                       int_name.validated_save()
+                    else:
+                      int_name = Interface.objects.create(
+                      name=f"Ethernet{i}",
+                      type="1000base-t",
+                      label="trunk",
+                      device=device,
+                      )
+                      self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
 
                 elif device_name == f"{dc_code}-l2leaf1" or device_name == f"{dc_code}-l2leaf2":
-                  if ROLES["l3leaf"]["nbr"] == 1 or ROLES["l3leaf"]["nbr"] == 3:
-                    intf_number = 2
-                    for i in range(1, intf_number + 1):
-                      int_name = Interface.objects.create(
-                        name=f"Ethernet{i}",
-                        type="1000base-t",
-                        label="trunk",
-                        device=device,
-                      )
-                      self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
-                  elif ROLES["l3leaf"]["nbr"] == 2 or ROLES["l3leaf"]["nbr"] == 4:
-                    intf_number = 4
-                    for i in range(1, intf_number + 1):
-                      int_name = Interface.objects.create(
-                        name=f"Ethernet{i}",
-                        type="1000base-t",
-                        label="trunk",
-                        device=device,
-                      )
-                      self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
-
-
-                elif device_name == f"{dc_code}-borderleaf1" or device_name == f"{dc_code}-borderleaf2":
-                  intf_number =  ROLES["spine"]["nbr"] + ROLES["dci"]["nbr"] + 2
-                  for i in range(1, intf_number + 1):
-                    if i == 3 or i == 4 or i == 5:
-                      int_name = Interface.objects.create(
-                      name=f"Ethernet{i}",
-                      type="1000base-t",
-                      label="Layer3",
-                      device=device,
-
-                      )
-                      self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
-                      int_name.cf['role'] = "spine"
-                      int_name.validated_save()
-                    else:
-                      int_name = Interface.objects.create(
-                      name=f"Ethernet{i}",
-                      type="1000base-t",
-                      label="trunk",
-                      device=device,
-                      )
-                      self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
-
-                  if ROLES["dci"]["nbr"] != 0:
-                    eth12 = Interface.objects.create(
-                      name = "Ethernet12",
-                      type= "1000base-t",
-                      label="Layer3",
-                      device = device,
-                    )
-                    self.log_success(obj=eth12, message=f"{eth12} successfully created on {device_name}")
-                    eth12.cf['role'] = "dci"
-                    eth12.validated_save()
-
-                elif device_name == f"dci1-{dc_code}":
-                  intf_number =  ROLES["borderleaf"]["nbr"]
+                  intf_number = 4
                   for i in range(1, intf_number + 1):
                     int_name = Interface.objects.create(
                       name=f"Ethernet{i}",
                       type="1000base-t",
+                      label="trunk",
+                      device=device,
+                    )
+                    self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
+
+                elif device_name == f"{dc_code}-superspine1" or device_name == f"{dc_code}-superspine2":
+                  intf_number =  ROLES["spine"]["nbr"]
+                  for i in range(1, intf_number + 1):
+                    if i == 1 or i == 2 or i == 3 or i == 4:
+                      int_name = Interface.objects.create(
+                      name=f"Ethernet{i}",
+                      type="1000base-t",
                       label="Layer3",
                       device=device,
 
-                    )
-                    self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
+                      )
+                      self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
+                      int_name.cf['role'] = "spine"
+                      int_name.validated_save()
                                 
                 # LEAF MLAG Port Channel
-                if device.device_role.slug == "l3leaf":
+                if device.device_role.slug == "l3leaf" and ROLES["l3leaf"]["nbr"] >= 2:
                     portchannel_intf = Interface.objects.create(
-                        name="Port-Channel10", type="lag", mode="tagged-all", label="trunk", device=device
+                        name="Port-Channel1", type="lag", mode="tagged-all", label="trunk", device=device
                     )
                     self.log_success(obj=portchannel_intf, message=f"{portchannel_intf} successfully created on {device_name}")
                     
                     # Thanks mcgoo298
                     eth1 = device.interfaces.get(name="Ethernet1")
                     eth2 = device.interfaces.get(name="Ethernet2")
-                    po10 = device.interfaces.get(name="Port-Channel10")
-                    eth1.lag = po10
+                    po1 = device.interfaces.get(name="Port-Channel1")
+                    eth1.lag = po1
                     eth1.mode = "tagged-all"
                     eth1.label = "trunk"
                     eth1.validated_save()
-                    self.log_success(message=f"Moved {eth1} succesfully to {po10}")
-                    eth2.lag = po10
+                    self.log_success(message=f"Moved {eth1} succesfully to {po1}")
+                    eth2.lag = po1
                     eth2.mode = "tagged-all"
                     eth2.label = "trunk"
                     eth2.validated_save()
-                    self.log_success(message=f"Moved {eth2} succesfully to {po10}")
+                    self.log_success(message=f"Moved {eth2} succesfully to {po1}")
                     # MLAG SVI
                     mlag_svi = Interface.objects.create(
                         name="Vlan4094", type="virtual", description="MLAG", device=device
@@ -994,171 +1039,67 @@ class CreateAristaDC(Job):
                     #     ip = IPAddress.objects.create(address='192.168.255.2/30', assigned_object=interface)
                     #     self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
 
-                    # Leaf switch to l2leaf Port Channel
-                    if device_name == f"{dc_code}-l3leaf1" or device_name == f"{dc_code}-l3leaf3":
-                      po1_intf = Interface.objects.create(
-                        name="Port-Channel1", type="lag", mode="tagged-all", label="trunk",  device=device
-                      )  
-                      self.log_success(obj=po1_intf, message=f"{po1_intf} successfully created on {device_name}")
-                      po1_intf.cf['role'] = "l2leaf_connection"
-                      po1_intf.validated_save()
-                      try:
-                        eth6 = device.interfaces.get(name="Ethernet6")
-                        eth7 = device.interfaces.get(name="Ethernet7")
-                        po1 = device.interfaces.get(name="Port-Channel1")
-                        eth6.lag = po1
-                        eth6.mode = "tagged-all"
-                        eth6.label = "trunk"
-                        eth6.cf['role'] = "l2leaf_connection"
-                        eth6.validated_save()
-                        self.log_success(message=f"Moved {eth6} succesfully to {po1}")
-                        eth7.lag = po1
-                        eth7.mode = "tagged-all"
-                        eth7.label = "trunk"
-                        eth7.cf['role'] = "l2leaf_connection"
-                        eth7.validated_save()
-                        self.log_success(message=f"Moved {eth7} succesfully to {po1}")
-                      except Exception:
-                        pass
-
-                    elif device_name == f"{dc_code}-l3leaf2" or device_name == f"{dc_code}-l3leaf4":
-                      po2_intf = Interface.objects.create(
-                        name="Port-Channel2", type="lag", mode="tagged-all", label="trunk",  device=device
-                      )  
-                      self.log_success(obj=po2_intf, message=f"{po2_intf} successfully created on {device_name}")
-                      po2_intf.cf['role'] = "l2leaf_connection"
-                      po2_intf.validated_save()
-                      try:
-                        eth6 = device.interfaces.get(name="Ethernet6")
-                        eth7 = device.interfaces.get(name="Ethernet7")
-                        po2 = device.interfaces.get(name="Port-Channel2")
-                        eth6.lag = po2
-                        eth6.mode = "tagged-all"
-                        eth6.label = "trunk"
-                        eth6.cf['role'] = "l2leaf_connection"
-                        eth6.validated_save()
-                        self.log_success(message=f"Moved {eth6} succesfully to {po2}")
-                        eth7.lag = po2
-                        eth7.mode = "tagged-all"
-                        eth7.label = "trunk"
-                        eth7.cf['role'] = "l2leaf_connection"
-                        eth7.validated_save()
-                        self.log_success(message=f"Moved {eth7} succesfully to {po2}")
-                      except Exception:
-                        pass
+                # L3Leaf switch to l2leaf Port Channel
+                if device_name == f"{dc_code}-leaf1" or device_name == f"{dc_code}-leaf2" and ROLES["l2leaf"]["nbr"] >= 1:
+                  po6_intf = Interface.objects.create(
+                    name="Port-Channel6", type="lag", mode="tagged-all", label="trunk",  device=device
+                  )  
+                  self.log_success(obj=po6_intf, message=f"{po6_intf} successfully created on {device_name}")
+                  po6_intf.cf['role'] = "l2leaf_connection"
+                  po6_intf.validated_save()
+                  try:
+                    eth7 = device.interfaces.get(name="Ethernet7")
+                    po6 = device.interfaces.get(name="Port-Channel6")
+                    eth7.lag = po6
+                    eth7.mode = "tagged-all"
+                    eth7.label = "trunk"
+                    eth7.cf['role'] = "l2leaf_connection"
+                    eth7.validated_save()
+                    self.log_success(message=f"Moved {eth7} succesfully to {po6}")
+                  except Exception:
+                    pass
+                  
+                if device_name == f"{dc_code}-leaf1" or device_name == f"{dc_code}-leaf2" and ROLES["l2leaf"]["nbr"] >= 2:
+                  try:
+                    eth8 = device.interfaces.get(name="Ethernet8")
+                    eth8.lag = po6
+                    eth8.mode = "tagged-all"
+                    eth8.label = "trunk"
+                    eth8.cf['role'] = "l2leaf_connection"
+                    eth8.validated_save()
+                    self.log_success(message=f"Moved {eth8} succesfully to {po6}")
+                  except Exception:
+                    pass
 
                 # l2leaf Switch to l3leaf Port Channel
-                if device.device_role.slug == "l2leaf":
-                  l2leaf_po1_intf = Interface.objects.create(
-                    name="Port-Channel1", type="lag", mode="tagged-all", label="trunk", device=device
+                if device.device_role.slug == "l2leaf" and ROLES["l3leaf"]["nbr"] >= 2:
+                  l2leaf_po6_intf = Interface.objects.create(
+                    name="Port-Channel6", type="lag", mode="tagged-all", label="trunk", device=device
                   )
-                  self.log_success(obj=l2leaf_po1_intf, message=f"{portchannel_intf} successfully created on {device_name}")
+                  self.log_success(obj=l2leaf_po6_intf, message=f"{l2leaf_po6_intf} successfully created on {device_name}")
 
-                  l2leaf_po2_intf = Interface.objects.create(
-                    name="Port-Channel2", type="lag", mode="tagged-all", label="trunk", device=device
-                  )
-                  self.log_success(obj=l2leaf_po2_intf, message=f"{portchannel_intf} successfully created on {device_name}")
                   try:
-                    l2leaf_eth1 = device.interfaces.get(name="Ethernet1")
                     l2leaf_eth3 = device.interfaces.get(name="Ethernet3")
-                    l2leaf_po1 = device.interfaces.get(name="Port-Channel1")
-                    l2leaf_eth1.lag = l2leaf_po1
-                    l2leaf_eth1.mode = "tagged-all"
-                    l2leaf_eth1.label = "trunk"
-                    l2leaf_eth1.validated_save()
-                    self.log_success(message=f"Moved {l2leaf_eth1} succesfully to {l2leaf_po1}")
-                    l2leaf_eth3.lag = l2leaf_po1
+                    l2leaf_eth4 = device.interfaces.get(name="Ethernet4")
+                    l2leaf_po6 = device.interfaces.get(name="Port-Channel6")
+                    l2leaf_eth3.lag = l2leaf_po6
                     l2leaf_eth3.mode = "tagged-all"
                     l2leaf_eth3.label = "trunk"
                     l2leaf_eth3.validated_save()
-                    self.log_success(message=f"Moved {l2leaf_eth3} succesfully to {l2leaf_po1}")
-                  except Exception:
-                    pass
-
-                  try:
-                    l2leaf_eth2 = device.interfaces.get(name="Ethernet2")
-                    l2leaf_eth4 = device.interfaces.get(name="Ethernet4")
-                    l2leaf_po2 = device.interfaces.get(name="Port-Channel2")
-                    l2leaf_eth2.lag = l2leaf_po2
-                    l2leaf_eth2.mode = "tagged-all"
-                    l2leaf_eth2.label = "trunk"
-                    l2leaf_eth2.validated_save()
-                    self.log_success(message=f"Moved {l2leaf_eth2} succesfully to {l2leaf_po2}")
-                    l2leaf_eth4.lag = l2leaf_po2
+                    self.log_success(message=f"Moved {l2leaf_eth3} succesfully to {l2leaf_po6}")
+                    l2leaf_eth4.lag = l2leaf_po6
                     l2leaf_eth4.mode = "tagged-all"
                     l2leaf_eth4.label = "trunk"
                     l2leaf_eth4.validated_save()
-                    self.log_success(message=f"Moved {l2leaf_eth4} succesfully to {l2leaf_po2}")
+                    self.log_success(message=f"Moved {l2leaf_eth4} succesfully to {l2leaf_po6}")
                   except Exception:
                     pass
 
-        
-                # BORDERLEAF MLAG Port Channel
-                if device.device_role.slug == "borderleaf":
-                    portchannel_intf = Interface.objects.create(
-                        name="Port-Channel10", type="lag", mode="tagged-all", label="trunk", device=device
-                    )
-                    self.log_success(obj=portchannel_intf, message=f"{portchannel_intf} successfully created on {device_name}")
-
-                    eth1 = device.interfaces.get(name="Ethernet1")
-                    eth2 = device.interfaces.get(name="Ethernet2")
-                    po10 = device.interfaces.get(name="Port-Channel10")
-                    eth1.lag = po10
-                    eth1.label = "trunk"
-                    eth1.validated_save()
-                    self.log_success(message=f"Moved {eth1} succesfully to {po10}")
-                    eth2.lag = po10
-                    eth2.label = "trunk"
-                    eth2.validated_save()
-                    self.log_success(message=f"Moved {eth2} succesfully to {po10}")
-
-                    # MLAG SVI
-                    mlag_svi = Interface.objects.create(
-                        name="Vlan4094", type="virtual", description="MLAG", device=device
-                    )
-                    self.log_success(obj=mlag_svi, message=f"{mlag_svi} successfully created on {device_name}")
-
-                    #LEAF PEER SVI
-                    leaf_peer_svi = Interface.objects.create(
-                        name="Vlan4093", type="virtual", description="LEAF_PEER", device=device
-                    )
-                    self.log_success(obj=leaf_peer_svi, message=f"{leaf_peer_svi} successfully created on {device_name}")
-                    #####################################################
-                    # Creating IP addresses for MLAG Peer and LEAF Peer #
-                    #####################################################
-                    
-                    # mlag_prefix = Prefix.objects.get(
-                    #   site=self.site, role__name=f"{dc_code}_mlag_peer",
-                    # )
-                    
-                    # available_mlag_ips = mlag_prefix.get_available_ips()
-                    # mlag_address = list(available_mlag_ips)[0]
-                    # mlag_ip = IPAddress.objects.create(address=str(mlag_address), description=f"{device_name}::{mlag_svi}", assigned_object=mlag_svi)
-
-                    # leaf_peer_prefix = Prefix.objects.get(
-                    #   site=self.site, role__name=f"{dc_code}_leaf_peer",
-                    # )
-
-                    # available_leaf_peer_ips = leaf_peer_prefix.get_available_ips()
-                    # leaf_peer_address = list(available_leaf_peer_ips)[0]
-                    # leaf_peer_ip = IPAddress.objects.create(address=str(leaf_peer_address), description=f"{device_name}::{leaf_peer_svi}", assigned_object=leaf_peer_svi)
-
-                    # if device_name == f"borderleaf1-{dc_code}":
-                    #     interface = Interface.objects.get(name="Vlan4094", device=device)
-                    #     ip = IPAddress.objects.create(address='192.168.255.1/30', assigned_object=interface)
-                    #     self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
-
-                    # elif device_name == f"borderleaf2-{dc_code}":
-                    #     interface = Interface.objects.get(name="Vlan4094", device=device)
-                    #     ip = IPAddress.objects.create(address='192.168.255.2/30', assigned_object=interface)
-                    #     self.log_success(message=f"Created MLAG PEER address on {interface.device.name}::{interface}")
-
-
 
                 # Generate Loopback0 interface and assign Loopback0 address
-                if device.device_role.slug == 'spine' or device.device_role.slug == "l3leaf" or device.device_role.slug == 'borderleaf' or device.device_role.slug == 'dci':
+                if device.device_role.slug == 'spine' or device.device_role.slug == "l3leaf" or device.device_role.slug == 'superspine':
                   loopback0_intf = Interface.objects.create(
-                      name="Loopback0", type="virtual", device=device
+                      name="Loopback0", type="virtual", description="EVPN_Overlay_Peering", device=device
                   )
                   self.log_success(obj=loopback0_intf, message=f"{loopback0_intf} successfully created on {device_name}")
 
@@ -1174,22 +1115,7 @@ class CreateAristaDC(Job):
                 # Generate Loopback1 interface and assign Loopback1 address
                 if device.device_role.slug == "l3leaf":
                     loopback1_intf = Interface.objects.create(
-                        name="Loopback1", type="virtual", device=device
-                    )
-                    self.log_success(obj=loopback1_intf, message=f"{loopback1_intf} successfully created on {device_name}")
-
-                    loopback1_prefix = Prefix.objects.get(
-                        site=self.site,
-                        role__name=f"{dc_code}_vtep_loopback",
-                    )
-
-                    available_ips = loopback1_prefix.get_available_ips()
-                    lo1_address = list(available_ips)[0]
-                    loopback1_ip = IPAddress.objects.create(address=str(lo1_address), description=f"{device_name}::{loopback1_intf}", assigned_object=loopback1_intf)
-
-                elif device.device_role.slug == "borderleaf":
-                    loopback1_intf = Interface.objects.create(
-                        name="Loopback1", type="virtual", device=device
+                        name="Loopback1", type="virtual", description="VTEP_VXLAN_Tunnel_Source", device=device
                     )
                     self.log_success(obj=loopback1_intf, message=f"{loopback1_intf} successfully created on {device_name}")
 
@@ -1207,92 +1133,95 @@ class CreateAristaDC(Job):
         #######################################
         for role, data in ROLES.items():
             for i in range(1, data.get("nbr", 2) + 1):
+              if role == 'l3leaf':
+                device_name = f"{dc_code}-leaf{i}" 
+              else:
                 device_name = f"{dc_code}-{role}{i}"
-                device = Device.objects.get(name=device_name)
-                dev_name = device_name.replace(f"{dc_code}-","")
+              device = Device.objects.get(name=device_name)
+              dev_name = device_name.replace(f"{dc_code}-","")
 
-                for iface in SWITCHES[dev_name]['interfaces']:
-                  try:
+              for iface in SWITCHES[dev_name]['interfaces']:
+                try:
+                  interface = Interface.objects.get(name=iface['name'], device=device)
+                  if interface.cable is None:
+                      if "b_device" in iface.keys():
+                          b_device = iface['b_device']
+                          b_dev_name = f"{dc_code}-{b_device}"
+                          bside_device = Device.objects.get(name=b_dev_name)
+                          bside_interface = Interface.objects.get(name=iface['b_int'],device=bside_device, )
+                          intf1 = interface
+                          intf2 = bside_interface
+                          status = Status.objects.get_for_model(Cable).get(slug="connected")
+                          if intf1.cable or intf2.cable:
+                              self.log_warning(
+                                  message=f"Unable to create a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}"
+                              )
+                              return False
+                          cable = Cable.objects.create(termination_a=intf1, termination_b=intf2, status=status)
+                          cable.save()
+                          self.log_success(message=f"Created a cable between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
+                          # Find Next available Network
+                          if "mode" not in iface.keys():
+                              P2P_PREFIX_SIZE = 31
+                              ip_status = Status.objects.get_for_model(Device).get(slug="active")
+                              prefix = Prefix.objects.filter(site=self.site, role__name=f"{dc_code}_underlay_p2p").first()
+                              first_avail = prefix.get_first_available_prefix()
+                              subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
+
+                              Prefix.objects.create(prefix=str(subnet))
+
+                              # Create IP Addresses on both sides
+                              ip1 = IPAddress.objects.create(address=f"{str(subnet[0])}/31", assigned_object=intf1, status=ip_status)
+                              ip2 = IPAddress.objects.create(address=f"{str(subnet[1])}/31", assigned_object=intf2, status=ip_status)
+                              self.log_success(message=f"Created a IP Addresses {ip1} & {ip2} between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
+                except Exception:
+                  pass
+              
+              #####################################
+              # Creating /31 assignments for MLAG #
+              #####################################
+              if "vlans" in SWITCHES[dev_name].keys():
+                for iface in SWITCHES[dev_name]['vlans']:
+                  if "Vlan4094" in iface['name']:
                     interface = Interface.objects.get(name=iface['name'], device=device)
-                    if interface.cable is None:
-                        if "b_device" in iface.keys():
-                            b_device = iface['b_device']
-                            b_dev_name = f"{dc_code}-{b_device}"
-                            bside_device = Device.objects.get(name=b_dev_name)
-                            bside_interface = Interface.objects.get(name=iface['b_int'],device=bside_device, )
-                            intf1 = interface
-                            intf2 = bside_interface
-                            status = Status.objects.get_for_model(Cable).get(slug="connected")
-                            if intf1.cable or intf2.cable:
-                                self.log_warning(
-                                    message=f"Unable to create a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}"
-                                )
-                                return False
-                            cable = Cable.objects.create(termination_a=intf1, termination_b=intf2, status=status)
-                            cable.save()
-                            self.log_success(message=f"Created a cable between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
-                            # Find Next available Network
-                            if "mode" not in iface.keys():
-                                P2P_PREFIX_SIZE = 31
-                                ip_status = Status.objects.get_for_model(Device).get(slug="active")
-                                prefix = Prefix.objects.filter(site=self.site, role__name=f"{dc_code}_underlay_p2p").first()
-                                first_avail = prefix.get_first_available_prefix()
-                                subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
-
-                                Prefix.objects.create(prefix=str(subnet))
-
-                                # Create IP Addresses on both sides
-                                ip1 = IPAddress.objects.create(address=f"{str(subnet[0])}/31", assigned_object=intf1, status=ip_status)
-                                ip2 = IPAddress.objects.create(address=f"{str(subnet[1])}/31", assigned_object=intf2, status=ip_status)
-                                self.log_success(message=f"Created a IP Addresses {ip1} & {ip2} between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
-                  except Exception:
-                    pass
-                
-                #####################################
-                # Creating /31 assignments for MLAG #
-                #####################################
-                if "vlans" in SWITCHES[dev_name].keys():
-                  for iface in SWITCHES[dev_name]['vlans']:
-                    if "Vlan4094" in iface['name']:
-                      interface = Interface.objects.get(name=iface['name'], device=device)
-                      if "b_device" in iface.keys():
-                        b_device = iface['b_device']
-                        b_dev_name = f"{dc_code}-{b_device}"
-                        bside_device = Device.objects.get(name=b_dev_name)
-                        bside_interface = Interface.objects.get(name=iface['b_int'],device=bside_device, )
-                        intf1 = interface
-                        intf2 = bside_interface
-                        P2P_PREFIX_SIZE = 31
-                        ip_status = Status.objects.get_for_model(Device).get(slug="active")
-                        prefix = Prefix.objects.filter(site=self.site, role__name=f"{dc_code}_mlag_peer_p2p").first()
-                        first_avail = prefix.get_first_available_prefix()
-                        subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
-                        Prefix.objects.create(prefix=str(subnet))
-                        # Create IP Addresses on both sides
-                        ip1 = IPAddress.objects.create(address=f"{str(subnet[0])}/31", assigned_object=intf1, status=ip_status)
-                        ip2 = IPAddress.objects.create(address=f"{str(subnet[1])}/31", assigned_object=intf2, status=ip_status)
-                        self.log_success(message=f"Created a IP Addresses {ip1} & {ip2} between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
-                
-                ##########################################
-                # Creating /31 assignments for LEAF PEER #
-                ##########################################
-                  for iface in SWITCHES[dev_name]['vlans']:
-                    if "Vlan4093" in iface['name']:
-                      interface = Interface.objects.get(name=iface['name'], device=device)
-                      if "b_device" in iface.keys():
-                        b_device = iface['b_device']
-                        b_dev_name = f"{dc_code}-{b_device}"
-                        bside_device = Device.objects.get(name=b_dev_name)
-                        bside_interface = Interface.objects.get(name=iface['b_int'],device=bside_device, )
-                        intf1 = interface
-                        intf2 = bside_interface
-                        P2P_PREFIX_SIZE = 31
-                        ip_status = Status.objects.get_for_model(Device).get(slug="active")
-                        prefix = Prefix.objects.filter(site=self.site, role__name=f"{dc_code}_leaf_peer_p2p").first()
-                        first_avail = prefix.get_first_available_prefix()
-                        subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
-                        Prefix.objects.create(prefix=str(subnet))
-                        # Create IP Addresses on both sides
-                        ip1 = IPAddress.objects.create(address=f"{str(subnet[0])}/31", assigned_object=intf1, status=ip_status)
-                        ip2 = IPAddress.objects.create(address=f"{str(subnet[1])}/31", assigned_object=intf2, status=ip_status)
-                        self.log_success(message=f"Created a IP Addresses {ip1} & {ip2} between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
+                    if "b_device" in iface.keys():
+                      b_device = iface['b_device']
+                      b_dev_name = f"{dc_code}-{b_device}"
+                      bside_device = Device.objects.get(name=b_dev_name)
+                      bside_interface = Interface.objects.get(name=iface['b_int'],device=bside_device, )
+                      intf1 = interface
+                      intf2 = bside_interface
+                      P2P_PREFIX_SIZE = 31
+                      ip_status = Status.objects.get_for_model(Device).get(slug="active")
+                      prefix = Prefix.objects.filter(site=self.site, role__name=f"{dc_code}_mlag_peer_p2p").first()
+                      first_avail = prefix.get_first_available_prefix()
+                      subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
+                      Prefix.objects.create(prefix=str(subnet))
+                      # Create IP Addresses on both sides
+                      ip1 = IPAddress.objects.create(address=f"{str(subnet[0])}/31", assigned_object=intf1, status=ip_status)
+                      ip2 = IPAddress.objects.create(address=f"{str(subnet[1])}/31", assigned_object=intf2, status=ip_status)
+                      self.log_success(message=f"Created a IP Addresses {ip1} & {ip2} between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
+              
+              ##########################################
+              # Creating /31 assignments for LEAF PEER #
+              ##########################################
+                for iface in SWITCHES[dev_name]['vlans']:
+                  if "Vlan4093" in iface['name']:
+                    interface = Interface.objects.get(name=iface['name'], device=device)
+                    if "b_device" in iface.keys():
+                      b_device = iface['b_device']
+                      b_dev_name = f"{dc_code}-{b_device}"
+                      bside_device = Device.objects.get(name=b_dev_name)
+                      bside_interface = Interface.objects.get(name=iface['b_int'],device=bside_device, )
+                      intf1 = interface
+                      intf2 = bside_interface
+                      P2P_PREFIX_SIZE = 31
+                      ip_status = Status.objects.get_for_model(Device).get(slug="active")
+                      prefix = Prefix.objects.filter(site=self.site, role__name=f"{dc_code}_leaf_peer_p2p").first()
+                      first_avail = prefix.get_first_available_prefix()
+                      subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
+                      Prefix.objects.create(prefix=str(subnet))
+                      # Create IP Addresses on both sides
+                      ip1 = IPAddress.objects.create(address=f"{str(subnet[0])}/31", assigned_object=intf1, status=ip_status)
+                      ip2 = IPAddress.objects.create(address=f"{str(subnet[1])}/31", assigned_object=intf2, status=ip_status)
+                      self.log_success(message=f"Created a IP Addresses {ip1} & {ip2} between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
