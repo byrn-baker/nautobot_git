@@ -865,13 +865,13 @@ class CreateAristaDC(Job):
                       self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
                       int_name.cf['role'] = "leaf"
                       int_name.validated_save()
-                    else:
-                      int_name = Interface.objects.create(
-                        name=f"Ethernet{i}",
-                        type="1000base-t",
-                        device=device,
-                      )
-                      self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
+                    # else:
+                    #   int_name = Interface.objects.create(
+                    #     name=f"Ethernet{i}",
+                    #     type="1000base-t",
+                    #     device=device,
+                    #   )
+                    #   self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
                     #SuperSpine Interfaces
                     if ROLES["superspine"]['nbr'] == 1 or ROLES["superspine"]['nbr'] == 2:
                       eth7 = Interface.objects.create(
