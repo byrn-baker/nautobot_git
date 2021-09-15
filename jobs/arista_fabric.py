@@ -852,9 +852,9 @@ class CreateAristaDC(Job):
                 #     )
                 #     self.log_success(obj=intf_name, message=f"{intf_name} successfully created on {device_name}")
                 if device_name == f"{dc_code}-spine1" or device_name == f"{dc_code}-spine2" or device_name == f"{dc_code}-spine3" or device_name == f"{dc_code}-spine4":
-                  intf_number =  ROLES["l3leaf"]["nbr"] + ROLES['superspine']['nbr']
+                  intf_number =  ROLES["l3leaf"]["nbr"]
                   for i in range(1, intf_number + 1):
-                    if i == 2 or i == 3 or i == 4 or i == 5 or i == 6 or i == 7 or i == 8:
+                    if i == 2 or i == 3 or i == 4 or i == 5 or i == 6:
                       int_name = Interface.objects.create(
                         name=f"Ethernet{i}",
                         type="1000base-t",
@@ -872,6 +872,27 @@ class CreateAristaDC(Job):
                         device=device,
                       )
                       self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
+                    #SuperSpine Interfaces
+                    if ROLES["superspine"]['nbr'] == 1 or ROLES["superspine"]['nbr'] == 2:
+                      eth7 = Interface.objects.create(
+                        name = "Ethernet7",
+                        type = "1000base-t",
+                        label = "Layer3",
+                        device = device,
+                      )
+                      self.log_success(obj=eth7, message=f"{eth7} successfully created on {device_name}")
+                      eth7.cf['role'] = "superspine"
+                      eth7.validated_save()
+
+                      eth8 = Interface.objects.create(
+                        name = "Ethernet8",
+                        type = "1000base-t",
+                        label = "Layer3",
+                        device = device,
+                      )
+                      self.log_success(obj=eth8, message=f"{eth8} successfully created on {device_name}")
+                      eth8.cf['role'] = "superspine"
+                      eth8.validated_save()
 
                 elif device_name == f"{dc_code}-leaf1" or device_name == f"{dc_code}-leaf2":
                   intf_number =  ROLES["spine"]["nbr"] + 2
@@ -896,37 +917,40 @@ class CreateAristaDC(Job):
                       )
                       self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
                     
-                    if ROLES["l2leaf"]["nbr"] == 1:
-                      eth7 = Interface.objects.create(
-                        name = "Ethernet7",
-                        type = "1000base-t",
-                        label = "trunk",
-                        device = device,
-                      ) 
-                      self.log_success(obj=eth7, message=f"{eth7} successfully created on {device_name}")
-                      eth7.cf['role'] = "l2leaf_connection"
-                      eth7.validated_save()
+                    try:
+                      if ROLES["l2leaf"]["nbr"] == 1:
+                        eth7 = Interface.objects.create(
+                          name = "Ethernet7",
+                          type = "1000base-t",
+                          label = "trunk",
+                          device = device,
+                        ) 
+                        self.log_success(obj=eth7, message=f"{eth7} successfully created on {device_name}")
+                        eth7.cf['role'] = "l2leaf_connection"
+                        eth7.validated_save()
 
-                    elif ROLES["l2leaf"]["nbr"] == 2:
-                      eth7 = Interface.objects.create(
-                        name = "Ethernet7",
-                        type = "1000base-t",
-                        label = "trunk",
-                        device = device,
-                      ) 
-                      self.log_success(obj=eth7, message=f"{eth7} successfully created on {device_name}")
-                      eth7.cf['role'] = "l2leaf_connection"
-                      eth7.validated_save()
+                      elif ROLES["l2leaf"]["nbr"] == 2:
+                        eth7 = Interface.objects.create(
+                          name = "Ethernet7",
+                          type = "1000base-t",
+                          label = "trunk",
+                          device = device,
+                        ) 
+                        self.log_success(obj=eth7, message=f"{eth7} successfully created on {device_name}")
+                        eth7.cf['role'] = "l2leaf_connection"
+                        eth7.validated_save()
 
-                      eth8 = Interface.objects.create(
-                        name = "Ethernet8",
-                        type = "1000base-t",
-                        label = "trunk",
-                        device = device,
-                      ) 
-                      self.log_success(obj=eth8, message=f"{eth8} successfully created on {device_name}")
-                      eth8.cf['role'] = "l2leaf_connection"
-                      eth8.validated_save()
+                        eth8 = Interface.objects.create(
+                          name = "Ethernet8",
+                          type = "1000base-t",
+                          label = "trunk",
+                          device = device,
+                        ) 
+                        self.log_success(obj=eth8, message=f"{eth8} successfully created on {device_name}")
+                        eth8.cf['role'] = "l2leaf_connection"
+                        eth8.validated_save()
+                    except Exception:
+                      pass
 
                 elif device_name == f"{dc_code}-leaf3" or device_name == f"{dc_code}-leaf4" or device_name == f"{dc_code}-leaf5":
                   intf_number =  ROLES["spine"]["nbr"] + 2
