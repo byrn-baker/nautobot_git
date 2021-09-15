@@ -425,7 +425,7 @@ class CreateAristaDC(Job):
 
     dc_bgp = IntegerVar(description="DataCenter BGP AS", label="DC BGP AS")
 
-    l3leaf_count = IntegerVar(description="Number of Leaf Switches", label="Leaf switches count", min_value=1, max_value=4)
+    l3leaf_count = IntegerVar(description="Number of Leaf Switches", label="L3 Leaf switch count", min_value=1, max_value=4)
 
     l2leaf_count = IntegerVar(description="Number of L2 Leaf Switches in this Pod", label="L2 Leaf switch count", min_value=1, max_value=2)
     
@@ -461,6 +461,9 @@ class CreateAristaDC(Job):
         spine = DeviceType.objects.get_or_create(manufacturer=arista, model="spine", slug="spine", u_height=1)
         # spine.validated_save()
         self.log_success(obj=spine,message="Created new device Type")
+
+        superspine = DeviceType.objects.get_or_create(manufacturer=arista, model="superspine", slug="superspine", u_height=1)
+        self.log_success(obj=superspine,message="Created new device Type")
 
 
         # ----------------------------------------------------------------------------
