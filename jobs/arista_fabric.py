@@ -697,7 +697,7 @@ class CreateAristaDC(Job):
         )
         self.log_success(obj=rack_name_spine, message=f"Created Relay Rack {rack_name_spine}")
 
-        if data["borderleaf"] == True: 
+        if data["dci"] == True: 
           rack_name_edge = f"{dc_code}-edge-rr-1"
           rack = Rack.objects.get_or_create(
               name=rack_name_edge, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
@@ -705,13 +705,13 @@ class CreateAristaDC(Job):
           self.log_success(obj=rack_name_edge, message=f"Created Relay Rack {rack_name_edge}")
 
         for i in range(1, ROLES["l3leaf"]["nbr"] + 1):
-          rack_name = f"{dc_code}-l3leaf-rr-{i}"
+          rack_name = f"{dc_code}-leaf-rr-{i}"
           rack = Rack.objects.get_or_create(
               name=rack_name, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
           )
           self.log_success(obj=rack_name, message=f"Created Relay Rack {rack_name}")
         for i in range(1, ROLES['l2leaf']['nbr'] + 1):
-          rack_name_l2leaf = f"{dc_code}-l2leaf-rr-{i}"
+          rack_name_l2leaf = f"{dc_code}-hosts-rr-{i}"
           rack = Rack.objects.get_or_create(
               name=rack_name_l2leaf, site=self.site, u_height=RACK_HEIGHT, type=RACK_TYPE, status=rack_status
           )
