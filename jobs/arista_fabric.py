@@ -1158,92 +1158,95 @@ class CreateAristaDC(Job):
         #######################################
         for role, data in ROLES.items():
             for i in range(1, data.get("nbr", 2) + 1):
+              if role == 'l3leaf':
+                device_name = f"{dc_code}-leaf{i}" 
+              else:
                 device_name = f"{dc_code}-{role}{i}"
-                device = Device.objects.get(name=device_name)
-                dev_name = device_name.replace(f"{dc_code}-","")
+              device = Device.objects.get(name=device_name)
+              dev_name = device_name.replace(f"{dc_code}-","")
 
-                for iface in SWITCHES[dev_name]['interfaces']:
-                  try:
+              for iface in SWITCHES[dev_name]['interfaces']:
+                try:
+                  interface = Interface.objects.get(name=iface['name'], device=device)
+                  if interface.cable is None:
+                      if "b_device" in iface.keys():
+                          b_device = iface['b_device']
+                          b_dev_name = f"{dc_code}-{b_device}"
+                          bside_device = Device.objects.get(name=b_dev_name)
+                          bside_interface = Interface.objects.get(name=iface['b_int'],device=bside_device, )
+                          intf1 = interface
+                          intf2 = bside_interface
+                          status = Status.objects.get_for_model(Cable).get(slug="connected")
+                          if intf1.cable or intf2.cable:
+                              self.log_warning(
+                                  message=f"Unable to create a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}"
+                              )
+                              return False
+                          cable = Cable.objects.create(termination_a=intf1, termination_b=intf2, status=status)
+                          cable.save()
+                          self.log_success(message=f"Created a cable between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
+                          # Find Next available Network
+                          if "mode" not in iface.keys():
+                              P2P_PREFIX_SIZE = 31
+                              ip_status = Status.objects.get_for_model(Device).get(slug="active")
+                              prefix = Prefix.objects.filter(site=self.site, role__name=f"{dc_code}_underlay_p2p").first()
+                              first_avail = prefix.get_first_available_prefix()
+                              subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
+
+                              Prefix.objects.create(prefix=str(subnet))
+
+                              # Create IP Addresses on both sides
+                              ip1 = IPAddress.objects.create(address=f"{str(subnet[0])}/31", assigned_object=intf1, status=ip_status)
+                              ip2 = IPAddress.objects.create(address=f"{str(subnet[1])}/31", assigned_object=intf2, status=ip_status)
+                              self.log_success(message=f"Created a IP Addresses {ip1} & {ip2} between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
+                except Exception:
+                  pass
+              
+              #####################################
+              # Creating /31 assignments for MLAG #
+              #####################################
+              if "vlans" in SWITCHES[dev_name].keys():
+                for iface in SWITCHES[dev_name]['vlans']:
+                  if "Vlan4094" in iface['name']:
                     interface = Interface.objects.get(name=iface['name'], device=device)
-                    if interface.cable is None:
-                        if "b_device" in iface.keys():
-                            b_device = iface['b_device']
-                            b_dev_name = f"{dc_code}-{b_device}"
-                            bside_device = Device.objects.get(name=b_dev_name)
-                            bside_interface = Interface.objects.get(name=iface['b_int'],device=bside_device, )
-                            intf1 = interface
-                            intf2 = bside_interface
-                            status = Status.objects.get_for_model(Cable).get(slug="connected")
-                            if intf1.cable or intf2.cable:
-                                self.log_warning(
-                                    message=f"Unable to create a P2P link between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}"
-                                )
-                                return False
-                            cable = Cable.objects.create(termination_a=intf1, termination_b=intf2, status=status)
-                            cable.save()
-                            self.log_success(message=f"Created a cable between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
-                            # Find Next available Network
-                            if "mode" not in iface.keys():
-                                P2P_PREFIX_SIZE = 31
-                                ip_status = Status.objects.get_for_model(Device).get(slug="active")
-                                prefix = Prefix.objects.filter(site=self.site, role__name=f"{dc_code}_underlay_p2p").first()
-                                first_avail = prefix.get_first_available_prefix()
-                                subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
-
-                                Prefix.objects.create(prefix=str(subnet))
-
-                                # Create IP Addresses on both sides
-                                ip1 = IPAddress.objects.create(address=f"{str(subnet[0])}/31", assigned_object=intf1, status=ip_status)
-                                ip2 = IPAddress.objects.create(address=f"{str(subnet[1])}/31", assigned_object=intf2, status=ip_status)
-                                self.log_success(message=f"Created a IP Addresses {ip1} & {ip2} between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
-                  except Exception:
-                    pass
-                
-                #####################################
-                # Creating /31 assignments for MLAG #
-                #####################################
-                if "vlans" in SWITCHES[dev_name].keys():
-                  for iface in SWITCHES[dev_name]['vlans']:
-                    if "Vlan4094" in iface['name']:
-                      interface = Interface.objects.get(name=iface['name'], device=device)
-                      if "b_device" in iface.keys():
-                        b_device = iface['b_device']
-                        b_dev_name = f"{dc_code}-{b_device}"
-                        bside_device = Device.objects.get(name=b_dev_name)
-                        bside_interface = Interface.objects.get(name=iface['b_int'],device=bside_device, )
-                        intf1 = interface
-                        intf2 = bside_interface
-                        P2P_PREFIX_SIZE = 31
-                        ip_status = Status.objects.get_for_model(Device).get(slug="active")
-                        prefix = Prefix.objects.filter(site=self.site, role__name=f"{dc_code}_mlag_peer_p2p").first()
-                        first_avail = prefix.get_first_available_prefix()
-                        subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
-                        Prefix.objects.create(prefix=str(subnet))
-                        # Create IP Addresses on both sides
-                        ip1 = IPAddress.objects.create(address=f"{str(subnet[0])}/31", assigned_object=intf1, status=ip_status)
-                        ip2 = IPAddress.objects.create(address=f"{str(subnet[1])}/31", assigned_object=intf2, status=ip_status)
-                        self.log_success(message=f"Created a IP Addresses {ip1} & {ip2} between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
-                
-                ##########################################
-                # Creating /31 assignments for LEAF PEER #
-                ##########################################
-                  for iface in SWITCHES[dev_name]['vlans']:
-                    if "Vlan4093" in iface['name']:
-                      interface = Interface.objects.get(name=iface['name'], device=device)
-                      if "b_device" in iface.keys():
-                        b_device = iface['b_device']
-                        b_dev_name = f"{dc_code}-{b_device}"
-                        bside_device = Device.objects.get(name=b_dev_name)
-                        bside_interface = Interface.objects.get(name=iface['b_int'],device=bside_device, )
-                        intf1 = interface
-                        intf2 = bside_interface
-                        P2P_PREFIX_SIZE = 31
-                        ip_status = Status.objects.get_for_model(Device).get(slug="active")
-                        prefix = Prefix.objects.filter(site=self.site, role__name=f"{dc_code}_leaf_peer_p2p").first()
-                        first_avail = prefix.get_first_available_prefix()
-                        subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
-                        Prefix.objects.create(prefix=str(subnet))
-                        # Create IP Addresses on both sides
-                        ip1 = IPAddress.objects.create(address=f"{str(subnet[0])}/31", assigned_object=intf1, status=ip_status)
-                        ip2 = IPAddress.objects.create(address=f"{str(subnet[1])}/31", assigned_object=intf2, status=ip_status)
-                        self.log_success(message=f"Created a IP Addresses {ip1} & {ip2} between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
+                    if "b_device" in iface.keys():
+                      b_device = iface['b_device']
+                      b_dev_name = f"{dc_code}-{b_device}"
+                      bside_device = Device.objects.get(name=b_dev_name)
+                      bside_interface = Interface.objects.get(name=iface['b_int'],device=bside_device, )
+                      intf1 = interface
+                      intf2 = bside_interface
+                      P2P_PREFIX_SIZE = 31
+                      ip_status = Status.objects.get_for_model(Device).get(slug="active")
+                      prefix = Prefix.objects.filter(site=self.site, role__name=f"{dc_code}_mlag_peer_p2p").first()
+                      first_avail = prefix.get_first_available_prefix()
+                      subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
+                      Prefix.objects.create(prefix=str(subnet))
+                      # Create IP Addresses on both sides
+                      ip1 = IPAddress.objects.create(address=f"{str(subnet[0])}/31", assigned_object=intf1, status=ip_status)
+                      ip2 = IPAddress.objects.create(address=f"{str(subnet[1])}/31", assigned_object=intf2, status=ip_status)
+                      self.log_success(message=f"Created a IP Addresses {ip1} & {ip2} between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
+              
+              ##########################################
+              # Creating /31 assignments for LEAF PEER #
+              ##########################################
+                for iface in SWITCHES[dev_name]['vlans']:
+                  if "Vlan4093" in iface['name']:
+                    interface = Interface.objects.get(name=iface['name'], device=device)
+                    if "b_device" in iface.keys():
+                      b_device = iface['b_device']
+                      b_dev_name = f"{dc_code}-{b_device}"
+                      bside_device = Device.objects.get(name=b_dev_name)
+                      bside_interface = Interface.objects.get(name=iface['b_int'],device=bside_device, )
+                      intf1 = interface
+                      intf2 = bside_interface
+                      P2P_PREFIX_SIZE = 31
+                      ip_status = Status.objects.get_for_model(Device).get(slug="active")
+                      prefix = Prefix.objects.filter(site=self.site, role__name=f"{dc_code}_leaf_peer_p2p").first()
+                      first_avail = prefix.get_first_available_prefix()
+                      subnet = list(first_avail.subnet(P2P_PREFIX_SIZE))[0]
+                      Prefix.objects.create(prefix=str(subnet))
+                      # Create IP Addresses on both sides
+                      ip1 = IPAddress.objects.create(address=f"{str(subnet[0])}/31", assigned_object=intf1, status=ip_status)
+                      ip2 = IPAddress.objects.create(address=f"{str(subnet[1])}/31", assigned_object=intf2, status=ip_status)
+                      self.log_success(message=f"Created a IP Addresses {ip1} & {ip2} between {intf1.device.name}::{intf1} and {intf2.device.name}::{intf2}")
