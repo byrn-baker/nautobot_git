@@ -462,10 +462,6 @@ class CreateAristaDC(Job):
         # spine.validated_save()
         self.log_success(obj=spine,message="Created new device Type")
 
-        superspine = DeviceType.objects.get_or_create(manufacturer=arista, model="superspine", slug="superspine", u_height=1)
-        # spine.validated_save()
-        self.log_success(obj=superspine,message="Created new device Type")
-
 
         # ----------------------------------------------------------------------------
         # Find or Create Site
