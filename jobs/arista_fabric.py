@@ -740,7 +740,10 @@ class CreateAristaDC(Job):
                   rack_name = f"{dc_code}-hosts-rr-{i}"
                   rack = Rack.objects.filter(name=rack_name, site=self.site).first()
 
-                device_name = f"{dc_code}-{role}{i}"
+                if role == 'l3leaf':
+                  device_name = f"{dc_code}-leaf{i}"
+                else:
+                  device_name = f"{dc_code}-{role}{i}"
 
                 device = Device.objects.filter(name=device_name).first()
                 if device:
