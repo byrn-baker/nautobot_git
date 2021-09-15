@@ -865,34 +865,34 @@ class CreateAristaDC(Job):
                       self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
                       int_name.cf['role'] = "leaf"
                       int_name.validated_save()
-                    # else:
-                    #   int_name = Interface.objects.create(
-                    #     name=f"Ethernet{i}",
-                    #     type="1000base-t",
-                    #     device=device,
-                    #   )
-                    #   self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
+                    else:
+                      int_name = Interface.objects.create(
+                        name=f"Ethernet{i}",
+                        type="1000base-t",
+                        device=device,
+                      )
+                      self.log_success(obj=int_name, message=f"{int_name} successfully created on {device_name}")
                     #SuperSpine Interfaces
-                    if ROLES["superspine"]['nbr'] == 1 or ROLES["superspine"]['nbr'] == 2:
-                      eth7 = Interface.objects.create(
-                        name = "Ethernet7",
-                        type = "1000base-t",
-                        label = "Layer3",
-                        device = device,
-                      )
-                      self.log_success(obj=eth7, message=f"{eth7} successfully created on {device_name}")
-                      eth7.cf['role'] = "superspine"
-                      eth7.validated_save()
+                    # if ROLES["superspine"]['nbr'] == 1 or ROLES["superspine"]['nbr'] == 2:
+                    #   eth7 = Interface.objects.create(
+                    #     name = "Ethernet7",
+                    #     type = "1000base-t",
+                    #     label = "Layer3",
+                    #     device = device,
+                    #   )
+                    #   self.log_success(obj=eth7, message=f"{eth7} successfully created on {device_name}")
+                    #   eth7.cf['role'] = "superspine"
+                    #   eth7.validated_save()
 
-                      eth8 = Interface.objects.create(
-                        name = "Ethernet8",
-                        type = "1000base-t",
-                        label = "Layer3",
-                        device = device,
-                      )
-                      self.log_success(obj=eth8, message=f"{eth8} successfully created on {device_name}")
-                      eth8.cf['role'] = "superspine"
-                      eth8.validated_save()
+                    #   eth8 = Interface.objects.create(
+                    #     name = "Ethernet8",
+                    #     type = "1000base-t",
+                    #     label = "Layer3",
+                    #     device = device,
+                    #   )
+                    #   self.log_success(obj=eth8, message=f"{eth8} successfully created on {device_name}")
+                    #   eth8.cf['role'] = "superspine"
+                    #   eth8.validated_save()
 
                 elif device_name == f"{dc_code}-leaf1" or device_name == f"{dc_code}-leaf2":
                   intf_number =  ROLES["spine"]["nbr"] + 2
