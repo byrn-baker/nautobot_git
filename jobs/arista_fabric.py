@@ -464,13 +464,13 @@ class CreateAristaDC(Job):
 
     fabric_name = StringVar(description="Name of the Fabric to assign new pod to", label="Fabirc Name")
     
-    spine_count = IntegerVar(description="Number of Spine Switches", label="Spine switches count", min_value=0, max_value=3)
+    spine_count = IntegerVar(description="Number of Spine Switches", label="Spine switches count", min_value=0, max_value=4)
 
     dc_bgp = IntegerVar(description="BGP AS to Assign to the Spine", label="Spine BGP AS")
 
-    l3leaf_count = IntegerVar(description="Number of Leaf Switches", label="L3 Leaf switch count", min_value=1, max_value=4)
+    l3leaf_count = IntegerVar(description="Number of Leaf Switches", label="L3 Leaf switch count", min_value=1, max_value=5)
 
-    l2leaf_count = IntegerVar(description="Number of L2 Leaf Switches in this Pod", label="L2 Leaf switch count", min_value=1, max_value=2)
+    l2leaf_count = IntegerVar(description="Number of L2 Leaf Switches in this Pod", label="L2 Leaf switch count", min_value=1, max_value=4)
     
     dci = BooleanVar(description="Does this DataCenter require an interconnect?", label="DCI required")
     
