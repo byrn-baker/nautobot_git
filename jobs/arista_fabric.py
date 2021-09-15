@@ -412,7 +412,6 @@ class CreateAristaDC(Job):
             "dc_bgp",
             "spine_count",
             "leaf_count",
-            "borderleaf",
             "dci",
         ]
     dc_code = StringVar(description="Name of the new DataCenter", label="DataCenter")
@@ -422,8 +421,6 @@ class CreateAristaDC(Job):
     dc_bgp = IntegerVar(description="DataCenter BGP AS", label="DC BGP AS")
 
     leaf_count = IntegerVar(description="Number of Leaf Switches", label="Leaf switches count", min_value=1, max_value=4)
-
-    borderleaf = BooleanVar(description="Does this DataCenter require Border Leaf switches?", label="borderleaf required")
     
     dci = BooleanVar(description="Does this DataCenter require an interconnect?", label="DCI required")
     
