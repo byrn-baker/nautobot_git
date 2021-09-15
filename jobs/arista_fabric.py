@@ -470,6 +470,8 @@ class CreateAristaDC(Job):
         # Find or Create Site
         # ----------------------------------------------------------------------------
         dc_code = data["dc_code"].lower()
+        pod_name = slugify(data["pod_name"])
+        fabric_name = slugify(data["fabric_name"])
         p2p_dc_code = f"{dc_code}_underlay"
         mlag_dc_code = f"{dc_code}_mlag_peer"
         leaf_peer_dc_code = f"{dc_code}_leaf_peer"
@@ -477,7 +479,8 @@ class CreateAristaDC(Job):
         bgp = data["dc_bgp"]
         site_status = Status.objects.get_for_model(Site).get(slug="active")
         self.site, created = Site.objects.get_or_create(name=dc_code.upper(), slug=dc_code, status=site_status)
-        self.site.custom_field_data["site_type"] = "FABRIC"
+        self.site.custom_field_data["site_type"] = "fabric"
+        self.site.custom_field_data["fabric_name"] = fabric_name
         self.site.save()
         self.log_success(self.site, f"Site {dc_code} successfully created")
 
