@@ -423,7 +423,7 @@ class CreateAristaDC(Job):
     
     spine_count = IntegerVar(description="Number of Spine Switches", label="Spine switches count", min_value=0, max_value=3)
 
-    dc_bgp = IntegerVar(description="DataCenter BGP AS", label="DC BGP AS")
+    dc_bgp = IntegerVar(description="BGP AS to Assign to the Spine", label="Spine BGP AS")
 
     l3leaf_count = IntegerVar(description="Number of Leaf Switches", label="L3 Leaf switch count", min_value=1, max_value=4)
 
@@ -533,8 +533,7 @@ class CreateAristaDC(Job):
         ROLES = {
             "spine": {"device_type": "spine"},
             "l3leaf": {"device_type": "l3leaf"},
-            "borderleaf": {"device_type": "l3leaf"},
-            "dci": {"device_type": "spine"},
+            "superspine": {"device_type": "superspine"},
             "l2leaf": {"device_type": "l2leaf"},
         }
         # Number of devices to provision
@@ -780,7 +779,7 @@ class CreateAristaDC(Job):
                 # Assigns the device to the Pod described in the Pod_Name survey
                 if device_name == f"{dc_code}-spine1" or device_name == f"{dc_code}-spine2" or device_name == f"{dc_code}-spine3" or device_name == f"{dc_code}-spine4" or device_name == f"{dc_code}-leaf1" or device_name == f"{dc_code}-leaf2" or device_name == f"{dc_code}-leaf3" or device_name == f"{dc_code}-leaf4" or device_name == f"{dc_code}-leaf5":
                   device.custom_field_data["pod_name"]=pod_name
-                  
+
                 device.validated_save()
                 self.log_success(device, f"Added local context on {device_name}")
 
