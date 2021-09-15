@@ -784,34 +784,35 @@ class CreateAristaDC(Job):
                 self.log_success(device, f"Added local context on {device_name}")
 
                 # Add the Devices specific BGP assignments
-                if device_name == f"{dc_code}-spine1" or device_name == f"{dc_code}-spine2" or device_name == f"{dc_code}-spine3":
+                if device_name == f"{dc_code}-spine1" or device_name == f"{dc_code}-spine2" or device_name == f"{dc_code}-spine3" or device_name == f"{dc_code}-spine4":
                     device._custom_field_data = {"device_bgp": bgp}
                     device.validated_save()
                     self.log_success(device, f"Added AS::{bgp} to Device {device_name}")
 
-                elif device_name == f"{dc_code}-l3leaf1" or device_name == f"{dc_code}-l3leaf2":
+                elif device_name == f"{dc_code}-leaf1" or device_name == f"{dc_code}-leaf2":
                     leaf_bgp = bgp + 1
                     device._custom_field_data = {"device_bgp": leaf_bgp}
                     device.validated_save()
                     self.log_success(device, f"Added AS::{leaf_bgp} to Device {device_name}")
 
-                elif device_name == f"{dc_code}-l3leaf3" or device_name == f"{dc_code}-l3leaf4":
+                elif device_name == f"{dc_code}-leaf3" or device_name == f"{dc_code}-leaf4":
                     leaf_bgp = bgp + 2
                     device._custom_field_data = {"device_bgp": leaf_bgp}
                     device.validated_save()
                     self.log_success(device, f"Added AS::{leaf_bgp} to Device {device_name}")
 
-                elif device_name == f"{dc_code}-borderleaf1" or device_name == f"{dc_code}-borderleaf2":
+                elif device_name == f"{dc_code}-leaf5":
                     borderleaf_bgp = bgp + 3
                     device._custom_field_data = {"device_bgp": borderleaf_bgp}
                     device.validated_save()
                     self.log_success(device, f"Added AS::{borderleaf_bgp} to Device {device_name}")
 
-                elif device_name == f"{dc_code}-dci1":
-                    dci_bgp = 65000
-                    device._custom_field_data = {"device_bgp": dci_bgp}
+                elif device_name == f"{dc_code}-superspine1" or device_name == f"{dc_code}-superspine2":
+                    superspine_bgp = 65000
+                    device._custom_field_data = {"device_bgp":  superspine_bgp}
                     device.validated_save()
-                    self.log_success(device, f"Added AS::{dci_bgp} to Device {device_name}")
+                    self.log_success(device, f"Added AS::{superspine_bgp} to Device {device_name}")
+
 
 
                 # Create physical interfaces
