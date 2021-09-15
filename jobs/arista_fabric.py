@@ -362,6 +362,8 @@ import ipaddress
 CUSTOM_FIELDS = {
     "role": {"models": [Interface], "label": "Role"},
     "site_type": {"models": [Site], "label": "Type of Site"},
+    "fabric_name": {"models": [Site], "label": "Fabric Name"},
+    "pod_name": {"models": [Device], "label": "The Pod this device is assigned to"},
     "device_bgp": {"models": [Device], "type": "Integer", "label": "Device BGP ASN"},
     "virtual_router_mac": {"models": [Device], "label": "Virtual Router Mac Address"},
     "virtual_router_ipv4": {"models": [Interface], "label": "Virtual Router IPv4 Address"},
