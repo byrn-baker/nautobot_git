@@ -407,6 +407,8 @@ class CreateAristaDC(Job):
         label = "Arista_DataCenter"
         field_order = [
             "dc_code",
+            "pod_name",
+            "fabric_name",
             "dc_bgp",
             "spine_count",
             "leaf_count",
