@@ -458,92 +458,92 @@ class CreateAristaDC(Job):
     
     dci = BooleanVar(description="Does this DataCenter require a DataCenter Interconnect?", dci="DCI required")
     
-    def run(self, data=None, commit=None):
-        """Main function for CreateDC."""
-        self.devices = {}
+    # def run(self, data=None, commit=None):
+    #     """Main function for CreateDC."""
+    #     self.devices = {}
 
-        # ----------------------------------------------------------------------------
-        # Initialize the database with all required objects
-        # ----------------------------------------------------------------------------
-        create_custom_fields()
-        # create_relationships()
-        # create_prefix_roles()
+    #     # ----------------------------------------------------------------------------
+    #     # Initialize the database with all required objects
+    #     # ----------------------------------------------------------------------------
+    #     create_custom_fields() 
+    #     # create_relationships()
+    #     # create_prefix_roles()
 
-        # ----------------------------------------------------------------------------
-        # Create all of the Manufactuers, Models and Roles if they do not exist
-        # ----------------------------------------------------------------------------
-        arista_man = Manufacturer.objects.get_or_create(name="Arista", slug="arista")
-        self.log_success(obj=arista_man, message="Created the Arista Manufacturer")
+    #     # ----------------------------------------------------------------------------
+    #     # Create all of the Manufactuers, Models and Roles if they do not exist
+    #     # ----------------------------------------------------------------------------
+    #     arista_man = Manufacturer.objects.get_or_create(name="Arista", slug="arista")
+    #     self.log_success(obj=arista_man, message="Created the Arista Manufacturer")
 
-        arista = Manufacturer.objects.get(name="Arista")
+    #     arista = Manufacturer.objects.get(name="Arista")
 
-        l2leaf = DeviceType.objects.get_or_create(manufacturer=arista, model="l2leaf", slug="l2leaf", u_height=1)
-        # l2leaf.validated_save()
-        self.log_success(obj=l2leaf, message="Created new device Type")
+    #     l2leaf = DeviceType.objects.get_or_create(manufacturer=arista, model="l2leaf", slug="l2leaf", u_height=1)
+    #     # l2leaf.validated_save()
+    #     self.log_success(obj=l2leaf, message="Created new device Type")
 
-        l3leaf = DeviceType.objects.get_or_create(manufacturer=arista, model="l3leaf", slug="l3leaf", u_height=1)
-        # l3leaf.validated_save()
-        self.log_success(obj=l3leaf, message="Created new device Type")
+    #     l3leaf = DeviceType.objects.get_or_create(manufacturer=arista, model="l3leaf", slug="l3leaf", u_height=1)
+    #     # l3leaf.validated_save()
+    #     self.log_success(obj=l3leaf, message="Created new device Type")
 
-        spine = DeviceType.objects.get_or_create(manufacturer=arista, model="spine", slug="spine", u_height=1)
-        # spine.validated_save()
-        self.log_success(obj=spine,message="Created new device Type")
+    #     spine = DeviceType.objects.get_or_create(manufacturer=arista, model="spine", slug="spine", u_height=1)
+    #     # spine.validated_save()
+    #     self.log_success(obj=spine,message="Created new device Type")
 
-        superspine = DeviceType.objects.get_or_create(manufacturer=arista, model="superspine", slug="superspine", u_height=1)
-        self.log_success(obj=superspine,message="Created new device Type")
+    #     superspine = DeviceType.objects.get_or_create(manufacturer=arista, model="superspine", slug="superspine", u_height=1)
+    #     self.log_success(obj=superspine,message="Created new device Type")
 
 
-        # ----------------------------------------------------------------------------
-        # Find or Create Site
-        # ----------------------------------------------------------------------------
-        dc_code = data["dc_code"].lower()
-        pod_name = slugify(data["pod_name"])
-        fabric_name = slugify(data["fabric_name"])
-        p2p_dc_code = f"{dc_code}_underlay"
-        mlag_dc_code = f"{dc_code}_mlag_peer"
-        leaf_peer_dc_code = f"{dc_code}_leaf_peer"
-        # region = data["region"]
-        bgp = data["dc_bgp"]
-        site_status = Status.objects.get_for_model(Site).get(slug="active")
-        self.site, created = Site.objects.get_or_create(name=dc_code.upper(), slug=dc_code, status=site_status)
-        self.site.custom_field_data["site_type"] = "fabric"
-        self.site.custom_field_data["fabric_name"] = fabric_name
-        self.site.save()
-        self.log_success(self.site, f"Site {dc_code} successfully created")
+    #     # ----------------------------------------------------------------------------
+    #     # Find or Create Site
+    #     # ----------------------------------------------------------------------------
+    #     dc_code = data["dc_code"].lower()
+    #     pod_name = slugify(data["pod_name"])
+    #     fabric_name = slugify(data["fabric_name"])
+    #     p2p_dc_code = f"{dc_code}_underlay"
+    #     mlag_dc_code = f"{dc_code}_mlag_peer"
+    #     leaf_peer_dc_code = f"{dc_code}_leaf_peer"
+    #     # region = data["region"]
+    #     bgp = data["dc_bgp"]
+    #     site_status = Status.objects.get_for_model(Site).get(slug="active")
+    #     self.site, created = Site.objects.get_or_create(name=dc_code.upper(), slug=dc_code, status=site_status)
+    #     self.site.custom_field_data["site_type"] = "fabric"
+    #     self.site.custom_field_data["fabric_name"] = fabric_name
+    #     self.site.save()
+    #     self.log_success(self.site, f"Site {dc_code} successfully created")
 
-        # Creating MLAG VLAN
-        vlan = VLAN.objects.get_or_create(
-          name="MLAG_PEER_VLAN",
-          vid=4094,
-          status=site_status,
-          site=self.site
-        )
-        # vlan.validated_save()
-        self.log_success(obj=vlan, message="Created MLAG VLAN")
+    #     # Creating MLAG VLAN
+    #     vlan = VLAN.objects.get_or_create(
+    #       name="MLAG_PEER_VLAN",
+    #       vid=4094,
+    #       status=site_status,
+    #       site=self.site
+    #     )
+    #     # vlan.validated_save()
+    #     self.log_success(obj=vlan, message="Created MLAG VLAN")
 
-        # vlan_4094_prefix = Prefix.objects.get_or_create(
-        #   prefix="10.255.252.0/31",
-        #   status=site_status,
-        # )
-        # # vlan_4094_prefix.validated_save()
-        # self.log_success(obj=vlan_4094_prefix, message="Created MLAG Prefix")
+    #     # vlan_4094_prefix = Prefix.objects.get_or_create(
+    #     #   prefix="10.255.252.0/31",
+    #     #   status=site_status,
+    #     # )
+    #     # # vlan_4094_prefix.validated_save()
+    #     # self.log_success(obj=vlan_4094_prefix, message="Created MLAG Prefix")
 
-        # Creating leaVLAN
-        vlan = VLAN.objects.get_or_create(
-          name="LEAF_PEER_L3_VLAN",
-          vid=4093,
-          status=site_status,
-          site=self.site
-        )
-        # vlan.validated_save()
-        self.log_success(obj=vlan, message="Created LEAF_PEER VLAN")
+    #     # Creating leaVLAN
+    #     vlan = VLAN.objects.get_or_create(
+    #       name="LEAF_PEER_L3_VLAN",
+    #       vid=4093,
+    #       status=site_status,
+    #       site=self.site
+    #     )
+    #     # vlan.validated_save()
+    #     self.log_success(obj=vlan, message="Created LEAF_PEER VLAN")
 
-        # vlan_4093_prefix = Prefix.objects.get_or_create(
-        #   prefix="10.255.254.0/31",
-        #   status=site_status,
-        # )
-        # # vlan_4093_prefix.validated_save()
-        # self.log_success(obj=vlan_4093_prefix, message="Created MLAG Prefix")
+    #     # vlan_4093_prefix = Prefix.objects.get_or_create(
+    #     #   prefix="10.255.254.0/31",
+    #     #   status=site_status,
+    #     # )
+    #     # # vlan_4093_prefix.validated_save()
+    #     # self.log_success(obj=vlan_4093_prefix, message="Created MLAG Prefix")
         
         # Reference Vars
         # SWITCHES = yaml.load(config, Loader=yaml.FullLoader)
