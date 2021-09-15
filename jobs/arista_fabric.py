@@ -131,23 +131,23 @@ spine4:
     - name: Ethernet2
       type: "1000base-t"
       b_device: leaf1
-      b_int: Ethernet5
+      b_int: Ethernet6
     - name: Ethernet3
       type: "1000base-t"
       b_device: leaf2
-      b_int: Ethernet5
+      b_int: Ethernet6
     - name: Ethernet4
       type: "1000base-t"
       b_device: leaf3
-      b_int: Ethernet5
+      b_int: Ethernet6
     - name: Ethernet5
       type: "1000base-t"
       b_device: leaf4
-      b_int: Ethernet5
+      b_int: Ethernet6
     - name: Ethernet6
       type: "1000base-t"
       b_device: leaf5
-      b_int: Ethernet5
+      b_int: Ethernet6
     - name: Ethernet7 
       type: "1000base-t"
       b_device: superspine1
