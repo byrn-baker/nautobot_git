@@ -404,28 +404,32 @@ class CreateAristaDC(Job):
         A new /26 will automatically be allocated from the 'mlag_peer Pool' and 'leaf_peer Pool' and split into /31s to be assigned to each MLAG SVI and LEAF_PEER SVI.  
         Top level prefixes need to be created and assigned the following roles - loopbacks, underlay_p2p, mlag_peer, and leaf_peer_l3.
         """
-        label = "Arista_DataCenter"
+        label = "Arista_Fabric"
         field_order = [
             "dc_code",
             "pod_name",
             "fabric_name",
             "dc_bgp",
             "spine_count",
-            "leaf_count",
-            "borderleaf",
+            "l3leaf_count",
+            "l2leaf_count",
             "dci",
         ]
     dc_code = StringVar(description="Name of the new DataCenter", label="DataCenter")
+
+    pod_name = StringVar(description="Name of the new Pod", label="Pod Name")
+
+    fabric_name = StringVar(description="Name of the Fabric to assign new pod to", label="Fabirc Name")
     
-    spine_count = IntegerVar(description="Number of Spine Switches", label="Spine switches count", min_value=0, max_value=3)
+    spine_count = IntegerVar(description="Number of Spine Switches", label="Spine switches count", min_value=2, max_value=4)
 
     dc_bgp = IntegerVar(description="DataCenter BGP AS", label="DC BGP AS")
 
-    leaf_count = IntegerVar(description="Number of Leaf Switches", label="Leaf switches count", min_value=1, max_value=4)
+    l3leaf_count = IntegerVar(description="Number of L3 Leaf Switches in this Pod", label="L3 Leaf switch count", min_value=2, max_value=5)
 
-    borderleaf = BooleanVar(description="Does this DataCenter require Border Leaf switches?", label="borderleaf required")
+    l2leaf_count = IntegerVar(description="Number of L2 Leaf Switches in this Pod", label="L2 Leaf switch count", min_value=1, max_value=2)
     
-    dci = BooleanVar(description="Does this DataCenter require an interconnect?", label="DCI required")
+    dci = BooleanVar(description="Does this Fabric require a DataCenter Interconnect?", dci="DCI required")
     
     def run(self, data=None, commit=None):
         """Main function for CreateDC."""
@@ -457,6 +461,10 @@ class CreateAristaDC(Job):
         spine = DeviceType.objects.get_or_create(manufacturer=arista, model="spine", slug="spine", u_height=1)
         # spine.validated_save()
         self.log_success(obj=spine,message="Created new device Type")
+
+        superspine = DeviceType.objects.get_or_create(manufacturer=arista, model="superspine", slug="superspine", u_height=1)
+        # spine.validated_save()
+        self.log_success(obj=superspine,message="Created new device Type")
 
 
         # ----------------------------------------------------------------------------
