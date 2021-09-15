@@ -755,7 +755,7 @@ class CreateAristaDC(Job):
                   rack = Rack.objects.filter(name=rack_name, site=self.site).first()
                 elif role == 'l3leaf':
                   rack_elevation = i + 1
-                  rack_name = f"{dc_code}-l3leaf-rr-{i}"
+                  rack_name = f"{dc_code}-leaf-rr-{i}"
                   rack = Rack.objects.filter(name=rack_name, site=self.site).first()
                 elif 'superspine' in role:
                   rack_elevation = i + 3
