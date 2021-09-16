@@ -833,22 +833,28 @@ class CreateAristaDC(Job):
                     self.log_success(device, f"Added AS::{bgp} to Device {device_name}")
                 
                 elif device_name == f"{dc_code}-leaf1" or device_name == f"{dc_code}-leaf2":
-                    leaf_bgp = bgp + 101
+                    dc = dc_code.replace("dc","")
+                    pod = pod_name.replace("pod","")
+                    leaf_bgp = f"65{dc}{pod}1"
                     device._custom_field_data = {"device_bgp": leaf_bgp}
                     device.validated_save()
                     self.log_success(device, f"Added AS::{leaf_bgp} to Device {device_name}")
 
                 elif device_name == f"{dc_code}-leaf3" or device_name == f"{dc_code}-leaf4":
-                    leaf_bgp = bgp + 102
+                    dc = dc_code.replace("dc","")
+                    pod = pod_name.replace("pod","")
+                    leaf_bgp = f"65{dc}{pod}2"
                     device._custom_field_data = {"device_bgp": leaf_bgp}
                     device.validated_save()
                     self.log_success(device, f"Added AS::{leaf_bgp} to Device {device_name}")
 
                 elif device_name == f"{dc_code}-leaf5":
-                    borderleaf_bgp = bgp + 103
-                    device._custom_field_data = {"device_bgp": borderleaf_bgp}
+                    dc = dc_code.replace("dc","")
+                    pod = pod_name.replace("pod","")
+                    leaf_bgp = f"65{dc}{pod}3"
+                    device._custom_field_data = {"device_bgp": leaf_bgp}
                     device.validated_save()
-                    self.log_success(device, f"Added AS::{borderleaf_bgp} to Device {device_name}")
+                    self.log_success(device, f"Added AS::{leaf_bgp} to Device {device_name}")
 
                 elif device_name == f"{dc_code}-superspine1" or device_name == f"{dc_code}-superspine2":
                     superspine_bgp = 65000
