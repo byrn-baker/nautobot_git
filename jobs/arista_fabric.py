@@ -835,7 +835,7 @@ class CreateAristaDC(Job):
                 elif device_name == f"{dc_code}-leaf1" or device_name == f"{dc_code}-leaf2":
                     dc = dc_code.replace("dc","")
                     pod = pod_name.replace("pod","")
-                    leaf_bgp = f"65{dc}{pod}1"
+                    leaf_bgp = f"65{dc}{pod}0"
                     device._custom_field_data = {"device_bgp": leaf_bgp}
                     device.validated_save()
                     self.log_success(device, f"Added AS::{leaf_bgp} to Device {device_name}")
@@ -843,7 +843,7 @@ class CreateAristaDC(Job):
                 elif device_name == f"{dc_code}-leaf3" or device_name == f"{dc_code}-leaf4":
                     dc = dc_code.replace("dc","")
                     pod = pod_name.replace("pod","")
-                    leaf_bgp = f"65{dc}{pod}2"
+                    leaf_bgp = f"65{dc}{pod}1"
                     device._custom_field_data = {"device_bgp": leaf_bgp}
                     device.validated_save()
                     self.log_success(device, f"Added AS::{leaf_bgp} to Device {device_name}")
@@ -851,7 +851,7 @@ class CreateAristaDC(Job):
                 elif device_name == f"{dc_code}-leaf5":
                     dc = dc_code.replace("dc","")
                     pod = pod_name.replace("pod","")
-                    leaf_bgp = f"65{dc}{pod}3"
+                    leaf_bgp = f"65{dc}{pod}2"
                     device._custom_field_data = {"device_bgp": leaf_bgp}
                     device.validated_save()
                     self.log_success(device, f"Added AS::{leaf_bgp} to Device {device_name}")
