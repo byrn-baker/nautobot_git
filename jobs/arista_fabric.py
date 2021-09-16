@@ -826,35 +826,35 @@ class CreateAristaDC(Job):
                   self.log_success(device, f"Added local context on {device_name}")
 
                 # Add the Devices specific BGP assignments
-                for i in range (1, bgp + 100):
-                  if device_name == f"{dc_code}-spine1" or device_name == f"{dc_code}-spine2" or device_name == f"{dc_code}-spine3" or device_name == f"{dc_code}-spine4":
-                      device._custom_field_data = {"device_bgp": bgp}
-                      device.validated_save()
-                      self.log_success(device, f"Added AS::{bgp} to Device {device_name}")
-                  
-                  elif device_name == f"{dc_code}-leaf1" or device_name == f"{dc_code}-leaf2":
-                      leaf_bgp = i + 1
-                      device._custom_field_data = {"device_bgp": leaf_bgp}
-                      device.validated_save()
-                      self.log_success(device, f"Added AS::{leaf_bgp} to Device {device_name}")
+                
+                if device_name == f"{dc_code}-spine1" or device_name == f"{dc_code}-spine2" or device_name == f"{dc_code}-spine3" or device_name == f"{dc_code}-spine4":
+                    device._custom_field_data = {"device_bgp": bgp}
+                    device.validated_save()
+                    self.log_success(device, f"Added AS::{bgp} to Device {device_name}")
+                
+                elif device_name == f"{dc_code}-leaf1" or device_name == f"{dc_code}-leaf2":
+                    leaf_bgp = bgp + 101
+                    device._custom_field_data = {"device_bgp": leaf_bgp}
+                    device.validated_save()
+                    self.log_success(device, f"Added AS::{leaf_bgp} to Device {device_name}")
 
-                  elif device_name == f"{dc_code}-leaf3" or device_name == f"{dc_code}-leaf4":
-                      leaf_bgp = i + 2
-                      device._custom_field_data = {"device_bgp": leaf_bgp}
-                      device.validated_save()
-                      self.log_success(device, f"Added AS::{leaf_bgp} to Device {device_name}")
+                elif device_name == f"{dc_code}-leaf3" or device_name == f"{dc_code}-leaf4":
+                    leaf_bgp = bgp + 102
+                    device._custom_field_data = {"device_bgp": leaf_bgp}
+                    device.validated_save()
+                    self.log_success(device, f"Added AS::{leaf_bgp} to Device {device_name}")
 
-                  elif device_name == f"{dc_code}-leaf5":
-                      borderleaf_bgp = i + 3
-                      device._custom_field_data = {"device_bgp": borderleaf_bgp}
-                      device.validated_save()
-                      self.log_success(device, f"Added AS::{borderleaf_bgp} to Device {device_name}")
+                elif device_name == f"{dc_code}-leaf5":
+                    borderleaf_bgp = bgp + 103
+                    device._custom_field_data = {"device_bgp": borderleaf_bgp}
+                    device.validated_save()
+                    self.log_success(device, f"Added AS::{borderleaf_bgp} to Device {device_name}")
 
-                  elif device_name == f"{dc_code}-superspine1" or device_name == f"{dc_code}-superspine2":
-                      superspine_bgp = 65000
-                      device._custom_field_data = {"device_bgp":  superspine_bgp}
-                      device.validated_save()
-                      self.log_success(device, f"Added AS::{superspine_bgp} to Device {device_name}")
+                elif device_name == f"{dc_code}-superspine1" or device_name == f"{dc_code}-superspine2":
+                    superspine_bgp = 65000
+                    device._custom_field_data = {"device_bgp":  superspine_bgp}
+                    device.validated_save()
+                    self.log_success(device, f"Added AS::{superspine_bgp} to Device {device_name}")
 
 
 
