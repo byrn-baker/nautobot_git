@@ -1037,11 +1037,13 @@ class CreateAristaDC(Job):
                     eth1.lag = po1
                     eth1.mode = "tagged-all"
                     eth1.label = "trunk"
+                    eth1.cf['role'] = "mlag"
                     eth1.validated_save()
                     self.log_success(message=f"Moved {eth1} succesfully to {po1}")
                     eth2.lag = po1
                     eth2.mode = "tagged-all"
                     eth2.label = "trunk"
+                    eth2.cf['role'] = "mlag"
                     eth2.validated_save()
                     self.log_success(message=f"Moved {eth2} succesfully to {po1}")
                     # MLAG SVI

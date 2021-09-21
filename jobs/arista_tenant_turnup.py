@@ -45,8 +45,8 @@ class VxLan_Tenant_Turnup(Job):
         description = "vLan number for new Tenant"
     )
 
-    vlan_rt = IntegerVar(
-        description = "Route Target to be assigned to this vLan"
+    vlan_vni = IntegerVar(
+        description = "VNI to be assigned to this vLan"
     )
 
     svi_description = StringVar(
@@ -116,7 +116,7 @@ class VxLan_Tenant_Turnup(Job):
                 name=f"{vlan_name}_VLAN_{data['vlan_vid']}",
                 vid=data['vlan_vid'],
                 role=vxlan_role,
-                _custom_field_data={"vxlan_vlan_rt": data['vlan_rt']},
+                _custom_field_data={"vxlan_vlan_rt": data['vlan_vni']},
                 tenant=tenant,
                 status=STATUS_ACTIVE,
                 site=site,
@@ -134,7 +134,7 @@ class VxLan_Tenant_Turnup(Job):
                 enabled=True,
                 label="Layer3",
                 description=data['svi_description'],
-                _custom_field_data={"role": "vxlan", "vxlan_vlan_vni": data['vlan_rt']},
+                _custom_field_data={"role": "vxlan", "vxlan_vlan_vni": data['vlan_vni']},
                 device=device,
             )
             self.log_success(obj=svi, message=f"Created new SVI Interface Vlan{data['vlan_vid']} on {dev}")
